@@ -1,0 +1,4 @@
+_config = {
+  name = "WebStorm",
+  extends = "com.jetbrains.intellij"
+}

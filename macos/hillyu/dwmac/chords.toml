@@ -1,0 +1,40 @@
+",q" = { name = "Quit", shell = "dwmac close"}
+",c" = { name = "Close All Windows But Current", shell = "dwmac close-all-windows-but-current"}
+",x" = { name = "Next", shell = "dwmac focus next"}
+",v" = { name = "Previous", shell = "dwmac focus prev"}
+",l" = { name = "Resize Left", shell = "dwmac mfact +0.05"}
+",r" = { name = "Resize Right", shell = "dwmac mfact -0.05"}
+",f" = { name = "Focus master", shell = "dwmac focus-master-or-back"}
+",m" = { name = "Move to master", shell = "dwmac move-node-to-master"}
+",u" = { name = "Back", shell = "dwmac swap prev"}
+",d" = { name = "Forward", shell = "dwmac swap next"}
+",w" = { name = "Swap master", shell = "dwmac swap master"}
+",lf" = { name = "Layout Float", shell = "dwmac layout floating"}
+",lt" = { name = "Layout Tiling", shell = "dwmac layout tiling"}
+",e" = { name = "Enable", shell = "dwmac enable"}
+",t" = { name = "Top", shell = "dwmac focus next"}
+",b" = { name = "Bottom", shell = "dwmac focus prev"}
+# ",S" = { name = "Focus stack", shell = "dwmac focus prev"}
+
+# Workspaces
+",1" = { name = "Focus 1", shell = "dwmac workspace 1"}
+",2" = { name = "Focus 2", shell = "dwmac workspace 2"}
+",3" = { name = "Focus 3", shell = "dwmac workspace 3"}
+",4" = { name = "Focus 4", shell = "dwmac workspace 4"}
+",5" = { name = "Focus 5", shell = "dwmac workspace 5"}
+",6" = { name = "Focus 6", shell = "dwmac workspace 6"}
+",7" = { name = "Focus 7", shell = "dwmac workspace 7"}
+",8" = { name = "Focus 8", shell = "dwmac workspace 8"}
+",9" = { name = "Focus 9", shell = "dwmac workspace 9"}
+",m1" = { name = "Move to Workspace 1", shell = "dwmac move-node-to-workspace 1"}
+",m2" = { name = "Move to Workspace 2", shell = "dwmac move-node-to-workspace 2"}
+",m3" = { name = "Move to Workspace 3", shell = "dwmac move-node-to-workspace 3"}
+",m4" = { name = "Move to Workspace 4", shell = "dwmac move-node-to-workspace 4"}
+",m5" = { name = "Move to Workspace 5", shell = "dwmac move-node-to-workspace 5"}
+",m6" = { name = "Move to Workspace 6", shell = "dwmac move-node-to-workspace 6"}
+",m7" = { name = "Move to Workspace 7", shell = "dwmac move-node-to-workspace 7"}
+",m8" = { name = "Move to Workspace 8", shell = "dwmac move-node-to-workspace 8"}
+",m9" = { name = "Move to Workspace 9", shell = "dwmac move-node-to-workspace 9"}
+",mm" = { name = "Workspace Back and Forth", shell = "dwmac workspace-back-and-forth"}
+
+",dn" = { name = "Move Workspace to Display", shell = "dwmac move-workspace-to-monitor --wrap-around next"}

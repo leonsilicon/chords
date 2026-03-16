@@ -1,0 +1,91 @@
+# Global commands for Rift
+
+_config = {
+  prefixes = {
+    "?" = {
+      name = "Prefix",
+      default = ","
+    }
+  }
+}
+
+# Calibrate
+#"?c" = { name = "Calibrate", shell = "rift-cli execute workspace next && rift-cli execute workspace prev"}
+#"?n" = { name = "Next", shell = "rift-cli execute window next"}
+#"?p" = { name = "Previous", shell = "rift-cli execute window prev"}
+#"?l" = { name = "Left", shell = "rift-cli execute window focus left"}
+#"?r" = { name = "Right", shell = "rift-cli execute window focus right"}
+#"?m" = { name = "Master", shell = "rift-cli execute window focus right"}
+#"?u" = { name = "Up", shell = "rift-cli execute window focus up"}
+#"?d" = { name = "Down", shell = "rift-cli execute window focus down"}
+#"?f" = { name = "Float", shell = "rift-cli execute window toggle-float"}
+#"?fs" = { name = "Fullscreen", shell = "rift-cli execute window toggle-fullscren"}
+#"?q" = { name = "Quit", shell = "rift-cli query windows | jq -r '.[] | select(.is_focused==true) | .id.idx' | xargs -I{} rift-cli execute window close --window-id {}" }
+#"?a" = { name = "Activate", shell = "rift-cli execute toggle-space-activated"}
+#"?rl" = { name = "Resize Left", shell = "rift-cli execute layout adjust-master-ratio +0.05"}
+#"?rr" = { name = "Resize Right", shell = "rift-cli execute layout adjust-master-ratio -- -0.05"}
+#"?mr" = { name = "Move Right", shell = "rift-cli execute layout move-node right"}
+#"?ml" = { name = "Move Left", shell = "rift-cli execute layout move-node left"}
+#"?mu" = { name = "Move Up", shell = "rift-cli execute layout move-node up"}
+#"?md" = { name = "Move Down", shell = "rift-cli execute layout move-node down"}
+#"?mm" = { name = "Move Master", shell = "rift-cli execute layout promote-to-master"}
+#
+## rift-cli execute display focus
+#"?dl" = { name = "Display Left", shell = "rift-cli execute display focus left"}
+#"?dr" = { name = "Display Right", shell = "rift-cli execute display focus right"}
+#"?du" = { name = "Display Up", shell = "rift-cli execute display focus up"}
+#"?dd" = { name = "Display Down", shell = "rift-cli execute display focus down"}
+#"?d)" = { name = "Display 0", shell = "rift-cli execute display focus 0"}
+#"?d1" = { name = "Display 1", shell = "rift-cli execute display focus 1"}
+#"?d2" = { name = "Display 2", shell = "rift-cli execute display focus 2"}
+#"?d3" = { name = "Display 3", shell = "rift-cli execute display focus 3"}
+#"?d4" = { name = "Display 4", shell = "rift-cli execute display focus 4"}
+#"?d5" = { name = "Display 5", shell = "rift-cli execute display focus 5"}
+#"?d6" = { name = "Display 6", shell = "rift-cli execute display focus 6"}
+#"?d7" = { name = "Display 7", shell = "rift-cli execute display focus 7"}
+#"?d8" = { name = "Display 8", shell = "rift-cli execute display focus 8"}
+#"?d9" = { name = "Display 9", shell = "rift-cli execute display focus 9"}
+#
+## rift-cli execute display move-window
+#"?td" = { name = "Teleport Down", shell = "rift-cli execute display move-window down"}
+#"?tu" = { name = "Teleport Up", shell = "rift-cli execute display move-window up"}
+#"?tl" = { name = "Teleport Left", shell = "rift-cli execute display move-window left"}
+#"?tr" = { name = "Teleport Right", shell = "rift-cli execute display move-window right"}
+#"?t)" = { name = "Teleport 0", shell = "rift-cli execute display move-window 0"}
+#"?t!" = { name = "Teleport 1", shell = "rift-cli execute display move-window 1"}
+#"?t@" = { name = "Teleport 2", shell = "rift-cli execute display move-window 2"}
+#"?t#" = { name = "Teleport 3", shell = "rift-cli execute display move-window 3"}
+#"?t$" = { name = "Teleport 4", shell = "rift-cli execute display move-window 4"}
+#"?t%" = { name = "Teleport 5", shell = "rift-cli execute display move-window 5"}
+#"?t^" = { name = "Teleport 6", shell = "rift-cli execute display move-window 6"}
+#"?t&" = { name = "Teleport 7", shell = "rift-cli execute display move-window 7"}
+#"?t*" = { name = "Teleport 8", shell = "rift-cli execute display move-window 8"}
+#"?t(" = { name = "Teleport 9", shell = "rift-cli execute display move-window 9"}
+#
+## rift-cli execute move-mouse-to-index
+#"?c)" = { name = "Cursor to 0", shell = "rift-cli execute move-mouse-to-index"}
+#"?c!" = { name = "Cursor to 1", shell = "rift-cli execute move-mouse-to-index"}
+#"?c@" = { name = "Cursor to 2", shell = "rift-cli execute move-mouse-to-index"}
+#"?c#" = { name = "Cursor to 3", shell = "rift-cli execute move-mouse-to-index"}
+#"?c$" = { name = "Cursor to 4", shell = "rift-cli execute move-mouse-to-index"}
+#"?c%" = { name = "Cursor to 5", shell = "rift-cli execute move-mouse-to-index"}
+#"?c^" = { name = "Cursor to 6", shell = "rift-cli execute move-mouse-to-index"}
+#"?c&" = { name = "Cursor to 7", shell = "rift-cli execute move-mouse-to-index"}
+#"?c*" = { name = "Cursor to 8", shell = "rift-cli execute move-mouse-to-index"}
+#"?c(" = { name = "Cursor to 9", shell = "rift-cli execute move-mouse-to-index"}
+#
+## rift-cli execute workspace
+#"?wc" = { name = "Workspace: Create", shell = "rift-cli execute workspace create"}
+#"?wl" = { name = "Workspace: Last", shell = "rift-cli execute workspace last"}
+#"?wn" = { name = "Workspace: Next", shell = "rift-cli execute workspace next"}
+#"?wp" = { name = "Workspace: Previous", shell = "rift-cli execute workspace prev"}
+#"?w!" = { name = "Workspace: 1", shell = "rift-cli execute workspace switch 1"}
+#"?w@" = { name = "Workspace: 2", shell = "rift-cli execute workspace switch 2"}
+#"?w#" = { name = "Workspace: 3", shell = "rift-cli execute workspace switch 3"}
+#"?w$" = { name = "Workspace: 4", shell = "rift-cli execute workspace switch 4"}
+#"?w%" = { name = "Workspace: 5", shell = "rift-cli execute workspace switch 5"}
+#"?w^" = { name = "Workspace: 6", shell = "rift-cli execute workspace switch 6"}
+#"?w&" = { name = "Workspace: 7", shell = "rift-cli execute workspace switch 7"}
+#"?w*" = { name = "Workspace: 8", shell = "rift-cli execute workspace switch 8"}
+#"?w(" = { name = "Workspace: 9", shell = "rift-cli execute workspace switch 9"}
+#"?w)" = { name = "Workspace: 0", shell = "rift-cli execute workspace switch 0"}

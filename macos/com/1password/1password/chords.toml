@@ -1,0 +1,8 @@
+_config = {
+    name = "1Password"
+}
+
+ce = { name = "Copy Email", shortcut = "cmd+c" }
+cu = { name = "Copy Username", shortcut = "cmd+c" }
+cp = { name = "Copy Password", shortcut = "cmd+shift+c" }
+co = { name = "Copy Onetime", shortcut = "opt+cmd+c" }

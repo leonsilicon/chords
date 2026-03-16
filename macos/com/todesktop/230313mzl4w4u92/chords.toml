@@ -1,0 +1,5 @@
+# https://forum.cursor.com/t/cursor-bundle-identifier/779
+_config = {
+  name = "Cursor",
+  extends = "com.microsoft.VSCode"
+}

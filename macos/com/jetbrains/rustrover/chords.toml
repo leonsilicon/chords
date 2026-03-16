@@ -1,0 +1,4 @@
+_config = {
+  name = "RustRover",
+  extends = "com.jetbrains.intellij"
+}
