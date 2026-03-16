@@ -1,3 +1,7 @@
+# Chords
+
+These chords are my personal chords for the (unreleased) Chords app, which supports loading repositories.
+
 # Some General Patterns
 
 # Directions
