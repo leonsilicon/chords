@@ -26,7 +26,7 @@ tl = { name = "Tab: Left Move", command = "Move tabs right or left", shortcut = 
 tr = { name = "Tab: Right Move", command = "Move tabs right or left", shortcut = "cmd+shift+pgdown"}
 
 # History
-hf = { name = "History: Forward", command = "Open the next page from your browsing history in the current tab", shortcut = "cmd+]"}
+hw = { name = "History: Forward", command = "Open the next page from your browsing history in the current tab", shortcut = "cmd+]"}
 hk = { name = "History: Back", command = "Open the previous page from your browsing history in the current tab", shortcut = "cmd+["}
 
 # Pages
@@ -37,8 +37,8 @@ pm = { name = "Page: Home", command = "Open your home page in the current tab", 
 psd = { name = "Page Setup Dialog", command = "Open the Page Setup dialog", shortcut = "cmd+option+p"}
 
 # Matches
-mx = { name = "Next Match", command = "Jump to the next match to your Find Bar search", shortcut = "cmd+g"}
-mv = { name = "Previous Match", command = "Jump to the previous match to your Find Bar search", shortcut = "cmd+shift+g"}
+mx = { name = "Match: Next", command = "Jump to the next match to your Find Bar search", shortcut = "cmd+g"}
+mv = { name = "Match: Previous", command = "Jump to the previous match to your Find Bar search", shortcut = "cmd+shift+g"}
 
 # Bookmarks
 bt = { name = "Bookmarks: Toggle", command = "Show or hide the Bookmarks Bar", shortcut = "cmd+b"}

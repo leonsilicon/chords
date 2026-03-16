@@ -5,13 +5,11 @@ _config = {
 
 # Warp Essentials
 lcp = { name = "Launch Configuration Palette", command = "workspace:toggle_launch_config_palette", shortcut = "ctrl+cmd+l" }
-tp = { name = "Theme Picker", command = "workspace:show_theme_chooser", shortcut = "ctrl+cmd+t" }
 cs = { name = "Command Search", command = "workspace:show_command_search", shortcut = "ctrl+r" }
 wf = { name = "Workflows", command = "input:toggle_workflows", shortcut = "ctrl+shift+r" }
 gn = { name = "Generate", command = "input:toggle_natural_language_command_search", shortcut = "ctrl+`" }
 ft = { name = "Focus Terminal", command = "terminal:focus_input", shortcut = "cmd+l" }
 ws = { name = "Warpify Shell", command = "terminal:trigger_subshell_bootstrap", shortcut = "ctrl+i" }
-wd = { name = "Warp Drive", command = "terminal:toggle_warp_drive", shortcut = "cmd+backslash" }
 fs = { name = "File Search", shortcut = "cmd+o" }
 cp = { name = "Open Command Palette", command = "terminal:open_command_palette", shortcut = "cmd+p" }
 
@@ -42,27 +40,8 @@ spd = { name = "Scroll Down One Page", command = "terminal:page_down", shortcut 
 st = { name = "Scroll to Top", command = "terminal:scroll_home", shortcut = "shift+cmd+up" }
 sb = { name = "Scroll to Bottom", command = "terminal:scroll_end", shortcut = "shift+cmd+down" }
 
-# Input Editor
-dwe = { name = "Delete to end of word", command = "input:delete_next_word", shortcut = "ctrl+alt+right" }
-dws = { name = "Delete to start of word", command = "input:delete_word", shortcut = "ctrl+alt+left" }
-dle = { name = "Delete to end of line", command = "input:delete_to_end_of_line", shortcut = "cmd+delete" }
-dls = { name = "Delete to start of line", command = "input:delete_to_start_of_line", shortcut = "cmd+backspace" }
-lmu = { name = "Move line up", command = "input:move_line_up", shortcut = "alt+cmd+f" }
-lmd = { name = "Move line down", command = "input:move_line_down", shortcut = "alt+cmd+b" }
-su = { name = "Select up", command = "input:select_up", shortcut = "shift+up" }
-sd = { name = "Select down", command = "input:select_down", shortcut = "shift+down" }
-sa = { name = "Select all", command = "input:select_all", shortcut = "cmd+a" }
-ss = { name = "Select to line start", command = "input:select_to_line_start", shortcut = "shift+cmd+left" }
-se = { name = "Select to line end", command = "input:select_to_line_end", shortcut = "shift+cmd+right" }
-sl = { name = "Select word left", command = "input:select_word_left", shortcut = "shift+alt+left" }
-sr = { name = "Select word right", command = "input:select_word_right", shortcut = "shift+alt+right" }
-pv = { name = "Move to previous page", command = "input:page_up", shortcut = "pageup" }
-px = { name = "Move to next page", command = "input:page_down", shortcut = "pagedown" }
-
 # Terminal
 mr = { name = "Mouse Reporting", command = "workspace:toggle_mouse_reporting" }
-gtv = { name = "Back", command = "workspace:go_to_previous_tab", shortcut = "cmd+[" }
-gtx = { name = "Forward", command = "workspace:go_to_next_tab", shortcut = "cmd+]" }
 td = { name = "Duplicate Current Tab", command = "workspace:duplicate_tab", shortcut = "shift+cmd+d" }
 tn = { name = "New Tab", command = "workspace:new_tab", shortcut = "cmd+t" }
 tc = { name = "Close Current Tab", command = "workspace:close_current_tab", shortcut = "cmd+w" }
@@ -79,16 +58,24 @@ tx = { name = "Switch to next tab", command = "workspace:next_tab", shortcut = "
 tv = { name = "Switch to previous tab", command = "workspace:previous_tab", shortcut = "ctrl+shift+tab" }
 tl = { name = "Move current tab left", command = "workspace:move_tab_left", shortcut = "shift+cmd+[" }
 tr = { name = "Move current tab right", command = "workspace:move_tab_right", shortcut = "shift+cmd+]" }
-pa = { name = "Panel: AI", command = "workspace:toggle_ai_panel", shortcut = "ctrl+`" }
-pe = { name = "Pane: East", command = "pane_group:focus_right", shortcut = "ctrl+alt+right" }
-pw = { name = "Pane: West", command = "pane_group:focus_left", shortcut = "ctrl+alt+left" }
-pn = { name = "Pane: North", command = "pane_group:focus_up", shortcut = "ctrl+alt+up" }
-ps = { name = "Pane: South", command = "pane_group:focus_down", shortcut = "ctrl+alt+down" }
-pz = { name = "Pane: Zoom Toggle", command = "pane_group:toggle_zoom_pane", shortcut = "ctrl+alt+cmd+z" }
-pu = { name = "Pane: Up Split", command = "pane_group:add_up", shortcut = "ctrl+alt+cmd+u" }
-pd = { name = "Pane: Down Split", command = "pane_group:add_down", shortcut = "ctrl+alt+cmd+d" }
-pr = { name = "Pane: Right Split", command = "pane_group:add_right", shortcut = "cmd+d" }
-sw = { name = "Search workspaces", command = "workspace:search_workspaces", shortcut = "ctrl+shift+o" }
+
+# Split
+sn = { name = "Split: North", command = "pane_group:focus_up", shortcut = "ctrl+alt+up" }
+se = { name = "Split: East", command = "pane_group:focus_right", shortcut = "ctrl+alt+right" }
+ss = { name = "Split: South", command = "pane_group:focus_down", shortcut = "ctrl+alt+down" }
+sw = { name = "Split: West", command = "pane_group:focus_left", shortcut = "ctrl+alt+left" }
+su = { name = "Split: Up", command = "pane_group:add_up", shortcut = "ctrl+alt+cmd+u" }
+sd = { name = "Split: Down", command = "pane_group:add_down", shortcut = "ctrl+alt+cmd+d" }
+sr = { name = "Split: Right", command = "pane_group:add_right", shortcut = "cmd+d" }
+sl = { name = "Split: Right", command = "pane_group:add_left" }
 zi = { name = "Increase font size", command = "window:increase_font_size", shortcut = "cmd+=" }
 zo = { name = "Decrease font size", command = "window:decrease_font_size", shortcut = "cmd+-" }
 zr = { name = "Reset font size", command = "window:reset_font_size", shortcut = "cmd+0" }
+zt = { name = "Zoom: Toggle", command = "pane_group:toggle_zoom_pane", shortcut = "ctrl+alt+cmd+z" }
+
+# Panels
+pa = { name = "Panel: AI", command = "workspace:toggle_ai_panel", shortcut = "ctrl+`" }
+pt = { name = "Panel: Theme", command = "workspace:show_theme_chooser", shortcut = "ctrl+cmd+t" }
+pd = { name = "Panel: Drive", command = "terminal:toggle_warp_drive", shortcut = "cmd+backslash" }
+
+# sw = { name = "Search workspaces", command = "workspace:search_workspaces", shortcut = "ctrl+shift+o" }

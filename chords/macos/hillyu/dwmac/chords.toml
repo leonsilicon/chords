@@ -6,15 +6,14 @@
 ",r" = { name = "Resize Right", shell = "dwmac mfact -0.05"}
 ",f" = { name = "Focus master", shell = "dwmac focus-master-or-back"}
 ",m" = { name = "Move to master", shell = "dwmac move-node-to-master"}
-",u" = { name = "Back", shell = "dwmac swap prev"}
-",d" = { name = "Forward", shell = "dwmac swap next"}
-",w" = { name = "Swap master", shell = "dwmac swap master"}
+",k" = { name = "Back", shell = "dwmac swap prev"}
+",w" = { name = "Forward", shell = "dwmac swap next"}
+",p" = { name = "Swap master", shell = "dwmac swap master"}
 ",lf" = { name = "Layout Float", shell = "dwmac layout floating"}
 ",lt" = { name = "Layout Tiling", shell = "dwmac layout tiling"}
 ",e" = { name = "Enable", shell = "dwmac enable"}
 ",t" = { name = "Top", shell = "dwmac focus next"}
 ",b" = { name = "Bottom", shell = "dwmac focus prev"}
-# ",S" = { name = "Focus stack", shell = "dwmac focus prev"}
 
 # Workspaces
 ",1" = { name = "Focus 1", shell = "dwmac workspace 1"}

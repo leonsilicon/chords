@@ -9,18 +9,18 @@ rvf = { name = "Reveal in Finder", shortcut = "option+f1 9" }
 rvt = { name = "Reveal in Terminal", shortcut = "option+f1 0" }
 set = { name = "Window: Settings", command = "Settings...", shortcut = "cmd+," }
 
-ne = { name = "New in This Directory", command = "New in This Directory", shortcut = "ctrl+option+n" }
-nd = { name = "New Directory", command = "New Directory", shortcut = "ctrl+option+n enter" }
-nf = { name = "New File", shortcut = "ctrl+option+n f enter" }
-ns = { name = "New Scratch File", shortcut = "cmd+shift+n" }
+# Files
+fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
+fn = { name = "File: New", shortcut = "ctrl+option+n f enter" }
+fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
+fos = { name = "File: Open Structure", command = "File Structure", shortcut = "cmd+f12" }
+
+fd = { name = "New in This Directory", command = "New in This Directory", shortcut = "ctrl+option+n" }
 bp = { name = "Build Project", command = "Build Project", shortcut = "cmd+f9" }
 br = { name = "Build: Rebuild", command = "Rebuild", shortcut = "cmd+shift+f9" }
 
 # Basic editing
-ct = { name = "Cut", command = "Cut", shortcut = "cmd+x" }
-co = { name = "Copy", command = "Copy", shortcut = "cmd+c" }
-ps = { name = "Paste", command = "Paste", shortcut = "cmd+v" }
-pp = { name = "Paste as Plain Text", command = "Paste as Plain Text", shortcut = "cmd+option+shift+v" }
+pap = { name = "Paste as Plain Text", command = "Paste as Plain Text", shortcut = "cmd+option+shift+v" }
 ph = { name = "Paste from History...", command = "Paste from History...", shortcut = "cmd+shift+v" }
 cpp = { name = "Copy Paths", command = "Copy Paths", shortcut = "cmd+shift+c" }
 cpr = { name = "Copy Reference", command = "Copy Reference", shortcut = "cmd+option+shift+c" }
@@ -36,7 +36,6 @@ ld = { name = "Line: Delete", command = "Delete Line", shortcut = "cmd+backspace
 lj = { name = "Line: Join", command = "Join Lines", shortcut = "ctrl+shift+j" }
 lc = { name = "Line: Clone", command = "Duplicate Line or Selection", shortcut = "cmd+d" }
 tgc = { name = "Toggle Case", command = "Toggle Case", shortcut = "cmd+shift+u" }
-nsf = { name = "New Scratch File", command = "Scratch File", shortcut = "cmd+shift+n" }
 os = { name = "Open Source", command = "Open Source in New Window", shortcut = "shift+f4" }
 fsi = { name = "Font Size: Increase", command = "Increase Font Size in All Editors", shortcut = "ctrl+shift+." }
 fsd = { name = "Font Size: Decrease", command = "Decrease Font Size in All Editors", shortcut = "ctrl+shift+," }
@@ -84,7 +83,7 @@ er = { name = "Expand Recursively", command = "Expand Recursively", shortcut = "
 cr = { name = "Collapse Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
 ea = { name = "Expand All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
 ca = { name = "Collapse All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
-fd = { name = "Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
+fs = { name = "Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 
 # Multiple carets and selection ranges
 # = { name = "Add/Remove Caret", command = "Add/Remove Caret", shortcut = "option+shift+click" }
@@ -120,15 +119,16 @@ cmb = { name = "Comment with Block Comment", command = "Comment with Block Comme
 sw = { name = "Surround With...", command = "Surround With...", shortcut = "cmd+option+t" }
 gn = { name = "Generate...", command = "Generate...", shortcut = "cmd+n" }
 
+# History
+hw = { name = "Context: Forward", command = "Forward", shortcut = "cmd+]" }
+hk = { name = "Context: Back", command = "Back", shortcut = "cmd+[" }
+
 # Context navigation
-nm = { name = "Next Method", command = "Next Method", shortcut = "ctrl+shift+down" }
-pm = { name = "Previous Method", command = "Previous Method", shortcut = "ctrl+shift+up" }
+mx = { name = "Method: Next", command = "Next Method", shortcut = "ctrl+shift+down" }
+mv = { name = "Method: Previous", command = "Previous Method", shortcut = "ctrl+shift+up" }
 swt = { name = "Switcher", command = "Switcher", shortcut = "ctrl+tab" }
-rf = { name = "Recent Files", command = "Recent Files", shortcut = "cmd+e" }
 rc = { name = "Recent Changes", command = "Recent Changes", shortcut = "option+shift+c" }
 le = { name = "Last Edit Location", command = "Last Edit Location", shortcut = "cmd+shift+backspace" }
-cf = { name = "Context: Forward", command = "Forward", shortcut = "cmd+]" }
-ck = { name = "Context: Back", command = "Back", shortcut = "cmd+[" }
 snt = { name = "Select Next Tab", command = "Select Next Tab", shortcut = "cmd+shift+]" }
 spt = { name = "Select Previous Tab", command = "Select Previous Tab", shortcut = "cmd+shift+[" }
 tab = { name = "Toggle Anonymous Bookmark", command = "Toggle Anonymous Bookmark", shortcut = "f3" }
@@ -141,24 +141,23 @@ no = { name = "Next Occurrence", command = "Next Occurrence", shortcut = "cmd+op
 po = { name = "Previous Occurrence", command = "Previous Occurrence", shortcut = "cmd+option+up" }
 
 # Search
-se = { name = "Search Everywhere", command = "Search Everywhere", shortcut = "shift shift" }
-st = { name = "Search Types", shortcut = "cmd+o"}
-sf = { name = "Search Files", shortcut = "cmd+shift+o"}
-ss = { name = "Search Symbols", shortcut = "cmd+option+o"}
-sa = { name = "Search All", shortcut = "cmd+shift+a" }
-sx = { name = "Search Text", shortcut = "cmd+shift+option+e" }
+sg = { name = "Search: Globally", command = "Search Everywhere", shortcut = "shift shift" }
+st = { name = "Search: Types", shortcut = "cmd+o"}
+sf = { name = "Search: Files", shortcut = "cmd+shift+o"}
+sy = { name = "Search: Symbols", shortcut = "cmd+option+o"}
+sa = { name = "Search: All", shortcut = "cmd+shift+a" }
+sx = { name = "Search: Text", shortcut = "cmd+shift+option+e" }
 
 # Find
 fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
 fr = { name = "Find and Replace", command = "Replace...", shortcut = "cmd+r" }
+fx = { name = "Find: Next", command = "Find Next / Move to Next Occurrence", shortcut = "cmd+g" }
+fv = { name = "Find: Previous", command = "Find Previous / Move to Previous Occurrence", shortcut = "cmd+shift+g" }
 fg = { name = "Find Globally", command = "Find in Files...", shortcut = "cmd+shift+f" }
-rg = { name = "Replace Globally", command = "Replace in Files...", shortcut = "cmd+shift+r" }
-fx = { name = "Find Next", command = "Find Next / Move to Next Occurrence", shortcut = "cmd+g" }
-fv = { name = "Find Previous", command = "Find Previous / Move to Previous Occurrence", shortcut = "cmd+shift+g" }
-fs = { name = "File Structure", command = "File Structure", shortcut = "cmd+f12" }
+frg = { name = "Find and Replace Globally", command = "Replace in Files...", shortcut = "cmd+shift+r" }
 fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a" }
 
-# Navigate from symbols
+# Goto
 gl = { name = "Go to Line/Column...", command = "Go to Line/Column...", shortcut = "cmd+l" }
 gd = { name = "Goto Declaration or Usages", command = "Go to Declaration or Usages", shortcut = "cmd+b" }
 gy = { name = "Goto Type Declaration", command = "Go to Type Declaration", shortcut = "cmd+shift+b" }
@@ -208,7 +207,7 @@ rt = { name = "Refactor This...", command = "Refactor This...", shortcut = "ctrl
 rn = { name = "Rename...", command = "Rename...", shortcut = "shift+f6" }
 cs = { name = "Change Signature...", command = "Change Signature...", shortcut = "cmd+f6" }
 inl = { name = "Inline...", command = "Inline...", shortcut = "cmd+option+n" }
-mv = { name = "Move...", command = "Move...", shortcut = "f6" }
+mo = { name = "Move...", command = "Move...", shortcut = "f6" }
 em = { name = "Extract Method...", command = "Extract Method...", shortcut = "cmd+option+m" }
 if = { name = "Introduce Field...", command = "Introduce Field...", shortcut = "cmd+option+f" }
 ip = { name = "Introduce Parameter...", command = "Introduce Parameter...", shortcut = "cmd+option+p" }
@@ -217,12 +216,12 @@ sfd = { name = "Safe Delete...", command = "Safe Delete...", shortcut = "cmd+del
 
 # Global VCS actions
 vo = { name = "VCS Operations Popup...", command = "VCS Operations Popup...", shortcut = "ctrl+v" }
-cm = { name = "Commit...", command = "Commit...", shortcut = "cmd+k" }
-up = { name = "Update Project", command = "Update Project", shortcut = "cmd+t" }
-rl = { name = "Rollback", command = "Rollback", shortcut = "cmd+option+z" }
-pu = { name = "Push...", command = "Push...", shortcut = "cmd+shift+k" }
-nc = { name = "Next Change", command = "Next Change", shortcut = "ctrl+option+shift+down" }
-pc = { name = "Previous Change", command = "Previous Change", shortcut = "ctrl+option+shift+up" }
+vc = { name = "VCS: Commit...", command = "Commit...", shortcut = "cmd+k" }
+vu = { name = "VCS: Update Project", command = "Update Project", shortcut = "cmd+t" }
+vr = { name = "VCS: Rollback", command = "Rollback", shortcut = "cmd+option+z" }
+vp = { name = "VCS: Push...", command = "Push...", shortcut = "cmd+shift+k" }
+vv = { name = "VCS: Previous Change", command = "Previous Change", shortcut = "ctrl+option+shift+up" }
+vx = { name = "VCS: Next Change", command = "Next Change", shortcut = "ctrl+option+shift+down" }
 
 # Diff Viewer
 dc = { name = "Diff: Compare Files", command = "Compare Files", shortcut = "cmd+d" }
@@ -234,22 +233,22 @@ dl = { name = "Diff: Left Accept", command = "Accept Left Side", shortcut = "cmd
 dr = { name = "Diff: Right Accept", command = "Accept Right Side", shortcut = "cmd+ctrl+left" }
 dss = { name = "Diff: Show Settings", command = "Show Diff Settings Popup...", shortcut = "cmd+shift+d" }
 
-# Tool windows
-htw = { name = "Hide Active Tool Window", command = "Hide Active Tool Window", shortcut = "shift+esc" }
-hatw = { name = "Hide All Tool Windows", command = "Hide All Tool Windows", shortcut = "cmd+shift+f12" }
-ltw = { name = "Last Tool Window", command = "Jump to Last Tool Window", shortcut = "f12" }
-stl = { name = "Stretch to Left", command = "Stretch to Left", shortcut = "ctrl+option+left" }
-str = { name = "Stretch to Right", command = "Stretch to Right", shortcut = "ctrl+option+right" }
-stt = { name = "Stretch to Top", command = "Stretch to Top", shortcut = "ctrl+option+up" }
-stb = { name = "Stretch to Bottom", command = "Stretch to Bottom", shortcut = "ctrl+option+down" }
-wp = { name = "Window: Project", command = "Show Project window", shortcut = "cmd+1" }
-wm = { name = "Window: Bookmarks", command = "Show Bookmarks window", shortcut = "cmd+2" }
-wf = { name = "Window: Find", command = "Show Find window", shortcut = "cmd+3" }
-wr = { name = "Window: Run", command = "Show Run window", shortcut = "cmd+4" }
-wd = { name = "Window: Debug", command = "Show Debug window", shortcut = "cmd+5" }
-wb = { name = "Window: Problems", command = "Show Problems window", shortcut = "cmd+6" }
-ws = { name = "Window: Structure", command = "Show Structure window", shortcut = "cmd+7" }
-wv = { name = "Window: Services", command = "Show Services window", shortcut = "cmd+9" }
-wg = { name = "Window: Git", command = "Show Version Control window", shortcut = "cmd+9" }
-wc = { name = "Window: Commit", command = "Show Commit window", shortcut = "cmd+0" }
-wt = { name = "Window: Terminal", command = "Show Terminal window", shortcut = "opt+f12" }
+# Panels
+phc = { name = "Panel: Hide Current", command = "Hide Active Tool Window", shortcut = "shift+esc" }
+pha = { name = "Panel: Hide All", command = "Hide All Tool Windows", shortcut = "cmd+shift+f12" }
+pk = { name = "Panel: Back", command = "Jump to Last Tool Window", shortcut = "f12" }
+psl = { name = "Panel: Stretch Left", command = "Stretch to Left", shortcut = "ctrl+option+left" }
+psr = { name = "Panel: Stretch Right", command = "Stretch to Right", shortcut = "ctrl+option+right" }
+pst = { name = "Panel: Stretch Top", command = "Stretch to Top", shortcut = "ctrl+option+up" }
+psb = { name = "Panel: Stretch Bottom", command = "Stretch to Bottom", shortcut = "ctrl+option+down" }
+pp = { name = "Panel: Project", command = "Show Project window", shortcut = "cmd+1" }
+pm = { name = "Panel: Marks", command = "Show Bookmarks window", shortcut = "cmd+2" }
+pf = { name = "Panel: Find", command = "Show Find window", shortcut = "cmd+3" }
+pr = { name = "Panel: Run", command = "Show Run window", shortcut = "cmd+4" }
+pd = { name = "Panel: Debug", command = "Show Debug window", shortcut = "cmd+5" }
+pb = { name = "Panel: Problems", command = "Show Problems window", shortcut = "cmd+6" }
+ps = { name = "Panel: Structure", command = "Show Structure window", shortcut = "cmd+7" }
+pv = { name = "Panel: Services", command = "Show Services window", shortcut = "cmd+9" }
+pg = { name = "Panel: Git", command = "Show Version Control window", shortcut = "cmd+9" }
+pc = { name = "Panl: Commit", command = "Show Commit window", shortcut = "cmd+0" }
+pt = { name = "Panel: Terminal", command = "Show Terminal window", shortcut = "opt+f12" }
