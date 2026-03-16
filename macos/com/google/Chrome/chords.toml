@@ -2,7 +2,7 @@
 
 # Window
 wn = { name = "Window: New", command = "Open a new window", shortcut = "cmd+n"}
-wni = { name = "Window: New Incognito", command = "Open a new window in Incognito mode", shortcut = "cmd+shift+n"}
+wi = { name = "Window: Incognito", command = "Open a new window in Incognito mode", shortcut = "cmd+shift+n"}
 wc = { name = "Window: Close", command = "Close the current window", shortcut = "cmd+shift+w"}
 wm = { name = "Window: Minimize", command = "Minimize the window", shortcut = "cmd+m"}
 wh = { name = "Window: Hide", command = "Hide Google Chrome", shortcut = "cmd+h"}
