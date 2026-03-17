@@ -84,8 +84,8 @@ fs = { name = "File: Show", lua = "command('revealInExplorer')"  }
 fra = { name = "search.action.replaceAllInFile", lua = "command('search.action.replaceAllInFile')", shortcut = "shift+cmd+enter" }
 fo = { name = "File: Open", lua = "command('workbench.action.files.openFile')", shortcut = "cmd+o" }
 for = { name = "File: Open Recent", lua = "command('workbench.action.openRecent')", shortcut = "ctrl+r" }
-fw = { name = "File: Forward", lua = "command('workbench.action.quickOpenNavigateNextInFilePicker')", shortcut = "cmd+p" }
-fk = { name = "File: Back", lua = "command('workbench.action.quickOpenNavigatePreviousInFilePicker')" , shortcut = "shift+cmd+p" }
+fw = { name = "Editor: Forward", lua = "command('workbench.action.quickOpenLeastRecentlyUsedEditorInGroup')", shortcut = "ctrl+shift+tab" }
+fk = { name = "Editor: Back", lua = "command('workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup')", shortcut = "ctrl+tab" }
 
 # Folding
 ## Fold
@@ -216,6 +216,15 @@ t7 = { name = "Tab 7", lua = "command('workbench.action.openEditorAtIndex7')", s
 t8 = { name = "Tab 8", lua = "command('workbench.action.openEditorAtIndex8')", shortcut = "ctrl+8" }
 t9 = { name = "Tab 9", lua = "command('workbench.action.openEditorAtIndex9')", shortcut = "ctrl+9" }
 
+# Window
+woe = { name = "Window: Open Editor", lua = "command('workbench.action.copyEditorToNewWindow')", shortcut = "cmd+k o" }
+wq = { name = "Window: Quit", lua = "command('workbench.action.closeWindow')", shortcut = "shift+cmd+w" }
+wqo = { name = "Window: Quit Others", lua = "command('workbench.action.closeOtherWindows')" }
+wn = { name = "Window: New", lua = "command('workbench.action.newWindow')", shortcut = "shift+cmd+n" }
+wr = { name = "Window: Reload", lua = "command('workbench.action.reloadWindow')", shortcut = "cmd+r" }
+ws = { name = "Window: Switch", lua = "command('workbench.action.switchWindow')", shortcut = "ctrl+w" }
+wt = { name = "Window: Terminal", lua = "command('workbench.action.terminal.newInNewWindow')", shortcut = "ctrl+shift+alt+`" }
+
 # Zoom
 zi = { name = "Zoom In", lua = "command('workbench.action.zoomIn')", shortcut = "cmd+NumpadAdd" }
 zo = { name = "Zoom Out", lua = "command('workbench.action.zoomOut')", shortcut = "cmd+NumpadSubtract" }
@@ -287,8 +296,6 @@ ceos = { name = "workbench.action.compareEditor.openSide", lua = "command('workb
 
 cepc = { name = "workbench.action.compareEditor.previousChange", lua = "command('workbench.action.compareEditor.previousChange')", shortcut = "shift+alt+f5" }
 
-cetnw = { name = "workbench.action.copyEditorToNewWindow", lua = "command('workbench.action.copyEditorToNewWindow')", shortcut = "cmd+k o" }
-
 cml = { name = "Comment Line", lua = "command('editor.action.commentLine')", shortcut = "cmd+/" }
 
 cl = { name = "workbench.action.terminal.clear", lua = "command('workbench.action.terminal.clear')", shortcut = "cmd+k" }
@@ -310,19 +317,9 @@ cad = { name = "chatEditor.action.showAccessibleDiffView", lua = "command('chatE
 
 ctd = { name = "chatEditor.action.toggleDiff", lua = "command('chatEditor.action.toggleDiff')", shortcut = "shift+alt+f7" }
 
-cp = [
-  { name = "Copy", lua = "command('execCopy')", shortcut = "cmd+c" },
-  { name = "chat.inlineResourceAnchor.copyResource", lua = "command('chat.inlineResourceAnchor.copyResource')", shortcut = "cmd+c" },
-  { name = "workbench.debug.viewlet.action.copyValue", lua = "command('workbench.debug.viewlet.action.copyValue')", shortcut = "cmd+c" },
-  { name = "search.action.copyMatch", lua = "command('search.action.copyMatch')", shortcut = "cmd+c" },
-  { name = "workbench.action.terminal.copySelection", lua = "command('workbench.action.terminal.copySelection')", shortcut = "cmd+c" }
-]
-
 cpt = { name = "editor.changePasteType", lua = "command('editor.changePasteType')", shortcut = "cmd+." }
 
 cs = { name = "Chat: Start", lua = "command('workbench.action.terminal.chat.start')", shortcut = "cmd+i" }
-
-cw = { name = "Close Window", lua = "command('workbench.action.closeWindow')", shortcut = "shift+cmd+w" }
 
 cwc = { name = "workbench.files.action.compareWithClipboard", lua = "command('workbench.files.action.compareWithClipboard')", shortcut = "cmd+k c" }
 
@@ -552,7 +549,6 @@ nsmfa = { name = "editor.action.nextSelectionMatchFindAction", lua = "command('e
 nt = { name = "New Tab", lua = "command('workbench.action.browser.newTab')", shortcut = "cmd+t" }
 
 
-nw = { name = "New Window", lua = "command('workbench.action.newWindow')", shortcut = "shift+cmd+n" }
 
 nx = [
   { name = "Next", lua = "command('search.action.focusNextSearchResult')", shortcut = "f4" },
@@ -649,7 +645,6 @@ rsf = { name = "search.action.restrictSearchToFolder", lua = "command('search.ac
 
 rvd = { name = "Reveal Definition", lua = "command('editor.action.revealDefinition')", shortcut = "f12" }
 
-rw = { name = "Reload Window", lua = "command('workbench.action.reloadWindow')", shortcut = "cmd+r" }
 
 sac = { name = "editor.action.selectFromAnchorToCursor", lua = "command('editor.action.selectFromAnchorToCursor')", shortcut = "cmd+k cmd+k" }
 
@@ -711,7 +706,6 @@ swa = { name = "search.action.searchWithAI", lua = "command('search.action.searc
 
 swc = { name = "suggestWidgetCopy", lua = "command('suggestWidgetCopy')" }
 
-sww = { name = "Switch Window", lua = "command('workbench.action.switchWindow')", shortcut = "ctrl+w" }
 
 tab = { name = "workbench.action.toggleAuxiliaryBar", lua = "command('workbench.action.toggleAuxiliaryBar')", shortcut = "alt+cmd+b" }
 
@@ -758,8 +752,6 @@ tme = { name = "workbench.action.toggleMaximizeEditorGroup", lua = "command('wor
 tn = { name = "workbench.action.terminal.new", lua = "command('workbench.action.terminal.new')", shortcut = "ctrl+shift+`" }
 
 tnc = { name = "workbench.action.terminal.openNativeConsole", lua = "command('workbench.action.terminal.openNativeConsole')", shortcut = "shift+cmd+c" }
-
-tnw = { name = "workbench.action.terminal.newInNewWindow", lua = "command('workbench.action.terminal.newInNewWindow')", shortcut = "ctrl+shift+alt+`" }
 
 to = { name = "Toggle Output", lua = "command('workbench.action.output.toggleOutput')", shortcut = "shift+cmd+u" }
 
