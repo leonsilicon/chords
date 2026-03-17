@@ -18,7 +18,7 @@ function command(cmd)
 
   atomic_write(
     dir .. "/request.json",
-    '{"commandId":"' .. cmd .. '"}'
+    '{"commandId":"' .. cmd .. '","args":[]}'
   )
   os.remove(dir .. "/response.json")
   tap("cmd+shift+f17")
