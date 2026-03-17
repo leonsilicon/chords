@@ -62,6 +62,38 @@ end
 '''
 
 [chords]
+# Editor
+ea = { name = "Editor: Actions", lua = "action('QuickActions')" }
+es = { name = "Editor: Solutions", lua = "action('QuickFixes')" }
+ef = { name = "Editor: Focus", lua = "action('FocusEditor')" }
+ep = { name = "Editor: Pin", lua = "action('PinActiveEditorTab')" }
+eu = { name = "Editor: Unpin", lua = "action('PinActiveTabToggle')" }
+eq = { name = "Editor: Quit", lua = "action('CloseEditor')" }
+eqa = { name = "Editor: Quit All", lua = "action('CloseAllEditors')" }
+eqo = { name = "Editor: Quit Others", lua = "action('CloseAllEditorsButActive')" }
+eql = { name = "Editor: Quit to the Left", lua = "action('CloseEditorsToTheLeft')" }
+eqr = { name = "Editor: Quit to the Right", lua = "action('CloseEditorsToTheRight')" }
+equ = { name = "Editor: Quit Unmodified", lua = "action('CloseUnmodifiedEditors')" }
+eqp = { name = "Editor: Quit Pinless", lua = "action('CloseUnpinnedEditors')" }
+
+# Tabs
+ta = { name = "Tab: All", command = "action('TabList')" }
+tv = { name = "Tab: Right", command = "action('PreviousTab')" }
+tx = { name = "Tab: Left", command = "action('NextTab')" }
+tk = { name = "Tab: Back", command = "action('GoToLastTab')" }
+to = { name = "Tab: Open Recently Closed", command = "action('ReopenClosedTab')" }
+t1 = { name = "Tab 1", lua = "action('GoToTab1')" }
+t2 = { name = "Tab 2", lua = "action('GoToTab2')" }
+t3 = { name = "Tab 3", lua = "action('GoToTab3')" }
+t4 = { name = "Tab 4", lua = "action('GoToTab4')" }
+t5 = { name = "Tab 5", lua = "action('GoToTab5')" }
+t6 = { name = "Tab 6", lua = "action('GoToTab6')" }
+t7 = { name = "Tab 7", lua = "action('GoToTab7')" }
+t8 = { name = "Tab 8", lua = "action('GoToTab8')" }
+t9 = { name = "Tab 9", lua = "action('GoToTab9')" }
+td = { name = "Tab: Move Down", lua = "action('MoveTabDown')" }
+tr = { name = "Tab: Move Right", lua = "action('MoveTabRight')" }
+
 # Find
 fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
 fr = { name = "Find and Replace", command = "Replace...", shortcut = "cmd+r" }
@@ -75,15 +107,26 @@ fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a
 fp = { name = "File: Path", shortcut = "cmd+shift+c" }
 fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
-fh = { name = "File: Here", command = "New in This Directory", shortcut = "ctrl+option+n" }
+fnn = { name = "File: New Name", lua = "action('RenameFile')" }
+fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
+fh = { name = "File: Here", lua = "action('NewFile')" }
 fd = { name = "File: Directory", lua = "action('NewDir')" }
 ft = { name = "File: Trash", shortcut = "cmd+delete" }
-fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
 fvs = { name = "File: View Structure", command = "File Structure", shortcut = "cmd+f12" }
-fs = { name = "File: Show", shortcut = "opt+f1 enter" }
+fs = { name = "File: Show", lua = "action('SelectInProjectView')" }
 
 bp = { name = "Build Project", command = "Build Project", shortcut = "cmd+f9" }
 br = { name = "Build: Rebuild", command = "Rebuild", shortcut = "cmd+shift+f9" }
+
+# Splits
+# sa = { name = "Split: Auto", lua = "command('workbench.action.splitEditor')", shortcut = "cmd+backslash" }
+sr = { name = "Split: Right", lua = "action('SplitHorizontally')" }
+sd = { name = "Split: Down", lua = "action('SplitVertically')" }
+so = { name = "Split: Orientation", lua = "action('ChangeSplitOrientation')" }
+sx = { name = "Split: Next", shortcut = "opt+right" }
+sv = { name = "Split: Previous", shortcut = "opt+shift+right" }
+sq = { name = "Split: Quit", lua = "action('Unsplit')" }
+sqa = { name = "Split: Quit All", lua = "action('UnsplitAll')" }
 
 # Basic editing
 pap = { name = "Paste as Plain Text", command = "Paste as Plain Text", shortcut = "cmd+option+shift+v" }
@@ -106,14 +149,28 @@ os = { name = "Open Source", command = "Open Source in New Window", shortcut = "
 fsi = { name = "Font Size: Increase", command = "Increase Font Size in All Editors", shortcut = "ctrl+shift+." }
 fsd = { name = "Font Size: Decrease", command = "Decrease Font Size in All Editors", shortcut = "ctrl+shift+," }
 
-# Code Folding
+# Folding
 ff = { name = "Folding: Fold", command = "Collapse", shortcut = "cmd+NumpadSubtract" }
 ffs = { name = "Folding: Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 ffa = { name = "Folding: Fold All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
+ffc = { name = "Folding: Fold Comments", lua = "command('CollapseDocComments')" }
 ffr = { name = "Folding: Fold Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
 fu = { name = "Folding: Unfold", command = "Expand", shortcut = "cmd+NumpadAdd" }
 fua = { name = "Folding: Unfold All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
+fuc = { name = "Folding: Unfold Comments", lua = "command('ExpandDocComments')" }
 fur = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
+fl = { name = "Folding: Level", lua = "action('ExpandToLevel')" }
+f1 = { name = "Folding: Level 1", lua = "action('ExpandToLevel1')" }
+f2 = { name = "Folding: Level 2", lua = "action('ExpandToLevel2')" }
+f3 = { name = "Folding: Level 3", lua = "action('ExpandToLevel3')" }
+f4 = { name = "Folding: Level 4", lua = "action('ExpandToLevel4')" }
+f5 = { name = "Folding: Level 5", lua = "action('ExpandToLevel5')" }
+fal = { name = "Folding: All Level", lua = "action('ExpandAllToLevel')" }
+fa1 = { name = "Folding: All Level 1", lua = "action('ExpandAllToLevel1')" }
+fa2 = { name = "Folding: All Level 2", lua = "action('ExpandAllToLevel2')" }
+fa3 = { name = "Folding: All Level 3", lua = "action('ExpandAllToLevel3')" }
+fa4 = { name = "Folding: All Level 4", lua = "action('ExpandAllToLevel4')" }
+fa5 = { name = "Folding: All Level 5", lua = "action('ExpandAllToLevel5')" }
 
 # Multiple carets and selection ranges
 # = { name = "Add/Remove Caret", command = "Add/Remove Caret", shortcut = "option+shift+click" }
@@ -165,7 +222,6 @@ tab = { name = "Toggle Anonymous Bookmark", command = "Toggle Anonymous Bookmark
 tbd = { name = "Toggle Bookmark with Digit", command = "Toggle Bookmark with Digit", shortcut = "ctrl+shift" }
 tbm = { name = "Toggle Bookmark with Mnemonic", command = "Toggle Bookmark with Mnemonic", shortcut = "option+f3" }
 sab = { name = "Show All Bookmarks", command = "Show All Bookmarks", shortcut = "cmd+f3" }
-gbd = { name = "Go to Bookmark with Digit", command = "Go to Bookmark with Digit", shortcut = "ctrl" }
 mb = { name = "Show Mnemonic Bookmarks", command = "Show Mnemonic Bookmarks", shortcut = "cmd+option+f3" }
 no = { name = "Next Occurrence", command = "Next Occurrence", shortcut = "cmd+option+down" }
 po = { name = "Previous Occurrence", command = "Previous Occurrence", shortcut = "cmd+option+up" }
@@ -176,26 +232,75 @@ st = { name = "Search: Types", shortcut = "cmd+o"}
 sf = { name = "Search: Files", shortcut = "cmd+shift+o"}
 sy = { name = "Search: Symbols", shortcut = "cmd+option+o"}
 sa = { name = "Search: All", shortcut = "cmd+shift+a" }
-sx = { name = "Search: Text", shortcut = "cmd+shift+option+e" }
-
+sc = { name = "Search: Content Text", shortcut = "cmd+shift+option+e" }
 
 # Goto
 gl = { name = "Go to Line/Column...", command = "Go to Line/Column...", shortcut = "cmd+l" }
+gk = { name = "Goto Class", lua = "action('GotoClass')" }
+gpx = { name = "Goto Problem: Next", command = "Next Highlighted Error", shortcut = "f2" }
+gpv = { name = "Goto Problem: Previous", command = "Previous Highlighted Error", shortcut = "shift+f2" }
 gd = { name = "Goto Declaration or Usages", command = "Go to Declaration or Usages", shortcut = "cmd+b" }
 gy = { name = "Goto Type Declaration", command = "Go to Type Declaration", shortcut = "cmd+shift+b" }
-gm = { name = "Goto Super Method", command = "Go to Super Method", shortcut = "cmd+u" }
+gsm = { name = "Goto Super Method", command = "Go to Super Method", shortcut = "cmd+u" }
+gm = { name = "Goto Menu", lua = "action('GoToMenu')" }
 gi = { name = "Goto Implementation(s)", command = "Go to Implementation(s)", shortcut = "cmd+option+b" }
 gs = { name = "Goto Symbol", command = "Go to Symbol...", shortcut = "cmd+option+o" }
 gt = { name = "Goto Test", command = "Go to Test", shortcut = "cmd+shift+t" }
+gcv = { name = "Goto Change: Previous", command = "Previous Change", shortcut = "ctrl+option+shift+up" }
+gcx = { name = "Goto Change: Next", command = "Next Change", shortcut = "ctrl+option+shift+down" }
+"gb`" = { name = "Go to Bookmark with Digit", command = "Go to Bookmark with Digit", shortcut = "ctrl" }
+gb0 = { name = "Goto Bookmark: 0", action = "action('GotoBookmark0')" }
+gb1 = { name = "Goto Bookmark: 1", action = "action('GotoBookmark1')" }
+gb2 = { name = "Goto Bookmark: 2", action = "action('GotoBookmark2')" }
+gb3 = { name = "Goto Bookmark: 3", action = "action('GotoBookmark3')" }
+gb4 = { name = "Goto Bookmark: 4", action = "action('GotoBookmark4')" }
+gb5 = { name = "Goto Bookmark: 5", action = "action('GotoBookmark5')" }
+gb6 = { name = "Goto Bookmark: 6", action = "action('GotoBookmark6')" }
+gb7 = { name = "Goto Bookmark: 7", action = "action('GotoBookmark7')" }
+gb8 = { name = "Goto Bookmark: 8", action = "action('GotoBookmark8')" }
+gb9 = { name = "Goto Bookmark: 9", action = "action('GotoBookmark9')" }
+gba = { name = "Goto Bookmark: A", action = "action('GotoBookmarkA')" }
+gbb = { name = "Goto Bookmark: B", action = "action('GotoBookmarkB')" }
+gbc = { name = "Goto Bookmark: C", action = "action('GotoBookmarkC')" }
+gbd = { name = "Goto Bookmark: D", action = "action('GotoBookmarkD')" }
+gbe = { name = "Goto Bookmark: E", action = "action('GotoBookmarkE')" }
+gbf = { name = "Goto Bookmark: F", action = "action('GotoBookmarkF')" }
+gbg = { name = "Goto Bookmark: G", action = "action('GotoBookmarkG')" }
+gbh = { name = "Goto Bookmark: H", action = "action('GotoBookmarkH')" }
+gbi = { name = "Goto Bookmark: I", action = "action('GotoBookmarkI')" }
+gbj = { name = "Goto Bookmark: J", action = "action('GotoBookmarkJ')" }
+gbk = { name = "Goto Bookmark: K", action = "action('GotoBookmarkK')" }
+gbl = { name = "Goto Bookmark: L", action = "action('GotoBookmarkL')" }
+gbm = { name = "Goto Bookmark: M", action = "action('GotoBookmarkM')" }
+gbn = { name = "Goto Bookmark: N", action = "action('GotoBookmarkN')" }
+gbo = { name = "Goto Bookmark: O", action = "action('GotoBookmarkO')" }
+gbp = { name = "Goto Bookmark: P", action = "action('GotoBookmarkP')" }
+gbq = { name = "Goto Bookmark: Q", action = "action('GotoBookmarkQ')" }
+gbr = { name = "Goto Bookmark: R", action = "action('GotoBookmarkR')" }
+gbs = { name = "Goto Bookmark: S", action = "action('GotoBookmarkS')" }
+gbt = { name = "Goto Bookmark: T", action = "action('GotoBookmarkT')" }
+gbu = { name = "Goto Bookmark: U", action = "action('GotoBookmarkU')" }
+gbv = { name = "Goto Bookmark: V", action = "action('GotoBookmarkV')" }
+gbw = { name = "Goto Bookmark: W", action = "action('GotoBookmarkW')" }
+gbx = { name = "Goto Bookmark: X", action = "action('GotoBookmarkX')" }
+gby = { name = "Goto Bookmark: Y", action = "action('GotoBookmarkY')" }
+gbz = { name = "Goto Bookmark: Z", action = "action('GotoBookmarkZ')" }
+
+# Usages
 uh = { name = "Usages: Highlight in File", command = "Highlight Usages in File", shortcut = "cmd+shift+f7" }
 uf = { name = "Usages: Find", command = "Find Usages", shortcut = "option+f7" }
 us = { name = "Usages: Show", command = "Show Usages", shortcut = "cmd+option+f7" }
 
+# Git (VCS)
+go = { name = "Git: Operations", command = "VCS Operations Popup...", shortcut = "ctrl+v" }
+gc = { name = "Git: Commit...", command = "Commit...", shortcut = "cmd+k" }
+gu = { name = "Git: Update Project", command = "Update Project", shortcut = "cmd+t" }
+gr = { name = "Git: Rollback", command = "Rollback", shortcut = "cmd+option+z" }
+gp = { name = "Git: Push...", command = "Push...", shortcut = "cmd+shift+k" }
+
 # Code analysis
 ia = { name = "Intention Actions", command = "Show Intention Actions", shortcut = "option+enter" }
 ed = { name = "Error Description", command = "Error Description", shortcut = "cmd+f1" }
-ex = { name = "Error: Next", command = "Next Highlighted Error", shortcut = "f2" }
-ev = { name = "Error: Previous", command = "Previous Highlighted Error", shortcut = "shift+f2" }
 ri = { name = "Run Inspection by Name...", command = "Run Inspection by Name...", shortcut = "cmd+option+shift+i" }
 
 # Run and debug
@@ -236,14 +341,6 @@ ip = { name = "Introduce Parameter...", command = "Introduce Parameter...", shor
 iv = { name = "Introduce Variable...", command = "Introduce Variable...", shortcut = "cmd+option+v" }
 sfd = { name = "Safe Delete...", command = "Safe Delete...", shortcut = "cmd+delete" }
 
-# Global VCS actions
-vo = { name = "VCS Operations Popup...", command = "VCS Operations Popup...", shortcut = "ctrl+v" }
-vc = { name = "VCS: Commit...", command = "Commit...", shortcut = "cmd+k" }
-vu = { name = "VCS: Update Project", command = "Update Project", shortcut = "cmd+t" }
-vr = { name = "VCS: Rollback", command = "Rollback", shortcut = "cmd+option+z" }
-vp = { name = "VCS: Push...", command = "Push...", shortcut = "cmd+shift+k" }
-vv = { name = "VCS: Previous Change", command = "Previous Change", shortcut = "ctrl+option+shift+up" }
-vx = { name = "VCS: Next Change", command = "Next Change", shortcut = "ctrl+option+shift+down" }
 
 # Diff Viewer
 dc = { name = "Diff: Compare Files", command = "Compare Files", shortcut = "cmd+d" }
@@ -274,3 +371,8 @@ pv = { name = "Panel: Services", command = "Show Services window", shortcut = "c
 pg = { name = "Panel: Git", command = "Show Version Control window", shortcut = "cmd+9" }
 pc = { name = "Panl: Commit", command = "Show Commit window", shortcut = "cmd+0" }
 pt = { name = "Panel: Terminal", command = "Show Terminal window", shortcut = "opt+f12" }
+
+# Zoom
+zo = { name = "Zoom Out", lua = "action('ZoomOutIdeAction')" }
+zi = { name = "Zoom In", lua = "action('ZoomInIdeAction')" }
+zm = { name = "Zen Mode", lua = "action('ToggleZenMode')" }
