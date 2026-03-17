@@ -2,6 +2,15 @@
 name = "Warp"
 url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 
+[config.lua]
+# This works by modifying keybindings.yml
+init = """
+function command(cmd)
+  let keybind = to_synthetic_keybind(cmd)
+end
+"""
+
+
 [chords]
 # Warp Essentials
 lcp = { name = "Launch Configuration Palette", command = "workspace:toggle_launch_config_palette", shortcut = "ctrl+cmd+l" }
@@ -12,6 +21,10 @@ ft = { name = "Focus Terminal", command = "terminal:focus_input", shortcut = "cm
 ws = { name = "Warpify Shell", command = "terminal:trigger_subshell_bootstrap", shortcut = "ctrl+i" }
 fs = { name = "File Search", shortcut = "cmd+o" }
 cp = { name = "Open Command Palette", command = "terminal:open_command_palette", shortcut = "cmd+p" }
+
+# Find
+fv = { name = "Find: Next Match", lua = "command('editor:previous_find_match')" }
+fx = { name = "Find: Next Match", lua = "command('editor:next_find_match')" }
 
 # Blocks
 co = { name = "Copy Command Output", command = "terminal:copy_outputs", shortcut = "alt+shift+cmd+c" }
@@ -44,8 +57,12 @@ sb = { name = "Scroll to Bottom", command = "terminal:scroll_end", shortcut = "s
 mr = { name = "Mouse Reporting", command = "workspace:toggle_mouse_reporting" }
 td = { name = "Duplicate Current Tab", command = "workspace:duplicate_tab", shortcut = "shift+cmd+d" }
 tn = { name = "New Tab", command = "workspace:new_tab", shortcut = "cmd+t" }
-tc = { name = "Close Current Tab", command = "workspace:close_current_tab", shortcut = "cmd+w" }
-to = { name = "Reopen Closed Tab", command = "workspace:reopen_closed_tab", shortcut = "shift+cmd+t" }
+
+# Tabs
+tq = { name = "Tab: Quit", command = "workspace:close_current_tab", shortcut = "cmd+w" }
+to = { name = "Tab: Open Closed", command = "workspace:reopen_closed_tab", shortcut = "shift+cmd+t" }
+tqr = { name = "Tab: Quit to Right", lua = "command('workspace:close_tabs_right_active_tab')", shortcut = "shift+cmd+t" }
+tqo = { name = "Tab: Quit Others", lua = "command('workspace:close_other_tabs')", shortcut = "shift+cmd+t" }
 t1 = { name = "Switch to tab 1", command = "workspace:switch_tab:0", shortcut = "cmd+1" }
 t2 = { name = "Switch to tab 2", command = "workspace:switch_tab:1", shortcut = "cmd+2" }
 t3 = { name = "Switch to tab 3", command = "workspace:switch_tab:2", shortcut = "cmd+3" }
@@ -64,14 +81,16 @@ sn = { name = "Split: North", command = "pane_group:focus_up", shortcut = "ctrl+
 se = { name = "Split: East", command = "pane_group:focus_right", shortcut = "ctrl+alt+right" }
 ss = { name = "Split: South", command = "pane_group:focus_down", shortcut = "ctrl+alt+down" }
 sw = { name = "Split: West", command = "pane_group:focus_left", shortcut = "ctrl+alt+left" }
-su = { name = "Split: Up", command = "pane_group:add_up", shortcut = "ctrl+alt+cmd+u" }
+su = { name = "Split: Up", lua = "command('pane_group:add_up')" }
 sd = { name = "Split: Down", command = "pane_group:add_down", shortcut = "ctrl+alt+cmd+d" }
 sr = { name = "Split: Right", command = "pane_group:add_right", shortcut = "cmd+d" }
-sl = { name = "Split: Right", command = "pane_group:add_left" }
+sl = { name = "Split: Left", lua = "command('pane_group:add_left')" }
+
+# Zoom
 zi = { name = "Increase font size", command = "window:increase_font_size", shortcut = "cmd+=" }
 zo = { name = "Decrease font size", command = "window:decrease_font_size", shortcut = "cmd+-" }
-zr = { name = "Reset font size", command = "window:reset_font_size", shortcut = "cmd+0" }
-zt = { name = "Zoom: Toggle", command = "pane_group:toggle_zoom_pane", shortcut = "ctrl+alt+cmd+z" }
+zr = { name = "Reset font size", lua = "command('window:reset_font_size')" }
+zf = { name = "Zoom: Full Screen", lua = "command('root_view:toggle_fullscreen')" }
 
 # Panels
 pa = { name = "Panel: AI", command = "workspace:toggle_ai_panel", shortcut = "ctrl+`" }

@@ -143,7 +143,7 @@ pgs = { name = "Page: Settings", lua = "command('workbench.action.openSettings')
 # Editor
 ea = { name = "Editor: Actions", lua = "command('editor.action.quickFix')", shortcut = "cmd+." }
 es = { name = "Editor: Solutions", lua = "command('editor.action.quickFix')", shortcut = "cmd+." }
-ef = { name = "Editor: Focus", shortcut = "cmd+k e" }
+ef = { name = "Editor: Focus", lua = "command('workbench.action.focusActiveEditorGroup')" }
 ep = { name = "Editor: Pin", lua = "command('workbench.action.pinEditor')", shortcut = "cmd+k shift+enter" }
 eu = { name = "Editor: Unpin", lua = "command('workbench.action.unpinEditor')", shortcut = "cmd+k shift+enter" }
 esa = { name = "Editor: Show All", lua = "command('workbench.action.showAllEditors')", shortcut = "alt+cmd+tab" }
@@ -226,6 +226,7 @@ ws = { name = "Window: Switch", lua = "command('workbench.action.switchWindow')"
 wt = { name = "Window: Terminal", lua = "command('workbench.action.terminal.newInNewWindow')", shortcut = "ctrl+shift+alt+`" }
 
 # Zoom
+zf = { name = "Zoom: Full Screen", lua = "command('workbench.action.toggleFullScreen')", shortcut = "ctrl+cmd+f" }
 zi = { name = "Zoom In", lua = "command('workbench.action.zoomIn')", shortcut = "cmd+NumpadAdd" }
 zo = { name = "Zoom Out", lua = "command('workbench.action.zoomOut')", shortcut = "cmd+NumpadSubtract" }
 zr = { name = "Zoom Reset", lua = "command('workbench.action.zoomReset')", shortcut = "cmd+Numpad0" }
@@ -389,7 +390,6 @@ foev = { name = "workbench.files.action.focusOpenEditorsView", lua = "command('w
 
 # fs = [
 #   { name = "Format Selection", lua = "command('editor.action.formatSelection')", shortcut = "cmd+k cmd+f" },
-#   { name = "Full Screen", lua = "command('workbench.action.toggleFullScreen')", shortcut = "ctrl+cmd+f" }
 # ]
 
 fsb = { name = "Focus Side Bar", lua = "command('workbench.action.focusSideBar')", shortcut = "cmd+0" }

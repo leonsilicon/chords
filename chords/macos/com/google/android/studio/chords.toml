@@ -1,2 +1,7 @@
 [config]
 extends = "com.jetbrains.intellij"
+
+[config.lua]
+init = '''
+ide = "/Applications/Android Studio.app/Contents/MacOS/studio"
+'''
