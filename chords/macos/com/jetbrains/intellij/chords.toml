@@ -15,7 +15,7 @@ fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a
 fp = { name = "File: Path", shortcut = "cmd+shift+c" }
 fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
-fc = { name = "File: Here", command = "New in This Directory", shortcut = "ctrl+option+n" }
+fh = { name = "File: Here", command = "New in This Directory", shortcut = "ctrl+option+n" }
 fd = { name = "File: Directory", lua = "command('explorer.newFolder')" }
 ft = { name = "File: Trash", shortcut = "cmd+delete" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
