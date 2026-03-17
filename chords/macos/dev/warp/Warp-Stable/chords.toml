@@ -6,7 +6,7 @@ url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 # This works by modifying keybindings.yml
 init = """
 function command(cmd)
-  let keybind = to_synthetic_keybind(cmd)
+  # keybind = to_synthetic_keybind(cmd)
 end
 """
 
