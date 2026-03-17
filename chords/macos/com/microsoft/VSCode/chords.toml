@@ -16,12 +16,12 @@ function command(cmd)
     return false
   end
 
-  tap("cmd+shift+f17")
-
   return atomic_write(
     dir .. "/request.json",
     '{"commandId":"' .. cmd .. '"}'
   )
+  os.remove(dir .. "/response.json")
+  tap("cmd+shift+f17")
 end
 
 function atomic_write(path, content)
