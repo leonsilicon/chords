@@ -3,7 +3,7 @@ name = "IntelliJ IDEA"
 
 [config.lua]
 init = '''
-ide = ide or "idea"
+ide = "/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"
 
 function action(command_name)
   local tmp = os.getenv("TMPDIR") or "/tmp"
