@@ -1,3 +1,7 @@
+[config]
+name = "dwmac"
+
+[chords]
 ",q" = { name = "Quit", shell = "dwmac close"}
 ",c" = { name = "Close All Windows But Current", shell = "dwmac close-all-windows-but-current"}
 ",x" = { name = "Next", shell = "dwmac focus next"}
