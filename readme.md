@@ -27,10 +27,10 @@ o = Before
 
 k = Back
 
-v for Previous
+v for Prev
 x for Next
 
-g for Go (to)
+g for Goto
 
 # Other
 
@@ -49,7 +49,6 @@ q = Quit (instead of Close)
 `s` = `S`plit (Split in Intellij, Editor Group in VSCode, Pane in Warp)
 `t` = `T`ab/`T`erminal
 `g` = `G`oto/`G`it
-`w` = `W`indow
 
 ## Universal Shortcuts
 

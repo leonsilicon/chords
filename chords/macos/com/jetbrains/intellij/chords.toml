@@ -65,7 +65,7 @@ end
 # Editor
 ea = { name = "Editor: Actions", lua = "action('QuickActions')" }
 es = { name = "Editor: Solutions", lua = "action('QuickFixes')" }
-ef = { name = "Editor: Focus", lua = "action('FocusEditor')" }
+ef = { name = "Editor: Focus", shortcut = "esc" }
 ep = { name = "Editor: Pin", lua = "action('PinActiveEditorTab')" }
 eu = { name = "Editor: Unpin", lua = "action('PinActiveTabToggle')" }
 eq = { name = "Editor: Quit", lua = "action('CloseEditor')" }

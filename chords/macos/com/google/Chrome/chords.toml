@@ -1,5 +1,8 @@
 # https://support.google.com/chrome/answer/157179 > Mac
+[config]
+name = "Google Chrome"
 
+[chords]
 # Window
 wn = { name = "Window: New", command = "Open a new window", shortcut = "cmd+n"}
 wi = { name = "Window: Incognito", command = "Open a new window in Incognito mode", shortcut = "cmd+shift+n"}
