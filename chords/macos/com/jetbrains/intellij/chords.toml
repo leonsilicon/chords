@@ -1,6 +1,66 @@
 [config]
 name = "IntelliJ IDEA"
 
+[config.lua]
+init = '''
+ide = ide or "idea"
+
+function action(command_name)
+  local tmp = os.getenv("TMPDIR") or "/tmp"
+  local id = tostring(os.time()) .. "_" .. tostring(math.random(100000, 999999))
+  local script_path = tmp .. "/jetbrains_action_" .. id .. ".groovy"
+  local result_path = tmp .. "/jetbrains_action_" .. id .. ".txt"
+
+  local file = assert(io.open(script_path, "w"))
+  file:write(([[
+import com.intellij.openapi.actionSystem.ActionManager
+
+def actionManager = ActionManager.getInstance()
+def resultFile = new File("%s")
+
+IDE.application.invokeAndWait {
+  try {
+    def action = actionManager.getAction("%s")
+    if (action == null) {
+      resultFile.text = "0"
+      return
+    }
+
+    def result = actionManager.tryToExecute(action, null, null, null, false)
+    resultFile.text = result.rejected ? "0" : "1"
+  } catch (Throwable ignored) {
+    resultFile.text = "0"
+  }
+}
+]]):format(
+    result_path
+      :gsub("\\", "\\\\")
+      :gsub('"', '\\"')
+      :gsub("\r", "\\r")
+      :gsub("\n", "\\n"),
+    tostring(command_name)
+      :gsub("\\", "\\\\")
+      :gsub('"', '\\"')
+      :gsub("\r", "\\r")
+      :gsub("\n", "\\n")
+  ))
+  file:close()
+
+  os.execute(
+    "'" .. tostring(ide):gsub("'", "'\\''") .. "' ideScript '" .. script_path:gsub("'", "'\\''") .. "'"
+  )
+
+  local result_file = io.open(result_path, "r")
+  local result = result_file and result_file:read("*a") or ""
+  if result_file then result_file:close() end
+
+  os.remove(script_path)
+  os.remove(result_path)
+
+  return result == "1"
+end
+'''
+
 [chords]
 # Find
 fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
@@ -16,7 +76,7 @@ fp = { name = "File: Path", shortcut = "cmd+shift+c" }
 fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
 fh = { name = "File: Here", command = "New in This Directory", shortcut = "ctrl+option+n" }
-fd = { name = "File: Directory", lua = "command('explorer.newFolder')" }
+fd = { name = "File: Directory", lua = "action('NewDir')" }
 ft = { name = "File: Trash", shortcut = "cmd+delete" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
 fvs = { name = "File: View Structure", command = "File Structure", shortcut = "cmd+f12" }
