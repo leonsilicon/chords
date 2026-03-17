@@ -9,13 +9,22 @@ rvf = { name = "Reveal in Finder", shortcut = "option+f1 9" }
 rvt = { name = "Reveal in Terminal", shortcut = "option+f1 0" }
 set = { name = "Window: Settings", command = "Settings...", shortcut = "cmd+," }
 
-# Files
+# Find
+fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
+fr = { name = "Find and Replace", command = "Replace...", shortcut = "cmd+r" }
+fx = { name = "Find: Next", command = "Find Next / Move to Next Occurrence", shortcut = "cmd+g" }
+fv = { name = "Find: Previous", command = "Find Previous / Move to Previous Occurrence", shortcut = "cmd+shift+g" }
+fg = { name = "Find Globally", command = "Find in Files...", shortcut = "cmd+shift+f" }
+frg = { name = "Find and Replace Globally", command = "Replace in Files...", shortcut = "cmd+shift+r" }
+fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a" }
+
+# File Actions
 fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
-fn = { name = "File: New", shortcut = "ctrl+option+n f enter" }
+fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
+fnf = { name = "File: New File", shortcut = "ctrl+option+n f enter" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
 fos = { name = "File: Open Structure", command = "File Structure", shortcut = "cmd+f12" }
 
-fd = { name = "New in This Directory", command = "New in This Directory", shortcut = "ctrl+option+n" }
 bp = { name = "Build Project", command = "Build Project", shortcut = "cmd+f9" }
 br = { name = "Build: Rebuild", command = "Rebuild", shortcut = "cmd+shift+f9" }
 
@@ -40,48 +49,13 @@ os = { name = "Open Source", command = "Open Source in New Window", shortcut = "
 fsi = { name = "Font Size: Increase", command = "Increase Font Size in All Editors", shortcut = "ctrl+shift+." }
 fsd = { name = "Font Size: Decrease", command = "Decrease Font Size in All Editors", shortcut = "ctrl+shift+," }
 
-# Caret navigation
-# = { name = "Move Caret to Previous Word", command = "Move Caret to Previous Word", shortcut = "option+left" }
-# = { name = "Move Caret to Next Word", command = "Move Caret to Next Word", shortcut = "option+right" }
-# = { name = "Move Caret to Line Start", command = "Move Caret to Line Start", shortcut = "cmd+left" }
-# = { name = "Move Caret to Line End", command = "Move Caret to Line End", shortcut = "cmd+right" }
-# = { name = "Move Caret to Matching Brace", command = "Move Caret to Matching Brace", shortcut = "ctrl+m" }
-# = { name = "Move Caret to Code Block Start", command = "Move Caret to Code Block Start", shortcut = "cmd+option+[" }
-# = { name = "Move Caret to Code Block End", command = "Move Caret to Code Block End", shortcut = "cmd+option+]" }
-# = { name = "Move Caret to Page Top", command = "Move Caret to Page Top", shortcut = "cmd+pageup" }
-# = { name = "Move Caret to Page Bottom", command = "Move Caret to Page Bottom", shortcut = "cmd+pagedown" }
-pgu = { name = "Page Up", command = "Page Up", shortcut = "pageup" }
-pgd = { name = "Page Down", command = "Page Down", shortcut = "pagedown" }
-# = { name = "Move Caret to Text Start", command = "Move Caret to Text Start", shortcut = "cmd+home" }
-# = { name = "Move Caret to Text End", command = "Move Caret to Text End", shortcut = "cmd+end" }
-
-# Select text
-# sA = { name = "Select All", command = "Select All", shortcut = "cmd+a" }
-# = { name = "Left with Selection", command = "Left with Selection", shortcut = "shift+left" }
-# = { name = "Right with Selection", command = "Right with Selection", shortcut = "shift+right" }
-# = { name = "Move Caret to Previous Word with Selection", command = "Move Caret to Previous Word with Selection", shortcut = "option+shift+left" }
-# = { name = "Move Caret to Next Word with Selection", command = "Move Caret to Next Word with Selection", shortcut = "option+shift+right" }
-# = { name = "Move Caret to Line Start with Selection", command = "Move Caret to Line Start with Selection", shortcut = "cmd+shift+left" }
-# = { name = "Move Caret to Line End with Selection", command = "Move Caret to Line End with Selection", shortcut = "cmd+shift+right" }
-# = { name = "Up with Selection", command = "Up with Selection", shortcut = "shift+up" }
-# = { name = "Down with Selection", command = "Down with Selection", shortcut = "shift+down" }
-# = { name = "Move Caret to Code Block Start with Selection", command = "Move Caret to Code Block Start with Selection", shortcut = "cmd+option+shift+[" }
-# = { name = "Move Caret to Code Block End with Selection", command = "Move Caret to Code Block End with Selection", shortcut = "cmd+option+shift+]" }
-# = { name = "Move Caret to Page Top with Selection", command = "Move Caret to Page Top with Selection", shortcut = "cmd+shift+pageup" }
-# = { name = "Move Caret to Page Bottom with Selection", command = "Move Caret to Page Bottom with Selection", shortcut = "cmd+shift+pagedown" }
-# = { name = "Page Up with Selection", command = "Page Up with Selection", shortcut = "shift+pageup" }
-# = { name = "Page Down with Selection", command = "Page Down with Selection", shortcut = "shift+pagedown" }
-# = { name = "Move Caret to Text Start with Selection", command = "Move Caret to Text Start with Selection", shortcut = "cmd+shift+home" }
-# = { name = "Move Caret to Text End with Selection", command = "Move Caret to Text End with Selection", shortcut = "cmd+shift+end" }
-# = { name = "Extend Selection", command = "Extend Selection", shortcut = "option+up" }
-# = { name = "Shrink Selection", command = "Shrink Selection", shortcut = "option+down" }
-
 # Code Folding
-ep = { name = "Expand", command = "Expand", shortcut = "cmd+NumpadAdd" }
-cl = { name = "Collapse", command = "Collapse", shortcut = "cmd+NumpadSubtract" }
-er = { name = "Expand Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
-cr = { name = "Collapse Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
-ea = { name = "Expand All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
+ff = { name = "Folding: Fold", command = "Collapse", shortcut = "cmd+NumpadSubtract" }
+ffa = { name = "Folding: Fold All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
+ffr = { name = "Folding: Fold Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
+fu = { name = "Folding: Unfold", command = "Expand", shortcut = "cmd+NumpadAdd" }
+fur = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
+fua = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
 ca = { name = "Collapse All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
 fs = { name = "Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 
@@ -148,14 +122,6 @@ sy = { name = "Search: Symbols", shortcut = "cmd+option+o"}
 sa = { name = "Search: All", shortcut = "cmd+shift+a" }
 sx = { name = "Search: Text", shortcut = "cmd+shift+option+e" }
 
-# Find
-fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
-fr = { name = "Find and Replace", command = "Replace...", shortcut = "cmd+r" }
-fx = { name = "Find: Next", command = "Find Next / Move to Next Occurrence", shortcut = "cmd+g" }
-fv = { name = "Find: Previous", command = "Find Previous / Move to Previous Occurrence", shortcut = "cmd+shift+g" }
-fg = { name = "Find Globally", command = "Find in Files...", shortcut = "cmd+shift+f" }
-frg = { name = "Find and Replace Globally", command = "Replace in Files...", shortcut = "cmd+shift+r" }
-fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a" }
 
 # Goto
 gl = { name = "Go to Line/Column...", command = "Go to Line/Column...", shortcut = "cmd+l" }

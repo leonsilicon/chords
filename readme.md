@@ -32,11 +32,22 @@ x for Next
 
 g for Go (to)
 
+# Other
+
+q = Quit (instead of Close)
+
+## Browsers
+`p` = `P`age
+
 ## IDEs
 
 `f` = `F`ile/`F`ind
+  - `ff` = Folding: Fold
+  - `fu` = Folding: Unfold
 `p` = `P`anel (Tool Window in IntelliJ, View in VSCode)
+  `pg` = `P`age
 `s` = `S`plit (Split in Intellij, Editor Group in VSCode, Pane in Warp)
+`t` = `T`ab/`T`erminal
 
 ## Universal Shortcuts
 

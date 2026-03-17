@@ -1,812 +1,844 @@
-_config = { name = "VSCode" }
+[_config]
+name = "VSCode"
+
+[_config.lua]
+# This script allows us to execute VSCode commands directly via https://marketplace.visualstudio.com/items?itemName=pokey.command-server if it's active, and otherwise falls back to built-in shortcuts.
+init = """
+local h = io.popen("id -u")
+local uid = h:read("*a"):gsub("%s+", "")
+h:close()
+
+local tmp = os.getenv("TMPDIR") or "/tmp"
+local dir = tmp .. "/vscode-command-server-" .. uid
+
+function command(cmd)
+  if os.rename(dir, dir) == nil then
+    return false
+  end
+
+  tap("cmd+shift+f17")
+
+  return atomic_write(
+    dir .. "/request.json",
+    '{"commandId":"' .. cmd .. '"}'
+  )
+end
+
+function atomic_write(path, content)
+  local tmp_path = path .. ".tmp." .. tostring(os.time())
+
+  local f = io.open(tmp_path, "w")
+  if not f then return false end
+
+  local ok = f:write(content)
+  f:close()
+
+  if not ok then
+    os.remove(tmp_path)
+    return false
+  end
+
+  if os.rename(tmp_path, path) == nil then
+    os.remove(tmp_path)
+    return false
+  end
+
+  return true
+end
+"""
 
 # Find
 fi = [
-  { name = "Find", command = "actions.find", shortcut = "cmd+f" },
-  { name = "editor.action.webvieweditor.showFind", command = "editor.action.webvieweditor.showFind", shortcut = "cmd+f" },
-  { name = "workbench.action.browser.showFind", command = "workbench.action.browser.showFind", shortcut = "cmd+f" },
-  { name = "workbench.action.terminal.focusFind", command = "workbench.action.terminal.focusFind", shortcut = "cmd+f" }
+  { name = "Find", lua = "command('actions.find')", shortcut = "cmd+f" },
+  { name = "editor.action.webvieweditor.showFind", lua = "command('editor.action.webvieweditor.showFind')", shortcut = "cmd+f" },
+  { name = "workbench.action.browser.showFind", lua = "command('workbench.action.browser.showFind')", shortcut = "cmd+f" },
+  { name = "workbench.action.terminal.focusFind", lua = "command('workbench.action.terminal.focusFind')", shortcut = "cmd+f" }
 ]
 fv = [
-  { name = "Find Previous", command = "workbench.action.browser.findPrevious", shortcut = "shift+cmd+g" },
-  { name = "workbench.action.terminal.findPrevious", command = "workbench.action.terminal.findPrevious", shortcut = "shift+f3" }
+  { name = "Find Previous", lua = "command('workbench.action.browser.findPrevious')", shortcut = "shift+cmd+g" },
+  { name = "workbench.action.terminal.findPrevious", lua = "command('workbench.action.terminal.findPrevious')", shortcut = "shift+f3" }
 ]
 fx = [
-  { name = "Find Next", command = "workbench.action.browser.findNext", shortcut = "cmd+g" },
-  { name = "workbench.action.terminal.findNext", command = "workbench.action.terminal.findNext", shortcut = "f3" }
+  { name = "Find Next", lua = "command('workbench.action.browser.findNext')", shortcut = "cmd+g" },
+  { name = "workbench.action.terminal.findNext", lua = "command('workbench.action.terminal.findNext')", shortcut = "f3" }
 ]
-fr = { name = "Find and Replace", command = "editor.action.startFindReplaceAction", shortcut = "alt+cmd+f" }
-fg = { name = "Find Globally", command = "workbench.action.findInFiles", shortcut = "shift+cmd+f" }
-frg = { name = "Find Replace Globally", command = "workbench.action.replaceInFiles", shortcut = "shift+cmd+h" }
+fr = { name = "Find and Replace", lua = "command('editor.action.startFindReplaceAction')", shortcut = "alt+cmd+f" }
+fg = { name = "Find Globally", lua = "command('workbench.action.findInFiles')", shortcut = "shift+cmd+f" }
+frg = { name = "Find Replace Globally", lua = "command('workbench.action.replaceInFiles')", shortcut = "shift+cmd+h" }
 
 # File Actions
-fp = { name = "File: Path", command = "copyFilePath", shortcut = "alt+cmd+c" }
-fcp = { name = "File: Current Path", command = "workbench.action.files.copyPathOfActiveFile", shortcut = "cmd+k p" }
-frp = { name = "File: Relative Path", command = "copyRelativeFilePath", shortcut = "shift+alt+cmd+c" }
-fn = { name = "File: New", command = "explorer.newFile" }
-fnu = { name = "File: New Untitled File", command = "workbench.action.files.newUntitledFile", shortcut = "cmd+n" }
-fd = { name = "File: Delete", command = "deleteFile", shortcut = "alt+cmd+backspace" }
-fm = { name = "File: Format", command = "editor.action.formatDocument", shortcut = "shift+alt+f" }
-fe = { name = "File: Expose", command = "workbench.action.files.revealActiveFileInWindows", shortcut = "cmd+k r" }
-fra = { name = "search.action.replaceAllInFile", command = "search.action.replaceAllInFile", shortcut = "shift+cmd+enter" }
-fo = { name = "File: Open", command = "workbench.action.files.openFile", shortcut = "cmd+o" }
-for = { name = "File: Open Recent", command = "workbench.action.openRecent", shortcut = "ctrl+r" }
-fw = { name = "File: Forward", command = "workbench.action.quickOpenNavigateNextInFilePicker", shortcut = "cmd+p" }
-fk = { name = "File: Back", command = "workbench.action.quickOpenNavigatePreviousInFilePicker" , shortcut = "shift+cmd+p" }
-
-
-# History
-hk = { name = "History: Back", command = "workbench.action.navigateBack", shortcut = "BrowserBack" }
-hf = { name = "History: Forward", command = "workbench.action.navigateForward", shortcut = "BrowserForward" }
-
-
-
-# Panels
-pa = { name = "Panel: AI", command = "workbench.panel.chat", shortcut = "ctrl+cmd+i" }
-pd = { name = "Panel: Debug", command = "workbench.view.debug", shortcut = "shift+cmd+d" }
-pe = { name = "Panel: Explorer", command = "workbench.view.explorer", shortcut = "shift+cmd+e" }
-pg = { name = "Panel: Git", command = "workbench.view.scm", shortcut = "ctrl+shift+g" }
-pmd = { name = "Panel: Move Down", command = "views.moveViewDown", shortcut = "cmd+k down" }
-pml = { name = "Panel: Move Left", command = "views.moveViewLeft", shortcut = "cmd+k left" }
-pmr = { name = "Panel: Move Right", command = "views.moveViewRight", shortcut = "cmd+k right" }
-pmu = { name = "Panel: Move Up", command = "views.moveViewUp", shortcut = "cmd+k up" }
-pp = { name = "Panel: Problems", command = "workbench.actions.view.problems", shortcut = "shift+cmd+m" }
-ps = { name = "Panel: Search", command = "workbench.view.search", shortcut = "shift+cmd+f" }
-pm = { name = "Panel: Marketplace", command = "workbench.view.extensions", shortcut = "shift+cmd+x" }
-po = { name = "Panel: Open", command = "workbench.action.quickOpenView", shortcut = "cmd+shift+p v i e w space" }
-pf = { name = "Panel: Forward", command = "workbench.action.quickOpenNavigateNextInViewPicker", shortcut = "ctrl+q" }
-pk = { name = "Panel: Back", command = "workbench.action.quickOpenNavigatePreviousInViewPicker", shortcut = "ctrl+shift+q" }
-pi = { name = "Panel: Info", command = "workbench.action.togglePanel", shortcut = "cmd+j" }
-px = { name = "Panel: Next", command = "workbench.action.focusNextPart", shortcut = "f6" }
-pv = { name = "Panel: Forward", command = "workbench.action.focusPreviousPart", shortcut = "shift+f6" }
-
-# Editor
-ep = { name = "Editor: Pin", command = "workbench.action.pinEditor", shortcut = "cmd+k shift+enter" }
-eu = { name = "Editor: Unpin", command = "workbench.action.unpinEditor", shortcut = "cmd+k shift+enter" }
-esa = { name = "Editor: Show All", command = "workbench.action.showAllEditors", shortcut = "alt+cmd+tab" }
-eo = { name = "Editor: Open Recently Closed", command = "workbench.action.reopenClosedEditor", shortcut = "shift+cmd+t" }
-ev = { name = "Editor: Previous", command = "workbench.action.previousEditorInGroup", shortcut = "cmd+k alt+cmd+left" }
-ex = { name = "Editor: Next", command = "workbench.action.nextEditor", shortcut = "shift+cmd+]" }
-exg = { name = "Editor: Next in Group", command = "workbench.action.nextEditorInGroup", shortcut = "cmd+k alt+cmd+right" }
-ew = { name = "Editor: Forward", command = "workbench.action.quickOpenLeastRecentlyUsedEditorInGroup", shortcut = "ctrl+shift+tab" }
-ek = { name = "Editor: Back", command = "workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup", shortcut = "ctrl+tab" }
-cag = { name = "workbench.action.closeAllGroups", command = "workbench.action.closeAllGroups", shortcut = "cmd+k shift+cmd+w" }
-
-# Search
-sg = { name = "Search Globally", command = "workbench.action.quickOpen", shortcut = "cmd+p" }
-sf = { name = "Search Files", command = "workbench.action.quickOpen", shortcut = "cmd+p" }
-
-# Editor Splits
-sa = { name = "Split: Auto", command = "workbench.action.splitEditor", shortcut = "cmd+backslash" }
-sl = { name = "Split: Left", command = "workbench.action.splitEditorLeft", shortcut = "cmd+k cmd+backslash" }
-sr = { name = "Split: Right", command = "workbench.action.splitEditorRight", shortcut = "cmd+k cmd+backslash" }
-su = { name = "Split Up", command = "workbench.action.splitEditorUp", shortcut = "cmd+k cmd+backslash" }
-sd = { name = "Split: Down", command = "workbench.action.splitEditorDown", shortcut = "cmd+k cmd+backslash" }
-so = { name = "Split: Orthogonal", command = "workbench.action.splitEditorOrthogonal", shortcut = "cmd+k cmd+backslash" }
-si = { name = "Split: Inner", command = "workbench.action.splitEditorInGroup", shortcut = "cmd+k shift+cmd+backslash" }
-sn = { name = "Split: North", command = "workbench.action.focusAboveGroup", shortcut = "cmd+k cmd+up" }
-ss = { name = "Split: South", command = "workbench.action.focusBelowGroup", shortcut = "cmd+k cmd+down" }
-sw = { name = "Split: West", command = "workbench.action.focusLeftGroup", shortcut = "cmd+k cmd+left" }
-se = { name = "Split: East", command = "workbench.action.focusRightGroup", shortcut = "cmd+k cmd+right" }
-s1 = { name = "Split: 1st", command = "workbench.action.focusFirstEditorGroup", shortcut = "cmd+1" }
-s2 = { name = "Split: 2nd", command = "workbench.action.focusSecondEditorGroup", shortcut = "cmd+2" }
-s3 = { name = "Split: 3rd", command = "workbench.action.focusThirdEditorGroup", shortcut = "cmd+3" }
-s4 = { name = "Split: 4th", command = "workbench.action.focusFourthEditorGroup", shortcut = "cmd+4" }
-s5 = { name = "Split: 5th", command = "workbench.action.focusFifthEditorGroup", shortcut = "cmd+5" }
-s6 = { name = "Split: 6th", command = "workbench.action.focusSixthEditorGroup", shortcut = "cmd+6" }
-s7 = { name = "Split: 7th", command = "workbench.action.focusSeventhEditorGroup", shortcut = "cmd+7" }
-s8 = { name = "Split: 8th", command = "workbench.action.focusEighthEditorGroup", shortcut = "cmd+8" }
-sq = { name = "Split: Quit", command = "workbench.action.closeEditorsInGroup", shortcut = "cmd+k w" }
+fp = { name = "File: Path", lua = "command('copyFilePath')", shortcut = "alt+cmd+c" }
+fcp = { name = "File: Current Path", lua = "command('workbench.action.files.copyPathOfActiveFile')", shortcut = "cmd+k p" }
+frp = { name = "File: Relative Path", lua = "command('copyRelativeFilePath')", shortcut = "shift+alt+cmd+c" }
+fn = { name = "File: New", lua = "command('explorer.newFile')" }
+fnu = { name = "File: New Untitled File", lua = "command('workbench.action.files.newUntitledFile')", shortcut = "cmd+n" }
+fd = { name = "File: Delete", lua = "command('deleteFile')", shortcut = "alt+cmd+backspace" }
+fm = { name = "File: Format", lua = "command('editor.action.formatDocument')", shortcut = "shift+alt+f" }
+fl = { name = "File: Locate", lua = "command('workbench.action.files.revealActiveFileInWindows')", shortcut = "cmd+k r" }
+fra = { name = "search.action.replaceAllInFile", lua = "command('search.action.replaceAllInFile')", shortcut = "shift+cmd+enter" }
+fo = { name = "File: Open", lua = "command('workbench.action.files.openFile')", shortcut = "cmd+o" }
+for = { name = "File: Open Recent", lua = "command('workbench.action.openRecent')", shortcut = "ctrl+r" }
+fw = { name = "File: Forward", lua = "command('workbench.action.quickOpenNavigateNextInFilePicker')", shortcut = "cmd+p" }
+fk = { name = "File: Back", lua = "command('workbench.action.quickOpenNavigatePreviousInFilePicker')" , shortcut = "shift+cmd+p" }
 
 # Folding
-fa = { name = "Folding: All", command = "editor.foldAll", shortcut = "cmd+k cmd+0" }
-fae = { name = "Folding: All Except", command = "editor.foldAllExcept", shortcut = "cmd+k cmd+-" }
-ftr = { name = "Folding: Toggle Recursively", command = "editor.toggleFoldRecursively", shortcut = "cmd+k shift+cmd+l" }
-ffs = { name = "Folding: From Selection", command = "editor.createFoldingRangeFromSelection", shortcut = "cmd+k cmd+," }
-fab = { name = "editor.foldAllBlockComments", command = "editor.foldAllBlockComments", shortcut = "cmd+k cmd+/" }
-fam = { name = "Folding: All Marker Regions", command = "editor.foldAllMarkerRegions", shortcut = "cmd+k cmd+8" }
-frc = { name = "Folding: Recursively", command = "editor.foldRecursively", shortcut = "cmd+k cmd+[" }
-ff = { name = "Folding: Fold", command = "editor.fold", shortcut = "alt+cmd+[" }
-fu = { name = "Folding: Unfold", command = "editor.unfold", shortcut = "alt+cmd+]" }
-fua = { name = "Folding: Unfold All", command = "editor.unfoldAll", shortcut = "cmd+k cmd+j" }
-fue = { name = "Folding: Unfold Except", command = "editor.unfoldAllExcept", shortcut = "cmd+k cmd+=" }
-fum = { name = "Folding: Unfold Marker Regions", command = "editor.unfoldAllMarkerRegions", shortcut = "cmd+k cmd+9" }
-fur = { name = "Folding: Unfold Recursively", command = "editor.unfoldRecursively", shortcut = "cmd+k cmd+]" }
-frm = { name = "Folding: Remove Manual", command = "editor.removeManualFoldingRanges", shortcut = "cmd+k cmd+." }
-f1 = { name = "editor.foldLevel1", command = "editor.foldLevel1", shortcut = "cmd+k cmd+1" }
-f2 = { name = "editor.foldLevel8", command = "editor.foldLevel8" }
-f3 = { name = "editor.foldLevel3", command = "editor.foldLevel3", shortcut = "cmd+k cmd+3" }
-f4 = { name = "editor.foldLevel4", command = "editor.foldLevel4", shortcut = "cmd+k cmd+4" }
-f5 = { name = "editor.foldLevel5", command = "editor.foldLevel5", shortcut = "cmd+k cmd+5" }
-f6 = { name = "editor.foldLevel6", command = "editor.foldLevel6", shortcut = "cmd+k cmd+6" }
-f7 = { name = "editor.foldLevel7", command = "editor.foldLevel7", shortcut = "cmd+k cmd+7" }
+## Fold
+ff = { name = "Folding: Fold", lua = "command('editor.fold')", shortcut = "alt+cmd+[" }
+ffa = { name = "Folding: Fold All", lua = "command('editor.foldAll')", shortcut = "cmd+k cmd+0" }
+ffb = { name = "Folding: Fold All Block Comments", lua = "command('editor.foldAllBlockComments')", shortcut = "cmd+k cmd+/" }
+ffr = { name = "Folding: Fold Recursively", lua = "command('editor.foldRecursively')", shortcut = "cmd+k cmd+[" }
+ffe = { name = "Folding: Fold All Except", lua = "command('editor.foldAllExcept')", shortcut = "cmd+k cmd+-" }
+ffm = { name = "Folding: Fold All Marker Regions", lua = "command('editor.foldAllMarkerRegions')", shortcut = "cmd+k cmd+8" }
+
+## Unfold
+fu = { name = "Folding: Unfold", lua = "command('editor.unfold')", shortcut = "alt+cmd+]" }
+fua = { name = "Folding: Unfold All", lua = "command('editor.unfoldAll')", shortcut = "cmd+k cmd+j" }
+fur = { name = "Folding: Unfold Recursively", lua = "command('editor.unfoldRecursively')", shortcut = "cmd+k cmd+]" }
+fue = { name = "Folding: Unfold All Except", lua = "command('editor.unfoldAllExcept')", shortcut = "cmd+k cmd+=" }
+fum = { name = "Folding: Unfold All Marker Regions", lua = "command('editor.unfoldAllMarkerRegions')", shortcut = "cmd+k cmd+9" }
+
+ffs = { name = "Folding: From Selection", lua = "command('editor.createFoldingRangeFromSelection')", shortcut = "cmd+k cmd+," }
+frm = { name = "Folding: Remove Manual", lua = "command('editor.removeManualFoldingRanges')", shortcut = "cmd+k cmd+." }
+ftr = { name = "Folding: Toggle Recursively", lua = "command('editor.toggleFoldRecursively')", shortcut = "cmd+k shift+cmd+l" }
+f1 = { name = "editor.foldLevel1", lua = "command('editor.foldLevel1')", shortcut = "cmd+k cmd+1" }
+f2 = { name = "editor.foldLevel2", lua = "command('editor.foldLevel2')", shortcut = "cmd+k cmd+2" }
+f3 = { name = "editor.foldLevel3", lua = "command('editor.foldLevel3')", shortcut = "cmd+k cmd+3" }
+f4 = { name = "editor.foldLevel4", lua = "command('editor.foldLevel4')", shortcut = "cmd+k cmd+4" }
+f5 = { name = "editor.foldLevel5", lua = "command('editor.foldLevel5')", shortcut = "cmd+k cmd+5" }
+f6 = { name = "editor.foldLevel6", lua = "command('editor.foldLevel6')", shortcut = "cmd+k cmd+6" }
+f7 = { name = "editor.foldLevel7", lua = "command('editor.foldLevel7')", shortcut = "cmd+k cmd+7" }
+
+# History
+hk = { name = "History: Back", lua = "command('workbench.action.navigateBack')", shortcut = "BrowserBack" }
+hf = { name = "History: Forward", lua = "command('workbench.action.navigateForward')", shortcut = "BrowserForward" }
+
+# Panels
+pa = { name = "Panel: AI", lua = "command('workbench.panel.chat')", shortcut = "ctrl+cmd+i" }
+pd = { name = "Panel: Debug", lua = "command('workbench.view.debug')", shortcut = "shift+cmd+d" }
+pe = { name = "Panel: Explorer", lua = "command('workbench.view.explorer')", shortcut = "shift+cmd+e" }
+pg = { name = "Panel: Git", lua = "command('workbench.view.scm')", shortcut = "ctrl+shift+g" }
+pmd = { name = "Panel: Move Down", lua = "command('views.moveViewDown')", shortcut = "cmd+k down" }
+pml = { name = "Panel: Move Left", lua = "command('views.moveViewLeft')", shortcut = "cmd+k left"}
+pmr = { name = "Panel: Move Right", lua = "command('views.moveViewRight')", shortcut = "cmd+k right" }
+pmu = { name = "Panel: Move Up", lua = "command('views.moveViewUp')", shortcut = "cmd+k up" }
+pp = { name = "Panel: Problems", lua = "command('workbench.actions.view.problems')", shortcut = "shift+cmd+m" }
+ps = { name = "Panel: Search", lua = "command('workbench.view.search')", shortcut = "shift+cmd+f" }
+pm = { name = "Panel: Marketplace", lua = "command('workbench.view.extensions')", shortcut = "shift+cmd+x" }
+po = { name = "Panel: Open", lua = "command('workbench.action.quickOpenView')", shortcut = "cmd+shift+p v i e w space" }
+pf = { name = "Panel: Forward", lua = "command('workbench.action.quickOpenNavigateNextInViewPicker')", shortcut = "ctrl+q" }
+pk = { name = "Panel: Back", lua = "command('workbench.action.quickOpenNavigatePreviousInViewPicker')", shortcut = "ctrl+shift+q" }
+pi = { name = "Panel: Info", lua = "command('workbench.action.togglePanel')", shortcut = "cmd+j" }
+px = { name = "Panel: Next", lua = "command('workbench.action.focusNextPart')", shortcut = "f6" }
+pv = { name = "Panel: Forward", lua = "command('workbench.action.focusPreviousPart')", shortcut = "shift+f6" }
+pgk = { name = "Page: Keybindings", lua = "command('workbench.action.openGlobalKeybindings')", shortcut = "cmd+k cmd+s" }
+pgs = { name = "Page: Settings", lua = "command('workbench.action.openSettings')", shortcut = "cmd+," }
+
+# Editor
+ep = { name = "Editor: Pin", lua = "command('workbench.action.pinEditor')", shortcut = "cmd+k shift+enter" }
+eu = { name = "Editor: Unpin", lua = "command('workbench.action.unpinEditor')", shortcut = "cmd+k shift+enter" }
+esa = { name = "Editor: Show All", lua = "command('workbench.action.showAllEditors')", shortcut = "alt+cmd+tab" }
+eo = { name = "Editor: Open Recently Closed", lua = "command('workbench.action.reopenClosedEditor')", shortcut = "shift+cmd+t" }
+ev = { name = "Editor: Previous", lua = "command('workbench.action.previousEditorInGroup')", shortcut = "cmd+k alt+cmd+left" }
+ex = { name = "Editor: Next", lua = "command('workbench.action.nextEditor')", shortcut = "shift+cmd+]" }
+exg = { name = "Editor: Next in Group", lua = "command('workbench.action.nextEditorInGroup')", shortcut = "cmd+k alt+cmd+right" }
+ew = { name = "Editor: Forward", lua = "command('workbench.action.quickOpenLeastRecentlyUsedEditorInGroup')", shortcut = "ctrl+shift+tab" }
+ek = { name = "Editor: Back", lua = "command('workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup')", shortcut = "ctrl+tab" }
+eq = { name = "Editor: Quit", lua = "command('workbench.action.closeActiveEditor')", shortcut = "cmd+w" }
+eqa = { name = "Editor: Quit All", lua = "command('workbench.action.closeAllEditors')", shortcut = "cmd+k cmd+w" }
+eqo = { name = "Editor: Quit Others", lua = "command('workbench.action.closeOtherEditors')", shortcut = "alt+cmd+t" }
+
+# Search
+sg = { name = "Search Globally", lua = "command('workbench.action.quickOpen')", shortcut = "cmd+p" }
+sf = { name = "Search Files", lua = "command('workbench.action.quickOpen')", shortcut = "cmd+p" }
+
+# Editor Splits
+sa = { name = "Split: Auto", lua = "command('workbench.action.splitEditor')", shortcut = "cmd+backslash" }
+sl = { name = "Split: Left", lua = "command('workbench.action.splitEditorLeft')", shortcut = "cmd+k cmd+backslash" }
+sr = { name = "Split: Right", lua = "command('workbench.action.splitEditorRight')", shortcut = "cmd+k cmd+backslash" }
+su = { name = "Split Up", lua = "command('workbench.action.splitEditorUp')", shortcut = "cmd+k cmd+backslash" }
+sd = { name = "Split: Down", lua = "command('workbench.action.splitEditorDown')", shortcut = "cmd+k cmd+backslash" }
+so = { name = "Split: Orthogonal", lua = "command('workbench.action.splitEditorOrthogonal')", shortcut = "cmd+k cmd+backslash" }
+si = { name = "Split: Inner", lua = "command('workbench.action.splitEditorInGroup')", shortcut = "cmd+k shift+cmd+backslash" }
+sn = { name = "Split: North", lua = "command('workbench.action.focusAboveGroup')", shortcut = "cmd+k cmd+up" }
+ss = { name = "Split: South", lua = "command('workbench.action.focusBelowGroup')", shortcut = "cmd+k cmd+down" }
+sw = { name = "Split: West", lua = "command('workbench.action.focusLeftGroup')", shortcut = "cmd+k cmd+left" }
+se = { name = "Split: East", lua = "command('workbench.action.focusRightGroup')", shortcut = "cmd+k cmd+right" }
+s1 = { name = "Split: 1st", lua = "command('workbench.action.focusFirstEditorGroup')", shortcut = "cmd+1" }
+s2 = { name = "Split: 2nd", lua = "command('workbench.action.focusSecondEditorGroup')", shortcut = "cmd+2" }
+s3 = { name = "Split: 3rd", lua = "command('workbench.action.focusThirdEditorGroup')", shortcut = "cmd+3" }
+s4 = { name = "Split: 4th", lua = "command('workbench.action.focusFourthEditorGroup')", shortcut = "cmd+4" }
+s5 = { name = "Split: 5th", lua = "command('workbench.action.focusFifthEditorGroup')", shortcut = "cmd+5" }
+s6 = { name = "Split: 6th", lua = "command('workbench.action.focusSixthEditorGroup')", shortcut = "cmd+6" }
+s7 = { name = "Split: 7th", lua = "command('workbench.action.focusSeventhEditorGroup')", shortcut = "cmd+7" }
+s8 = { name = "Split: 8th", lua = "command('workbench.action.focusEighthEditorGroup')", shortcut = "cmd+8" }
+sq = { name = "Split: Quit", lua = "command('workbench.action.closeGroup')", shortcut = "cmd+w" }
+sqe = { name = "Split: Quit Editors", lua = "command('workbench.action.closeEditorsInGroup')", shortcut = "cmd+k w" }
+sqa = { name = "Split: Quit All", lua = "command('workbench.action.closeAllGroups')", shortcut = "cmd+k shift+cmd+w" }
+squ = { name = "Split: Quit Unmodified", lua = "command('workbench.action.closeUnmodifiedEditors')", shortcut = "cmd+k u" }
 
 # Goto
-gi = { name = "Go to Implementation", command = "editor.action.goToImplementation", shortcut = "cmd+f12" }
-gip = { name = "Go to Implementation Peek", command = "editor.action.peekImplementation", shortcut = "shift+cmd+f12" }
-gl = { name = "Go to Line", command = "workbench.action.gotoLine", shortcut = "ctrl+g" }
-gr = { name = "Go to References", command = "editor.action.goToReferences", shortcut = "shift+f12" }
-gv = { name = "Go to Previous Reference", command = "goToPreviousReference", shortcut = "shift+f12" }
-gx = { name = "Go to Next Reference", command = "goToNextReference", shortcut = "f12" }
-gs = { name = "Go to Symbol", command = "workbench.action.gotoSymbol", shortcut = "shift+cmd+o" }
+gi = { name = "Go to Implementation", lua = "command('editor.action.goToImplementation')", shortcut = "cmd+f12" }
+gip = { name = "Go to Implementation Peek", lua = "command('editor.action.peekImplementation')", shortcut = "shift+cmd+f12" }
+gl = { name = "Go to Line", lua = "command('workbench.action.gotoLine')", shortcut = "ctrl+g" }
+gr = { name = "Go to References", lua = "command('editor.action.goToReferences')", shortcut = "shift+f12" }
+gv = { name = "Go to Previous Reference", lua = "command('goToPreviousReference')", shortcut = "shift+f12" }
+gx = { name = "Go to Next Reference", lua = "command('goToNextReference')", shortcut = "f12" }
+gs = { name = "Go to Symbol", lua = "command('workbench.action.gotoSymbol')", shortcut = "shift+cmd+o" }
 
-ac = { name = "Accept", command = "chatEditor.action.accept", shortcut = "shift+cmd+y" }
+# Tabs
+t1 = { name = "Tab 1", lua = "command('workbench.action.openEditorAtIndex1')", shortcut = "ctrl+1" }
+t2 = { name = "Tab 2", lua = "command('workbench.action.openEditorAtIndex2')", shortcut = "ctrl+2" }
+t3 = { name = "Tab 3", lua = "command('workbench.action.openEditorAtIndex3')", shortcut = "ctrl+3" }
+t4 = { name = "Tab 4", lua = "command('workbench.action.openEditorAtIndex4')", shortcut = "ctrl+4" }
+t5 = { name = "Tab 5", lua = "command('workbench.action.openEditorAtIndex5')", shortcut = "ctrl+5" }
+t6 = { name = "Tab 6", lua = "command('workbench.action.openEditorAtIndex6')", shortcut = "ctrl+6" }
+t7 = { name = "Tab 7", lua = "command('workbench.action.openEditorAtIndex7')", shortcut = "ctrl+7" }
+t8 = { name = "Tab 8", lua = "command('workbench.action.openEditorAtIndex8')", shortcut = "ctrl+8" }
+t9 = { name = "Tab 9", lua = "command('workbench.action.openEditorAtIndex9')", shortcut = "ctrl+9" }
 
-ah = { name = "chatEditor.action.acceptHunk", command = "chatEditor.action.acceptHunk", shortcut = "cmd+y" }
+ac = { name = "Accept", lua = "command('chatEditor.action.accept')", shortcut = "shift+cmd+y" }
 
-uh = { name = "chatEditor.action.undoHunk", command = "chatEditor.action.undoHunk", shortcut = "cmd+n" }
+ah = { name = "chatEditor.action.acceptHunk", lua = "command('chatEditor.action.acceptHunk')", shortcut = "cmd+y" }
 
-ach = { name = "editor.action.accessibilityHelp", command = "editor.action.accessibilityHelp", shortcut = "alt+f1" }
+uh = { name = "chatEditor.action.undoHunk", lua = "command('chatEditor.action.undoHunk')", shortcut = "cmd+n" }
 
-ahca = { name = "editor.action.accessibilityHelpConfigureAssignedKeybindings", command = "editor.action.accessibilityHelpConfigureAssignedKeybindings", shortcut = "alt+a" }
+ach = { name = "editor.action.accessibilityHelp", lua = "command('editor.action.accessibilityHelp')", shortcut = "alt+f1" }
 
-ahck = { name = "editor.action.accessibilityHelpConfigureKeybindings", command = "editor.action.accessibilityHelpConfigureKeybindings", shortcut = "alt+k" }
+ahca = { name = "editor.action.accessibilityHelpConfigureAssignedKeybindings", lua = "command('editor.action.accessibilityHelpConfigureAssignedKeybindings')", shortcut = "alt+a" }
 
-aco = { name = "editor.action.accessibilityHelpOpenHelpLink", command = "editor.action.accessibilityHelpOpenHelpLink", shortcut = "alt+h" }
+ahck = { name = "editor.action.accessibilityHelpConfigureKeybindings", lua = "command('editor.action.accessibilityHelpConfigureKeybindings')", shortcut = "alt+k" }
 
-av = { name = "editor.action.accessibleView", command = "editor.action.accessibleView", shortcut = "alt+f2" }
+aco = { name = "editor.action.accessibilityHelpOpenHelpLink", lua = "command('editor.action.accessibilityHelpOpenHelpLink')", shortcut = "alt+h" }
 
-avgs = { name = "editor.action.accessibleViewGoToSymbol", command = "editor.action.accessibleViewGoToSymbol", shortcut = "shift+cmd+." }
+av = { name = "editor.action.accessibleView", lua = "command('editor.action.accessibleView')", shortcut = "alt+f2" }
 
-ava = { name = "editor.action.accessibleViewAcceptInlineCompletion", command = "editor.action.accessibleViewAcceptInlineCompletion", shortcut = "ctrl+/" }
+avgs = { name = "editor.action.accessibleViewGoToSymbol", lua = "command('editor.action.accessibleViewGoToSymbol')", shortcut = "shift+cmd+." }
 
-avd = { name = "editor.action.accessibleViewDisableHint", command = "editor.action.accessibleViewDisableHint", shortcut = "alt+f6" }
+ava = { name = "editor.action.accessibleViewAcceptInlineCompletion", lua = "command('editor.action.accessibleViewAcceptInlineCompletion')", shortcut = "ctrl+/" }
 
-avn = { name = "editor.action.accessibleViewNext", command = "editor.action.accessibleViewNext", shortcut = "alt+]" }
+avd = { name = "editor.action.accessibleViewDisableHint", lua = "command('editor.action.accessibleViewDisableHint')", shortcut = "alt+f6" }
 
-avp = { name = "editor.action.accessibleViewPrevious", command = "editor.action.accessibleViewPrevious", shortcut = "alt+[" }
+avn = { name = "editor.action.accessibleViewNext", lua = "command('editor.action.accessibleViewNext')", shortcut = "alt+]" }
 
-acs = { name = "addCursorsAtSearchResults", command = "addCursorsAtSearchResults" }
+avp = { name = "editor.action.accessibleViewPrevious", lua = "command('editor.action.accessibleViewPrevious')", shortcut = "alt+[" }
 
-aca = { name = "Accept All", command = "chatEditor.action.acceptAllEdits", shortcut = "alt+cmd+y" }
+acs = { name = "addCursorsAtSearchResults", lua = "command('addCursorsAtSearchResults')" }
 
-acl = { name = "editor.action.addCommentLine", command = "editor.action.addCommentLine", shortcut = "cmd+k cmd+c" }
+aca = { name = "Accept All", lua = "command('chatEditor.action.acceptAllEdits')", shortcut = "alt+cmd+y" }
 
-acm = { name = "workbench.action.addComment", command = "workbench.action.addComment", shortcut = "cmd+k alt+cmd+c" }
+acl = { name = "editor.action.addCommentLine", lua = "command('editor.action.addCommentLine')", shortcut = "cmd+k cmd+c" }
 
-acp = { name = "editor.action.announceCursorPosition", command = "editor.action.announceCursorPosition", shortcut = "shift+alt+cmd+g" }
+acm = { name = "workbench.action.addComment", lua = "command('workbench.action.addComment')", shortcut = "cmd+k alt+cmd+c" }
 
-acr = { name = "addCursorsAtSearchResults", command = "addCursorsAtSearchResults" }
+acp = { name = "editor.action.announceCursorPosition", lua = "command('editor.action.announceCursorPosition')", shortcut = "shift+alt+cmd+g" }
 
-aa = { name = "Ask AI", command = "inlineChat.askInChat", shortcut = "cmd+i" }
+acr = { name = "addCursorsAtSearchResults", lua = "command('addCursorsAtSearchResults')" }
 
-as = { name = "editor.action.addSelectionToNextFindMatch", command = "editor.action.addSelectionToNextFindMatch", shortcut = "cmd+d" }
+aa = { name = "Ask AI", lua = "command('inlineChat.askInChat')", shortcut = "cmd+i" }
 
-asc = { name = "acceptSelectedCodeAction", command = "acceptSelectedCodeAction" }
+as = { name = "editor.action.addSelectionToNextFindMatch", lua = "command('editor.action.addSelectionToNextFindMatch')", shortcut = "cmd+d" }
 
-bk = { name = "Back", command = "workbench.action.browser.goBack", shortcut = "cmd+left" }
+asc = { name = "acceptSelectedCodeAction", lua = "command('acceptSelectedCodeAction')" }
 
-bf = { name = "breadcrumbs.focus", command = "breadcrumbs.focus", shortcut = "shift+cmd+;" }
+bk = { name = "Back", lua = "command('workbench.action.browser.goBack')", shortcut = "cmd+left" }
 
-bfs = { name = "breadcrumbs.focusAndSelect", command = "breadcrumbs.focusAndSelect", shortcut = "shift+cmd+." }
+bf = { name = "breadcrumbs.focus", lua = "command('breadcrumbs.focus')", shortcut = "shift+cmd+;" }
 
-bo = { name = "breadcrumbs.toggleToOn", command = "breadcrumbs.toggleToOn", shortcut = "shift+cmd+." }
+bfs = { name = "breadcrumbs.focusAndSelect", lua = "command('breadcrumbs.focusAndSelect')", shortcut = "shift+cmd+." }
 
-bcm = { name = "editor.action.blockComment", command = "editor.action.blockComment", shortcut = "shift+alt+a" }
+bo = { name = "breadcrumbs.toggleToOn", lua = "command('breadcrumbs.toggleToOn')", shortcut = "shift+cmd+." }
 
-ca = { name = "Change All", command = "editor.action.changeAll", shortcut = "cmd+f2" }
+bcm = { name = "editor.action.blockComment", lua = "command('editor.action.blockComment')", shortcut = "shift+alt+a" }
 
-cac = { name = "Chat: Attach Context", command = "workbench.action.chat.attachContext", shortcut = "cmd+/" }
+ca = { name = "Change All", lua = "command('editor.action.changeAll')", shortcut = "cmd+f2" }
 
-cae = { name = "workbench.action.closeAllEditors", command = "workbench.action.closeAllEditors", shortcut = "cmd+k cmd+w" }
+cac = { name = "Chat: Attach Context", lua = "command('workbench.action.chat.attachContext')", shortcut = "cmd+/" }
 
-caed = { name = "Close Active Editor", command = "workbench.action.closeActiveEditor", shortcut = "cmd+w" }
+cdt = { name = "editor.changeDropType", lua = "command('editor.changeDropType')", shortcut = "cmd+." }
 
-caf = { name = "Close Active Folder", command = "workbench.action.closeActiveEditor", shortcut = "cmd+w" }
+cenc = { name = "workbench.action.compareEditor.nextChange", lua = "command('workbench.action.compareEditor.nextChange')", shortcut = "alt+f5" }
 
+ceos = { name = "workbench.action.compareEditor.openSide", lua = "command('workbench.action.compareEditor.openSide')", shortcut = "cmd+k shift+o" }
 
-cdt = { name = "editor.changeDropType", command = "editor.changeDropType", shortcut = "cmd+." }
+cepc = { name = "workbench.action.compareEditor.previousChange", lua = "command('workbench.action.compareEditor.previousChange')", shortcut = "shift+alt+f5" }
 
-cenc = { name = "workbench.action.compareEditor.nextChange", command = "workbench.action.compareEditor.nextChange", shortcut = "alt+f5" }
+cetnw = { name = "workbench.action.copyEditorToNewWindow", lua = "command('workbench.action.copyEditorToNewWindow')", shortcut = "cmd+k o" }
 
-ceos = { name = "workbench.action.compareEditor.openSide", command = "workbench.action.compareEditor.openSide", shortcut = "cmd+k shift+o" }
+cf = { name = "Close Folder", lua = "command('workbench.action.closeFolder')", shortcut = "cmd+k f" }
 
-cepc = { name = "workbench.action.compareEditor.previousChange", command = "workbench.action.compareEditor.previousChange", shortcut = "shift+alt+f5" }
+cml = { name = "Comment Line", lua = "command('editor.action.commentLine')", shortcut = "cmd+/" }
 
-cetnw = { name = "workbench.action.copyEditorToNewWindow", command = "workbench.action.copyEditorToNewWindow", shortcut = "cmd+k o" }
+cl = { name = "workbench.action.terminal.clear", lua = "command('workbench.action.terminal.clear')", shortcut = "cmd+k" }
 
-cf = { name = "Close Folder", command = "workbench.action.closeFolder", shortcut = "cmd+k f" }
-
-cg = { name = "Close Group", command = "workbench.action.closeGroup", shortcut = "cmd+w" }
-
-cml = { name = "Comment Line", command = "editor.action.commentLine", shortcut = "cmd+/" }
-
-cl = { name = "workbench.action.terminal.clear", command = "workbench.action.terminal.clear", shortcut = "cmd+k" }
-
-clm = { name = "workbench.action.editor.changeLanguageMode", command = "workbench.action.editor.changeLanguageMode", shortcut = "cmd+k m" }
+clm = { name = "workbench.action.editor.changeLanguageMode", lua = "command('workbench.action.editor.changeLanguageMode')", shortcut = "cmd+k m" }
 
 cm = [
-  { name = "Context Menu", command = "editor.action.showContextMenu", shortcut = "shift+f10" },
-  { name = "settings.action.showContextMenu", command = "settings.action.showContextMenu", shortcut = "shift+f9" }
+  { name = "Context Menu", lua = "command('editor.action.showContextMenu')", shortcut = "shift+f10" },
+  { name = "settings.action.showContextMenu", lua = "command('settings.action.showContextMenu')", shortcut = "shift+f9" }
 ]
 
-coe = { name = "workbench.action.closeOtherEditors", command = "workbench.action.closeOtherEditors", shortcut = "alt+cmd+t" }
+com = { name = "workbench.action.chat.openModePicker", lua = "command('workbench.action.chat.openModePicker')", shortcut = "cmd+." }
 
-com = { name = "workbench.action.chat.openModePicker", command = "workbench.action.chat.openModePicker", shortcut = "cmd+." }
+cnn = { name = "chatEditor.action.navigateNext", lua = "command('chatEditor.action.navigateNext')", shortcut = "alt+f5" }
 
-cnn = { name = "chatEditor.action.navigateNext", command = "chatEditor.action.navigateNext", shortcut = "alt+f5" }
+cnp = { name = "chatEditor.action.navigatePrevious", lua = "command('chatEditor.action.navigatePrevious')", shortcut = "shift+alt+f5" }
 
-cnp = { name = "chatEditor.action.navigatePrevious", command = "chatEditor.action.navigatePrevious", shortcut = "shift+alt+f5" }
+cad = { name = "chatEditor.action.showAccessibleDiffView", lua = "command('chatEditor.action.showAccessibleDiffView')", shortcut = "f7" }
 
-cad = { name = "chatEditor.action.showAccessibleDiffView", command = "chatEditor.action.showAccessibleDiffView", shortcut = "f7" }
-
-ctd = { name = "chatEditor.action.toggleDiff", command = "chatEditor.action.toggleDiff", shortcut = "shift+alt+f7" }
+ctd = { name = "chatEditor.action.toggleDiff", lua = "command('chatEditor.action.toggleDiff')", shortcut = "shift+alt+f7" }
 
 cp = [
-  { name = "Copy", command = "execCopy", shortcut = "cmd+c" },
-  { name = "chat.inlineResourceAnchor.copyResource", command = "chat.inlineResourceAnchor.copyResource", shortcut = "cmd+c" },
-  { name = "workbench.debug.viewlet.action.copyValue", command = "workbench.debug.viewlet.action.copyValue", shortcut = "cmd+c" },
-  { name = "search.action.copyMatch", command = "search.action.copyMatch", shortcut = "cmd+c" },
-  { name = "workbench.action.terminal.copySelection", command = "workbench.action.terminal.copySelection", shortcut = "cmd+c" }
+  { name = "Copy", lua = "command('execCopy')", shortcut = "cmd+c" },
+  { name = "chat.inlineResourceAnchor.copyResource", lua = "command('chat.inlineResourceAnchor.copyResource')", shortcut = "cmd+c" },
+  { name = "workbench.debug.viewlet.action.copyValue", lua = "command('workbench.debug.viewlet.action.copyValue')", shortcut = "cmd+c" },
+  { name = "search.action.copyMatch", lua = "command('search.action.copyMatch')", shortcut = "cmd+c" },
+  { name = "workbench.action.terminal.copySelection", lua = "command('workbench.action.terminal.copySelection')", shortcut = "cmd+c" }
 ]
 
-cpt = { name = "editor.changePasteType", command = "editor.changePasteType", shortcut = "cmd+." }
+cpt = { name = "editor.changePasteType", lua = "command('editor.changePasteType')", shortcut = "cmd+." }
 
-cs = { name = "Chat: Start", command = "workbench.action.terminal.chat.start", shortcut = "cmd+i" }
+cs = { name = "Chat: Start", lua = "command('workbench.action.terminal.chat.start')", shortcut = "cmd+i" }
 
-cue = { name = "workbench.action.closeUnmodifiedEditors", command = "workbench.action.closeUnmodifiedEditors", shortcut = "cmd+k u" }
+cw = { name = "Close Window", lua = "command('workbench.action.closeWindow')", shortcut = "shift+cmd+w" }
 
-cw = { name = "Close Window", command = "workbench.action.closeWindow", shortcut = "shift+cmd+w" }
+cwc = { name = "workbench.files.action.compareWithClipboard", lua = "command('workbench.files.action.compareWithClipboard')", shortcut = "cmd+k c" }
 
-cwc = { name = "workbench.files.action.compareWithClipboard", command = "workbench.files.action.compareWithClipboard", shortcut = "cmd+k c" }
+cws = { name = "workbench.files.action.compareWithSaved", lua = "command('workbench.files.action.compareWithSaved')", shortcut = "cmd+k d" }
 
-cws = { name = "workbench.files.action.compareWithSaved", command = "workbench.files.action.compareWithSaved", shortcut = "cmd+k d" }
+db = { name = "Debug", lua = "command('Debug')" }
 
-db = { name = "Debug", command = "Debug" }
+ddn = { name = "editor.action.dirtydiff.next", lua = "command('editor.action.dirtydiff.next')", shortcut = "alt+f3" }
 
-ddn = { name = "editor.action.dirtydiff.next", command = "editor.action.dirtydiff.next", shortcut = "alt+f3" }
+ddp = { name = "editor.action.dirtydiff.previous", lua = "command('editor.action.dirtydiff.previous')", shortcut = "shift+alt+f3" }
 
-ddp = { name = "editor.action.dirtydiff.previous", command = "editor.action.dirtydiff.previous", shortcut = "shift+alt+f3" }
+dib = { name = "editor.debug.action.toggleInlineBreakpoint", lua = "command('editor.debug.action.toggleInlineBreakpoint')", shortcut = "shift+f9" }
 
-dib = { name = "editor.debug.action.toggleInlineBreakpoint", command = "editor.debug.action.toggleInlineBreakpoint", shortcut = "shift+f9" }
+dc = { name = "workbench.debug.panel.action.clearReplAction", lua = "command('workbench.debug.panel.action.clearReplAction')", shortcut = "cmd+k" }
 
-dc = { name = "workbench.debug.panel.action.clearReplAction", command = "workbench.debug.panel.action.clearReplAction", shortcut = "cmd+k" }
+dk = { name = "editor.action.defineKeybinding", lua = "command('editor.action.defineKeybinding')", shortcut = "cmd+k cmd+k" }
 
-dk = { name = "editor.action.defineKeybinding", command = "editor.action.defineKeybinding", shortcut = "cmd+k cmd+k" }
+dll = { name = "editor.action.deleteLines", lua = "command('editor.action.deleteLines')", shortcut = "shift+cmd+k" }
 
-dll = { name = "editor.action.deleteLines", command = "editor.action.deleteLines", shortcut = "shift+cmd+k" }
+dl = { name = "editor.detectLanguage", lua = "command('editor.detectLanguage')", shortcut = "shift+alt+d" }
 
-dl = { name = "editor.detectLanguage", command = "editor.detectLanguage", shortcut = "shift+alt+d" }
+dp = { name = "Debug Pause", lua = "command('workbench.action.debug.pause')", shortcut = "f6" }
 
-dp = { name = "Debug Pause", command = "workbench.action.debug.pause", shortcut = "f6" }
+dnc = { name = "workbench.action.debug.nextConsole", lua = "command('workbench.action.debug.nextConsole')", shortcut = "shift+cmd+]" }
 
-dnc = { name = "workbench.action.debug.nextConsole", command = "workbench.action.debug.nextConsole", shortcut = "shift+cmd+]" }
+dpc = { name = "workbench.action.debug.prevConsole", lua = "command('workbench.action.debug.prevConsole')", shortcut = "shift+cmd+[" }
 
-dpc = { name = "workbench.action.debug.prevConsole", command = "workbench.action.debug.prevConsole", shortcut = "shift+cmd+[" }
+dr = { name = "Debug Run", lua = "command('workbench.action.debug.run')", shortcut = "ctrl+f5" }
 
-dr = { name = "Debug Run", command = "workbench.action.debug.run", shortcut = "ctrl+f5" }
+dv = { name = "debug.openView", lua = "command('debug.openView')", shortcut = "cmd+f5" }
 
-dv = { name = "debug.openView", command = "debug.openView", shortcut = "cmd+f5" }
+dcw = { name = "debug.copyWatchExpression", lua = "command('debug.copyWatchExpression')", shortcut = "alt+cmd+c" }
 
-dcw = { name = "debug.copyWatchExpression", command = "debug.copyWatchExpression", shortcut = "alt+cmd+c" }
+drs = { name = "Debug Restart", lua = "command('workbench.action.debug.restart')", shortcut = "shift+cmd+f5" }
 
-drs = { name = "Debug Restart", command = "workbench.action.debug.restart", shortcut = "shift+cmd+f5" }
+dsh = { name = "editor.debug.action.showDebugHover", lua = "command('editor.debug.action.showDebugHover')", shortcut = "cmd+k cmd+i" }
 
-dsh = { name = "editor.debug.action.showDebugHover", command = "editor.debug.action.showDebugHover", shortcut = "cmd+k cmd+i" }
+dsi = { name = "Debug Step Into", lua = "command('workbench.action.debug.stepInto')", shortcut = "f11" }
 
-dsi = { name = "Debug Step Into", command = "workbench.action.debug.stepInto", shortcut = "f11" }
+dsit = { name = "Debug Step Into Target", lua = "command('workbench.action.debug.stepIntoTarget')", shortcut = "cmd+f11" }
 
-dsit = { name = "Debug Step Into Target", command = "workbench.action.debug.stepIntoTarget", shortcut = "cmd+f11" }
+dso = { name = "Debug Step Out", lua = "command('workbench.action.debug.stepOut')", shortcut = "shift+f11" }
 
-dso = { name = "Debug Step Out", command = "workbench.action.debug.stepOut", shortcut = "shift+f11" }
+dsov = { name = "Debug Step Over", lua = "command('workbench.action.debug.stepOver')", shortcut = "f10" }
 
-dsov = { name = "Debug Step Over", command = "workbench.action.debug.stepOver", shortcut = "f10" }
+dsp = { name = "Debug Stop", lua = "command('workbench.action.debug.stop')", shortcut = "shift+f5" }
 
-dsp = { name = "Debug Stop", command = "workbench.action.debug.stop", shortcut = "shift+f5" }
+dst = { name = "Debug Start", lua = "command('workbench.action.debug.start')", shortcut = "f5" }
 
-dst = { name = "Debug Start", command = "workbench.action.debug.start", shortcut = "f5" }
+dtb = { name = "editor.debug.action.toggleBreakpoint", lua = "command('editor.debug.action.toggleBreakpoint')", shortcut = "f9" }
 
-dtb = { name = "editor.debug.action.toggleBreakpoint", command = "editor.debug.action.toggleBreakpoint", shortcut = "f9" }
-
-eds = { name = "workbench.action.editorDictation.start", command = "workbench.action.editorDictation.start", shortcut = "alt+cmd+v" }
+eds = { name = "workbench.action.editorDictation.start", lua = "command('workbench.action.editorDictation.start')", shortcut = "alt+cmd+v" }
 
 
-els = { name = "Expand Line Selection", command = "expandLineSelection", shortcut = "cmd+l" }
+els = { name = "Expand Line Selection", lua = "command('expandLineSelection')", shortcut = "cmd+l" }
 
-etf = { name = "editor.toggleFold", command = "editor.toggleFold", shortcut = "cmd+k cmd+l" }
-
-
-ezm = { name = "Exit Zen Mode", command = "workbench.action.exitZenMode", shortcut = "escape escape" }
+etf = { name = "editor.toggleFold", lua = "command('editor.toggleFold')", shortcut = "cmd+k cmd+l" }
 
 
-fdn = { name = "Format Document None", command = "editor.action.formatDocument.none", shortcut = "shift+alt+f" }
+ezm = { name = "Exit Zen Mode", lua = "command('workbench.action.exitZenMode')", shortcut = "escape escape" }
 
-foev = { name = "workbench.files.action.focusOpenEditorsView", command = "workbench.files.action.focusOpenEditorsView", shortcut = "cmd+k e" }
+
+fdn = { name = "Format Document None", lua = "command('editor.action.formatDocument.none')", shortcut = "shift+alt+f" }
+
+foev = { name = "workbench.files.action.focusOpenEditorsView", lua = "command('workbench.files.action.focusOpenEditorsView')", shortcut = "cmd+k e" }
 
 
 fs = [
-  { name = "Format Selection", command = "editor.action.formatSelection", shortcut = "cmd+k cmd+f" },
-  { name = "Full Screen", command = "workbench.action.toggleFullScreen", shortcut = "ctrl+cmd+f" }
+  { name = "Format Selection", lua = "command('editor.action.formatSelection')", shortcut = "cmd+k cmd+f" },
+  { name = "Full Screen", lua = "command('workbench.action.toggleFullScreen')", shortcut = "ctrl+cmd+f" }
 ]
 
-fsb = { name = "Focus Side Bar", command = "workbench.action.focusSideBar", shortcut = "cmd+0" }
+fsb = { name = "Focus Side Bar", lua = "command('workbench.action.focusSideBar')", shortcut = "cmd+0" }
 
-fsg = { name = "focusSuggestion", command = "focusSuggestion" }
+fsg = { name = "focusSuggestion", lua = "command('focusSuggestion')" }
 
-# fw = { name = "Forward", command = "workbench.action.browser.goForward", shortcut = "cmd+right" }
+# fw = { name = "Forward", lua = "command('workbench.action.browser.goForward')", shortcut = "cmd+right" }
 
-fws = { name = "Find With Selection", command = "actions.findWithSelection", shortcut = "cmd+e" }
-
-
-gnm = { name = "testing.coverage.goToNextMissedLine", command = "testing.coverage.goToNextMissedLine", shortcut = "alt+f9" }
-
-gpm = { name = "testing.coverage.goToPreviousMissedLine", command = "testing.coverage.goToPreviousMissedLine", shortcut = "shift+alt+f9" }
+fws = { name = "Find With Selection", lua = "command('actions.findWithSelection')", shortcut = "cmd+e" }
 
 
-gns = { name = "editor.gotoNextSymbolFromResult", command = "editor.gotoNextSymbolFromResult", shortcut = "f12" }
+gnm = { name = "testing.coverage.goToNextMissedLine", lua = "command('testing.coverage.goToNextMissedLine')", shortcut = "alt+f9" }
 
-hc = { name = "Hide Comment", command = "workbench.action.hideComment", shortcut = "shift+escape" }
+gpm = { name = "testing.coverage.goToPreviousMissedLine", lua = "command('testing.coverage.goToPreviousMissedLine')", shortcut = "shift+alt+f9" }
 
-hr = { name = "workbench.action.browser.hardReload", command = "workbench.action.browser.hardReload", shortcut = "shift+cmd+r" }
 
-ic = { name = "Inline Chat", command = "inlineChat.start", shortcut = "cmd+i" }
+gns = { name = "editor.gotoNextSymbolFromResult", lua = "command('editor.gotoNextSymbolFromResult')", shortcut = "f12" }
 
-ice = { name = "editor.action.insertCursorAtEndOfEachLineSelected", command = "editor.action.insertCursorAtEndOfEachLineSelected", shortcut = "shift+alt+i" }
+hc = { name = "Hide Comment", lua = "command('workbench.action.hideComment')", shortcut = "shift+escape" }
 
-ind = { name = "Indent", command = "editor.action.indentLines", shortcut = "cmd+]" }
+hr = { name = "workbench.action.browser.hardReload", lua = "command('workbench.action.browser.hardReload')", shortcut = "shift+cmd+r" }
 
-iprd = { name = "editor.action.inPlaceReplace.down", command = "editor.action.inPlaceReplace.down", shortcut = "shift+cmd+." }
+ic = { name = "Inline Chat", lua = "command('inlineChat.start')", shortcut = "cmd+i" }
 
-ipru = { name = "editor.action.inPlaceReplace.up", command = "editor.action.inPlaceReplace.up", shortcut = "shift+cmd+," }
+ice = { name = "editor.action.insertCursorAtEndOfEachLineSelected", lua = "command('editor.action.insertCursorAtEndOfEachLineSelected')", shortcut = "shift+alt+i" }
 
-is = { name = "insertSnippet", command = "insertSnippet" }
+ind = { name = "Indent", lua = "command('editor.action.indentLines')", shortcut = "cmd+]" }
 
-jeig = { name = "workbench.action.joinEditorInGroup", command = "workbench.action.joinEditorInGroup", shortcut = "cmd+k shift+cmd+backslash" }
+iprd = { name = "editor.action.inPlaceReplace.down", lua = "command('editor.action.inPlaceReplace.down')", shortcut = "shift+cmd+." }
 
-jl = { name = "Join Lines", command = "editor.action.joinLines", shortcut = "ctrl+j" }
+ipru = { name = "editor.action.inPlaceReplace.up", lua = "command('editor.action.inPlaceReplace.up')", shortcut = "shift+cmd+," }
 
-jtb = { name = "editor.action.jumpToBracket", command = "editor.action.jumpToBracket", shortcut = "shift+cmd+backslash" }
+is = { name = "insertSnippet", lua = "command('insertSnippet')" }
 
-kba = { name = "keybindings.editor.addKeybinding", command = "keybindings.editor.addKeybinding", shortcut = "cmd+k cmd+a" }
+jeig = { name = "workbench.action.joinEditorInGroup", lua = "command('workbench.action.joinEditorInGroup')", shortcut = "cmd+k shift+cmd+backslash" }
 
-kbc = { name = "keybindings.editor.copyKeybindingEntry", command = "keybindings.editor.copyKeybindingEntry", shortcut = "cmd+c" }
+jl = { name = "Join Lines", lua = "command('editor.action.joinLines')", shortcut = "ctrl+j" }
 
-kbd = { name = "keybindings.editor.defineWhenExpression", command = "keybindings.editor.defineWhenExpression", shortcut = "cmd+k cmd+e" }
+jtb = { name = "editor.action.jumpToBracket", lua = "command('editor.action.jumpToBracket')", shortcut = "shift+cmd+backslash" }
 
-kbr = { name = "keybindings.editor.removeKeybinding", command = "keybindings.editor.removeKeybinding", shortcut = "cmd+backspace" }
+kba = { name = "keybindings.editor.addKeybinding", lua = "command('keybindings.editor.addKeybinding')", shortcut = "cmd+k cmd+a" }
 
-kbrs = { name = "keybindings.editor.recordSearchKeys", command = "keybindings.editor.recordSearchKeys", shortcut = "alt+cmd+k" }
+kbc = { name = "keybindings.editor.copyKeybindingEntry", lua = "command('keybindings.editor.copyKeybindingEntry')", shortcut = "cmd+c" }
 
-kbs = { name = "keybindings.editor.searchKeybindings", command = "keybindings.editor.searchKeybindings", shortcut = "cmd+f" }
+kbd = { name = "keybindings.editor.defineWhenExpression", lua = "command('keybindings.editor.defineWhenExpression')", shortcut = "cmd+k cmd+e" }
 
-kbt = { name = "keybindings.editor.toggleSortByPrecedence", command = "keybindings.editor.toggleSortByPrecedence", shortcut = "alt+cmd+p" }
+kbr = { name = "keybindings.editor.removeKeybinding", lua = "command('keybindings.editor.removeKeybinding')", shortcut = "cmd+backspace" }
 
-ke = { name = "Keep Editor", command = "workbench.action.keepEditor", shortcut = "cmd+k enter" }
+kbrs = { name = "keybindings.editor.recordSearchKeys", lua = "command('keybindings.editor.recordSearchKeys')", shortcut = "alt+cmd+k" }
 
-kr = { name = "workbench.action.keybindingsReference", command = "workbench.action.keybindingsReference", shortcut = "cmd+k cmd+r" }
+kbs = { name = "keybindings.editor.searchKeybindings", lua = "command('keybindings.editor.searchKeybindings')", shortcut = "cmd+f" }
 
-lbi = { name = "lineBreakInsert", command = "lineBreakInsert" }
+kbt = { name = "keybindings.editor.toggleSortByPrecedence", lua = "command('keybindings.editor.toggleSortByPrecedence')", shortcut = "alt+cmd+p" }
 
-le = { name = "editor.action.linkedEditing", command = "editor.action.linkedEditing", shortcut = "shift+cmd+f2" }
+ke = { name = "Keep Editor", lua = "command('workbench.action.keepEditor')", shortcut = "cmd+k enter" }
 
-leig = { name = "workbench.action.lastEditorInGroup", command = "workbench.action.lastEditorInGroup", shortcut = "cmd+9" }
+kr = { name = "workbench.action.keybindingsReference", lua = "command('workbench.action.keybindingsReference')", shortcut = "cmd+k cmd+r" }
 
-mef = { name = "workbench.action.moveActiveEditorToFirstGroup", command = "workbench.action.moveActiveEditorToFirstGroup" }
+lbi = { name = "lineBreakInsert", lua = "command('lineBreakInsert')" }
 
-megd = { name = "workbench.action.moveActiveEditorGroupDown", command = "workbench.action.moveActiveEditorGroupDown", shortcut = "cmd+k down" }
+le = { name = "editor.action.linkedEditing", lua = "command('editor.action.linkedEditing')", shortcut = "shift+cmd+f2" }
 
-megl = { name = "workbench.action.moveActiveEditorGroupLeft", command = "workbench.action.moveActiveEditorGroupLeft", shortcut = "cmd+k left" }
+leig = { name = "workbench.action.lastEditorInGroup", lua = "command('workbench.action.lastEditorInGroup')", shortcut = "cmd+9" }
 
-megr = { name = "workbench.action.moveActiveEditorGroupRight", command = "workbench.action.moveActiveEditorGroupRight", shortcut = "cmd+k right" }
+mef = { name = "workbench.action.moveActiveEditorToFirstGroup", lua = "command('workbench.action.moveActiveEditorToFirstGroup')" }
 
-megu = { name = "workbench.action.moveActiveEditorGroupUp", command = "workbench.action.moveActiveEditorGroupUp", shortcut = "cmd+k up" }
+megd = { name = "workbench.action.moveActiveEditorGroupDown", lua = "command('workbench.action.moveActiveEditorGroupDown')", shortcut = "cmd+k down" }
+
+megl = { name = "workbench.action.moveActiveEditorGroupLeft", lua = "command('workbench.action.moveActiveEditorGroupLeft')", shortcut = "cmd+k left" }
+
+megr = { name = "workbench.action.moveActiveEditorGroupRight", lua = "command('workbench.action.moveActiveEditorGroupRight')", shortcut = "cmd+k right" }
+
+megu = { name = "workbench.action.moveActiveEditorGroupUp", lua = "command('workbench.action.moveActiveEditorGroupUp')", shortcut = "cmd+k up" }
 
 mel = [
-  { name = "workbench.action.moveActiveEditorLeftInGroup", command = "workbench.action.moveActiveEditorLeftInGroup" },
-  { name = "workbench.action.moveActiveEditorToLastGroup", command = "workbench.action.moveActiveEditorToLastGroup" }
+  { name = "workbench.action.moveActiveEditorLeftInGroup", lua = "command('workbench.action.moveActiveEditorLeftInGroup')" },
+  { name = "workbench.action.moveActiveEditorToLastGroup", lua = "command('workbench.action.moveActiveEditorToLastGroup')" }
 ]
 
-men = { name = "workbench.action.moveActiveEditorToNextGroup", command = "workbench.action.moveActiveEditorToNextGroup" }
+men = { name = "workbench.action.moveActiveEditorToNextGroup", lua = "command('workbench.action.moveActiveEditorToNextGroup')" }
 
-mep = { name = "workbench.action.moveActiveEditorToPreviousGroup", command = "workbench.action.moveActiveEditorToPreviousGroup" }
+mep = { name = "workbench.action.moveActiveEditorToPreviousGroup", lua = "command('workbench.action.moveActiveEditorToPreviousGroup')" }
 
-mer = { name = "workbench.action.moveActiveEditorRightInGroup", command = "workbench.action.moveActiveEditorRightInGroup" }
+mer = { name = "workbench.action.moveActiveEditorRightInGroup", lua = "command('workbench.action.moveActiveEditorRightInGroup')" }
 
-mn = { name = "editor.action.marker.next", command = "editor.action.marker.next", shortcut = "alt+f8" }
+mn = { name = "editor.action.marker.next", lua = "command('editor.action.marker.next')", shortcut = "alt+f8" }
 
-mnf = { name = "editor.action.marker.nextInFiles", command = "editor.action.marker.nextInFiles", shortcut = "f8" }
+mnf = { name = "editor.action.marker.nextInFiles", lua = "command('editor.action.marker.nextInFiles')", shortcut = "f8" }
 
-mp = { name = "editor.action.marker.prev", command = "editor.action.marker.prev", shortcut = "shift+alt+f8" }
+mp = { name = "editor.action.marker.prev", lua = "command('editor.action.marker.prev')", shortcut = "shift+alt+f8" }
 
-mpf = { name = "editor.action.marker.prevInFiles", command = "editor.action.marker.prevInFiles", shortcut = "shift+f8" }
+mpf = { name = "editor.action.marker.prevInFiles", lua = "command('editor.action.marker.prevInFiles')", shortcut = "shift+f8" }
 
-ms = { name = "editor.action.moveSelectionToNextFindMatch", command = "editor.action.moveSelectionToNextFindMatch", shortcut = "cmd+k cmd+d" }
+ms = { name = "editor.action.moveSelectionToNextFindMatch", lua = "command('editor.action.moveSelectionToNextFindMatch')", shortcut = "cmd+k cmd+d" }
 
-nbfp = { name = "notebook.findPrevious.fromWidget", command = "notebook.findPrevious.fromWidget", shortcut = "shift+f3" }
+nbfp = { name = "notebook.findPrevious.fromWidget", lua = "command('notebook.findPrevious.fromWidget')", shortcut = "shift+f3" }
 
-nbfn = { name = "notebook.findNext.fromWidget", command = "notebook.findNext.fromWidget", shortcut = "f3" }
+nbfn = { name = "notebook.findNext.fromWidget", lua = "command('notebook.findNext.fromWidget')", shortcut = "f3" }
 
-nbaf = { name = "notebook.addFindMatchToSelection", command = "notebook.addFindMatchToSelection", shortcut = "cmd+d" }
+nbaf = { name = "notebook.addFindMatchToSelection", lua = "command('notebook.addFindMatchToSelection')", shortcut = "cmd+d" }
 
-nbdl = { name = "notebook.cell.detectLanguage", command = "notebook.cell.detectLanguage", shortcut = "shift+alt+d" }
+nbdl = { name = "notebook.cell.detectLanguage", lua = "command('notebook.cell.detectLanguage')", shortcut = "shift+alt+d" }
 
-nbcl = { name = "notebook.cell.changeLanguage", command = "notebook.cell.changeLanguage", shortcut = "cmd+k m" }
+nbcl = { name = "notebook.cell.changeLanguage", lua = "command('notebook.cell.changeLanguage')", shortcut = "cmd+k m" }
 
-nbcc = { name = "notebook.cell.changeToCode", command = "notebook.cell.changeToCode", shortcut = "y" }
+nbcc = { name = "notebook.cell.changeToCode", lua = "command('notebook.cell.changeToCode')", shortcut = "y" }
 
-nbci = { name = "notebook.cell.collapseCellInput", command = "notebook.cell.collapseCellInput", shortcut = "cmd+k cmd+c" }
+nbci = { name = "notebook.cell.collapseCellInput", lua = "command('notebook.cell.collapseCellInput')", shortcut = "cmd+k cmd+c" }
 
 nbcm = [
-  { name = "notebook.cell.changeToMarkdown", command = "notebook.cell.changeToMarkdown", shortcut = "m" },
-  { name = "notebook.commentSelectedCells", command = "notebook.commentSelectedCells", shortcut = "cmd+/" }
+  { name = "notebook.cell.changeToMarkdown", lua = "command('notebook.cell.changeToMarkdown')", shortcut = "m" },
+  { name = "notebook.commentSelectedCells", lua = "command('notebook.commentSelectedCells')", shortcut = "cmd+/" }
 ]
 
-nbco = { name = "notebook.cell.collapseCellOutput", command = "notebook.cell.collapseCellOutput", shortcut = "cmd+k t" }
+nbco = { name = "notebook.cell.collapseCellOutput", lua = "command('notebook.cell.collapseCellOutput')", shortcut = "cmd+k t" }
 
-nbcs = { name = "notebook.cell.chat.start", command = "notebook.cell.chat.start", shortcut = "cmd+k i" }
+nbcs = { name = "notebook.cell.chat.start", lua = "command('notebook.cell.chat.start')", shortcut = "cmd+k i" }
 
-nbc = { name = "notebook.centerActiveCell", command = "notebook.centerActiveCell", shortcut = "ctrl+l" }
+nbc = { name = "notebook.centerActiveCell", lua = "command('notebook.centerActiveCell')", shortcut = "ctrl+l" }
 
-nbei = { name = "notebook.cell.expandCellInput", command = "notebook.cell.expandCellInput", shortcut = "cmd+k cmd+c" }
+nbei = { name = "notebook.cell.expandCellInput", lua = "command('notebook.cell.expandCellInput')", shortcut = "cmd+k cmd+c" }
 
-nbeo = { name = "notebook.cell.expandCellOutput", command = "notebook.cell.expandCellOutput", shortcut = "cmd+k t" }
+nbeo = { name = "notebook.cell.expandCellOutput", lua = "command('notebook.cell.expandCellOutput')", shortcut = "cmd+k t" }
 
-nbja = { name = "notebook.cell.joinAbove", command = "notebook.cell.joinAbove", shortcut = "ctrl+shift+alt+j" }
+nbja = { name = "notebook.cell.joinAbove", lua = "command('notebook.cell.joinAbove')", shortcut = "ctrl+shift+alt+j" }
 
-nbjb = { name = "notebook.cell.joinBelow", command = "notebook.cell.joinBelow", shortcut = "ctrl+alt+j" }
+nbjb = { name = "notebook.cell.joinBelow", lua = "command('notebook.cell.joinBelow')", shortcut = "ctrl+alt+j" }
 
-nbof = { name = "notebook.cell.openFailureActions", command = "notebook.cell.openFailureActions", shortcut = "cmd+." }
+nbof = { name = "notebook.cell.openFailureActions", lua = "command('notebook.cell.openFailureActions')", shortcut = "cmd+." }
 
-nbto = { name = "notebook.cell.toggleOutputScrolling", command = "notebook.cell.toggleOutputScrolling", shortcut = "cmd+k y" }
+nbto = { name = "notebook.cell.toggleOutputScrolling", lua = "command('notebook.cell.toggleOutputScrolling')", shortcut = "cmd+k y" }
 
-nbf = { name = "notebook.formatCell", command = "notebook.formatCell", shortcut = "shift+alt+f" }
+nbf = { name = "notebook.formatCell", lua = "command('notebook.formatCell')", shortcut = "shift+alt+f" }
 
-nbs = { name = "notebook.cell.split", command = "notebook.cell.split", shortcut = "cmd+k shift+cmd+backslash" }
+nbs = { name = "notebook.cell.split", lua = "command('notebook.cell.split')", shortcut = "cmd+k shift+cmd+backslash" }
 
-nbpa = { name = "notebook.cell.pasteAbove", command = "notebook.cell.pasteAbove", shortcut = "shift+cmd+v" }
+nbpa = { name = "notebook.cell.pasteAbove", lua = "command('notebook.cell.pasteAbove')", shortcut = "shift+cmd+v" }
 
-na = { name = "New AI Chat", command = "workbench.action.chat.newChat", shortcut = "ctrl+l" }
+na = { name = "New AI Chat", lua = "command('workbench.action.chat.newChat')", shortcut = "ctrl+l" }
 
 nc = [
-  { name = "workbench.action.editor.nextChange", command = "workbench.action.editor.nextChange", shortcut = "alt+f5" },
-  { name = "multiDiffEditor.goToNextChange", command = "multiDiffEditor.goToNextChange", shortcut = "alt+f5" }
+  { name = "workbench.action.editor.nextChange", lua = "command('workbench.action.editor.nextChange')", shortcut = "alt+f5" },
+  { name = "multiDiffEditor.goToNextChange", lua = "command('multiDiffEditor.goToNextChange')", shortcut = "alt+f5" }
 ]
 
-ncra = { name = "editor.action.nextCommentedRangeAction", command = "editor.action.nextCommentedRangeAction", shortcut = "alt+f10" }
+ncra = { name = "editor.action.nextCommentedRangeAction", lua = "command('editor.action.nextCommentedRangeAction')", shortcut = "alt+f10" }
 
-ncta = { name = "editor.action.nextCommentThreadAction", command = "editor.action.nextCommentThreadAction", shortcut = "alt+f9" }
-
-
-nm = { name = "testing.goToNextMessage", command = "testing.goToNextMessage", shortcut = "alt+f8" }
-
-nmfa = { name = "editor.action.nextMatchFindAction", command = "editor.action.nextMatchFindAction", shortcut = "f3" }
-
-nph = { name = "showNextParameterHint", command = "showNextParameterHint" }
-
-nsmfa = { name = "editor.action.nextSelectionMatchFindAction", command = "editor.action.nextSelectionMatchFindAction", shortcut = "cmd+f3" }
-
-nt = { name = "New Tab", command = "workbench.action.browser.newTab", shortcut = "cmd+t" }
+ncta = { name = "editor.action.nextCommentThreadAction", lua = "command('editor.action.nextCommentThreadAction')", shortcut = "alt+f9" }
 
 
-nw = { name = "New Window", command = "workbench.action.newWindow", shortcut = "shift+cmd+n" }
+nm = { name = "testing.goToNextMessage", lua = "command('testing.goToNextMessage')", shortcut = "alt+f8" }
+
+nmfa = { name = "editor.action.nextMatchFindAction", lua = "command('editor.action.nextMatchFindAction')", shortcut = "f3" }
+
+nph = { name = "showNextParameterHint", lua = "command('showNextParameterHint')" }
+
+nsmfa = { name = "editor.action.nextSelectionMatchFindAction", lua = "command('editor.action.nextSelectionMatchFindAction')", shortcut = "cmd+f3" }
+
+nt = { name = "New Tab", lua = "command('workbench.action.browser.newTab')", shortcut = "cmd+t" }
+
+
+nw = { name = "New Window", lua = "command('workbench.action.newWindow')", shortcut = "shift+cmd+n" }
 
 nx = [
-  { name = "Next", command = "search.action.focusNextSearchResult", shortcut = "f4" },
-  { name = "selectNextCodeAction", command = "selectNextCodeAction", shortcut = "ctrl+n" }
+  { name = "Next", lua = "command('search.action.focusNextSearchResult')", shortcut = "f4" },
+  { name = "selectNextCodeAction", lua = "command('selectNextCodeAction')", shortcut = "ctrl+n" }
 ]
 
-oc = { name = "Open Chat", command = "workbench.action.chat.open", shortcut = "ctrl+cmd+i" }
+oc = { name = "Open Chat", lua = "command('workbench.action.chat.open')", shortcut = "ctrl+cmd+i" }
 
-"oe1" = { name = "Open Editor 1", command = "workbench.action.openEditorAtIndex1", shortcut = "ctrl+1" }
+off = { name = "Open File Folder", lua = "command('workbench.action.files.openFileFolder')", shortcut = "cmd+o" }
 
-"oe9" = { name = "Open Editor 9", command = "workbench.action.openEditorAtIndex9", shortcut = "ctrl+9" }
+ofvw = { name = "workbench.action.files.openFolderViaWorkspace", lua = "command('workbench.action.files.openFolderViaWorkspace')", shortcut = "cmd+o" }
 
-"oe2" = { name = "Open Editor 2", command = "workbench.action.openEditorAtIndex2", shortcut = "ctrl+2" }
 
-"oe8" = { name = "Open Editor 8", command = "workbench.action.openEditorAtIndex8", shortcut = "ctrl+8" }
+oi = { name = "editor.action.organizeImports", lua = "command('editor.action.organizeImports')", shortcut = "shift+alt+o" }
 
-"oe7" = { name = "Open Editor 7", command = "workbench.action.openEditorAtIndex7", shortcut = "ctrl+7" }
+olff = { name = "workbench.action.files.openLocalFileFolder", lua = "command('workbench.action.files.openLocalFileFolder')", shortcut = "cmd+o" }
 
-"oe3" = { name = "Open Editor 3", command = "workbench.action.openEditorAtIndex3", shortcut = "ctrl+3" }
-
-"oe5" = { name = "Open Editor 5", command = "workbench.action.openEditorAtIndex5", shortcut = "ctrl+5" }
-
-"oe6" = { name = "Open Editor 6", command = "workbench.action.openEditorAtIndex6", shortcut = "ctrl+6" }
-
-"oe4" = { name = "Open Editor 4", command = "workbench.action.openEditorAtIndex4", shortcut = "ctrl+4" }
-
-off = { name = "Open File Folder", command = "workbench.action.files.openFileFolder", shortcut = "cmd+o" }
-
-ofvw = { name = "workbench.action.files.openFolderViaWorkspace", command = "workbench.action.files.openFolderViaWorkspace", shortcut = "cmd+o" }
-
-ogk = { name = "Open Global Keybindings", command = "workbench.action.openGlobalKeybindings", shortcut = "cmd+k cmd+s" }
-
-oi = { name = "editor.action.organizeImports", command = "editor.action.organizeImports", shortcut = "shift+alt+o" }
-
-olff = { name = "workbench.action.files.openLocalFileFolder", command = "workbench.action.files.openLocalFileFolder", shortcut = "cmd+o" }
-
-os = { name = "Open Settings", command = "workbench.action.openSettings", shortcut = "cmd+," }
-
-otd = { name = "Outdent", command = "editor.action.outdentLines", shortcut = "cmd+[" }
+otd = { name = "Outdent", lua = "command('editor.action.outdentLines')", shortcut = "cmd+[" }
 
 pc = [
-  { name = "Previous Change", command = "workbench.action.editor.previousChange", shortcut = "shift+alt+f5" },
-  { name = "multiDiffEditor.goToPreviousChange", command = "multiDiffEditor.goToPreviousChange", shortcut = "shift+alt+f5" }
+  { name = "Previous Change", lua = "command('workbench.action.editor.previousChange')", shortcut = "shift+alt+f5" },
+  { name = "multiDiffEditor.goToPreviousChange", lua = "command('multiDiffEditor.goToPreviousChange')", shortcut = "shift+alt+f5" }
 ]
 
-pcra = { name = "editor.action.previousCommentedRangeAction", command = "editor.action.previousCommentedRangeAction", shortcut = "shift+alt+f10" }
+pcra = { name = "editor.action.previousCommentedRangeAction", lua = "command('editor.action.previousCommentedRangeAction')", shortcut = "shift+alt+f10" }
 
-pcta = { name = "editor.action.previousCommentThreadAction", command = "editor.action.previousCommentThreadAction", shortcut = "shift+alt+f9" }
+pcta = { name = "editor.action.previousCommentThreadAction", lua = "command('editor.action.previousCommentThreadAction')", shortcut = "shift+alt+f9" }
 
-dd = { name = "editor.action.peekDefinition", command = "editor.action.peekDefinition", shortcut = "alt+f12" }
+dd = { name = "editor.action.peekDefinition", lua = "command('editor.action.peekDefinition')", shortcut = "alt+f12" }
 
 
-tpm = { name = "testing.goToPreviousMessage", command = "testing.goToPreviousMessage", shortcut = "shift+alt+f8" }
+tpm = { name = "testing.goToPreviousMessage", lua = "command('testing.goToPreviousMessage')", shortcut = "shift+alt+f8" }
 
-pmfa = { name = "Previous Match Find Action", command = "editor.action.previousMatchFindAction", shortcut = "shift+f3" }
+pmfa = { name = "Previous Match Find Action", lua = "command('editor.action.previousMatchFindAction')", shortcut = "shift+f3" }
 
-pph = { name = "showPrevParameterHint", command = "showPrevParameterHint" }
+pph = { name = "showPrevParameterHint", lua = "command('showPrevParameterHint')" }
 
 pr = [
-  { name = "Previous", command = "search.action.focusPreviousSearchResult", shortcut = "shift+f4" },
-  { name = "selectPrevCodeAction", command = "selectPrevCodeAction", shortcut = "ctrl+p" }
+  { name = "Previous", lua = "command('search.action.focusPreviousSearchResult')", shortcut = "shift+f4" },
+  { name = "selectPrevCodeAction", lua = "command('selectPrevCodeAction')", shortcut = "ctrl+p" }
 ]
 
-psmfa = { name = "editor.action.previousSelectionMatchFindAction", command = "editor.action.previousSelectionMatchFindAction", shortcut = "shift+cmd+f3" }
+psmfa = { name = "editor.action.previousSelectionMatchFindAction", lua = "command('editor.action.previousSelectionMatchFindAction')", shortcut = "shift+cmd+f3" }
 
-qc = { name = "Toggle Quick Chat", command = "workbench.action.quickchat.toggle", shortcut = "shift+alt+cmd+l" }
+qc = { name = "Toggle Quick Chat", lua = "command('workbench.action.quickchat.toggle')", shortcut = "shift+alt+cmd+l" }
 
 qf = [
-  { name = "Quick Fix", command = "editor.action.quickFix", shortcut = "cmd+." },
-  { name = "workbench.action.terminal.showQuickFixes", command = "workbench.action.terminal.showQuickFixes", shortcut = "cmd+." }
+  { name = "Quick Fix", lua = "command('editor.action.quickFix')", shortcut = "cmd+." },
+  { name = "workbench.action.terminal.showQuickFixes", lua = "command('workbench.action.terminal.showQuickFixes')", shortcut = "cmd+." }
 ]
 
-qi = { name = "workbench.action.quickInputBack", command = "workbench.action.quickInputBack", shortcut = "ctrl+-" }
+qi = { name = "workbench.action.quickInputBack", lua = "command('workbench.action.quickInputBack')", shortcut = "ctrl+-" }
 
-qih = { name = "quickInput.hide", command = "quickInput.hide", shortcut = "ctrl+alt+cmd+escape" }
+qih = { name = "quickInput.hide", lua = "command('quickInput.hide')", shortcut = "ctrl+alt+cmd+escape" }
 
-qith = { name = "quickInput.toggleHover", command = "quickInput.toggleHover", shortcut = "ctrl+space" }
+qith = { name = "quickInput.toggleHover", lua = "command('quickInput.toggleHover')", shortcut = "ctrl+space" }
 
-qonr = { name = "workbench.action.quickOpenNavigateNextInRecentFilesPicker", command = "workbench.action.quickOpenNavigateNextInRecentFilesPicker", shortcut = "ctrl+r" }
+qonr = { name = "workbench.action.quickOpenNavigateNextInRecentFilesPicker", lua = "command('workbench.action.quickOpenNavigateNextInRecentFilesPicker')", shortcut = "ctrl+r" }
 
-qopr = { name = "workbench.action.quickOpenNavigatePreviousInRecentFilesPicker", command = "workbench.action.quickOpenNavigatePreviousInRecentFilesPicker", shortcut = "ctrl+shift+r" }
-
-
-qosn = { name = "workbench.action.quickOpenSelectNext", command = "workbench.action.quickOpenSelectNext", shortcut = "ctrl+n" }
-
-qosp = { name = "workbench.action.quickOpenSelectPrevious", command = "workbench.action.quickOpenSelectPrevious", shortcut = "ctrl+p" }
+qopr = { name = "workbench.action.quickOpenNavigatePreviousInRecentFilesPicker", lua = "command('workbench.action.quickOpenNavigatePreviousInRecentFilesPicker')", shortcut = "ctrl+shift+r" }
 
 
-qt = { name = "Quit", command = "workbench.action.quit", shortcut = "cmd+q" }
+qosn = { name = "workbench.action.quickOpenSelectNext", lua = "command('workbench.action.quickOpenSelectNext')", shortcut = "ctrl+n" }
 
-raff = { name = "search.action.replaceAllInFolder", command = "search.action.replaceAllInFolder", shortcut = "shift+cmd+enter" }
-
-rb = { name = "Remove Brackets", command = "editor.action.removeBrackets", shortcut = "alt+cmd+backspace" }
-
-rcl = { name = "Remove Comment Line", command = "editor.action.removeCommentLine", shortcut = "cmd+k cmd+u" }
-
-rd = { name = "Redo", command = "redo", shortcut = "shift+cmd+z" }
-
-rda = { name = "Reveal Definition Aside", command = "editor.action.revealDefinitionAside", shortcut = "cmd+k f12" }
-
-rfc = { name = "Refactor", command = "editor.action.refactor", shortcut = "ctrl+shift+r" }
-
-rj = { name = "Reject", command = "chatEditor.action.reject", shortcut = "shift+cmd+n" }
-
-rl = { name = "Reload", command = "workbench.action.browser.reload", shortcut = "cmd+r" }
-
-rn = { name = "Rename", command = "editor.action.rename", shortcut = "f2" }
-
-ro = { name = "Replace One", command = "editor.action.replaceOne", shortcut = "shift+cmd+1" }
-
-rp = { name = "search.action.replace", command = "search.action.replace", shortcut = "shift+cmd+1" }
-
-rs = { name = "rerunSearchEditorSearch", command = "rerunSearchEditorSearch" }
-
-rpfl = { name = "repl.action.filter", command = "repl.action.filter", shortcut = "cmd+f" }
-
-rpfn = { name = "repl.action.find", command = "repl.action.find", shortcut = "alt+cmd+f" }
-
-rsf = { name = "search.action.restrictSearchToFolder", command = "search.action.restrictSearchToFolder", shortcut = "shift+alt+f" }
-
-rvd = { name = "Reveal Definition", command = "editor.action.revealDefinition", shortcut = "f12" }
-
-rw = { name = "Reload Window", command = "workbench.action.reloadWindow", shortcut = "cmd+r" }
-
-sac = { name = "editor.action.selectFromAnchorToCursor", command = "editor.action.selectFromAnchorToCursor", shortcut = "cmd+k cmd+k" }
+qosp = { name = "workbench.action.quickOpenSelectPrevious", lua = "command('workbench.action.quickOpenSelectPrevious')", shortcut = "ctrl+p" }
 
 
-sal = { name = "Save All", command = "saveAll", shortcut = "alt+cmd+s" }
+qt = { name = "Quit", lua = "command('workbench.action.quit')", shortcut = "cmd+q" }
+
+raff = { name = "search.action.replaceAllInFolder", lua = "command('search.action.replaceAllInFolder')", shortcut = "shift+cmd+enter" }
+
+rb = { name = "Remove Brackets", lua = "command('editor.action.removeBrackets')", shortcut = "alt+cmd+backspace" }
+
+rcl = { name = "Remove Comment Line", lua = "command('editor.action.removeCommentLine')", shortcut = "cmd+k cmd+u" }
+
+rd = { name = "Redo", lua = "command('redo')", shortcut = "shift+cmd+z" }
+
+rda = { name = "Reveal Definition Aside", lua = "command('editor.action.revealDefinitionAside')", shortcut = "cmd+k f12" }
+
+rfc = { name = "Refactor", lua = "command('editor.action.refactor')", shortcut = "ctrl+shift+r" }
+
+rj = { name = "Reject", lua = "command('chatEditor.action.reject')", shortcut = "shift+cmd+n" }
+
+rl = { name = "Reload", lua = "command('workbench.action.browser.reload')", shortcut = "cmd+r" }
+
+rn = { name = "Rename", lua = "command('editor.action.rename')", shortcut = "f2" }
+
+ro = { name = "Replace One", lua = "command('editor.action.replaceOne')", shortcut = "shift+cmd+1" }
+
+rp = { name = "search.action.replace", lua = "command('search.action.replace')", shortcut = "shift+cmd+1" }
+
+rs = { name = "rerunSearchEditorSearch", lua = "command('rerunSearchEditorSearch')" }
+
+rpfl = { name = "repl.action.filter", lua = "command('repl.action.filter')", shortcut = "cmd+f" }
+
+rpfn = { name = "repl.action.find", lua = "command('repl.action.find')", shortcut = "alt+cmd+f" }
+
+rsf = { name = "search.action.restrictSearchToFolder", lua = "command('search.action.restrictSearchToFolder')", shortcut = "shift+alt+f" }
+
+rvd = { name = "Reveal Definition", lua = "command('editor.action.revealDefinition')", shortcut = "f12" }
+
+rw = { name = "Reload Window", lua = "command('workbench.action.reloadWindow')", shortcut = "cmd+r" }
+
+sac = { name = "editor.action.selectFromAnchorToCursor", lua = "command('editor.action.selectFromAnchorToCursor')", shortcut = "cmd+k cmd+k" }
+
+
+sal = { name = "Save All", lua = "command('saveAll')", shortcut = "alt+cmd+s" }
 
 sas = [
-  { name = "Save As", command = "workbench.action.files.saveAs", shortcut = "shift+cmd+s" },
-  { name = "Show All Symbols", command = "workbench.action.showAllSymbols", shortcut = "cmd+t" }
+  { name = "Save As", lua = "command('workbench.action.files.saveAs')", shortcut = "shift+cmd+s" },
+  { name = "Show All Symbols", lua = "command('workbench.action.showAllSymbols')", shortcut = "cmd+t" }
 ]
 
-sc = { name = "Show Commands", command = "workbench.action.showCommands", shortcut = "f1" }
+sc = { name = "Show Commands", lua = "command('workbench.action.showCommands')", shortcut = "f1" }
 
-# sd = { name = "Scroll Down", command = "Scroll Down" }
+# sd = { name = "Scroll Down", lua = "command('Scroll Down')" }
 
-sh = { name = "Show Hover", command = "workbench.action.showHover", shortcut = "cmd+k cmd+i" }
+sh = { name = "Show Hover", lua = "command('workbench.action.showHover')", shortcut = "cmd+k cmd+i" }
 
-shl = { name = "editor.action.selectHighlights", command = "editor.action.selectHighlights", shortcut = "shift+cmd+l" }
+shl = { name = "editor.action.selectHighlights", lua = "command('editor.action.selectHighlights')", shortcut = "shift+cmd+l" }
 
-sld = { name = "Scroll Line Down", command = "scrollLineDown", shortcut = "ctrl+pagedown" }
+sld = { name = "Scroll Line Down", lua = "command('scrollLineDown')", shortcut = "ctrl+pagedown" }
 
-slf = { name = "workbench.action.files.saveLocalFile", command = "workbench.action.files.saveLocalFile", shortcut = "shift+cmd+s" }
+slf = { name = "workbench.action.files.saveLocalFile", lua = "command('workbench.action.files.saveLocalFile')", shortcut = "shift+cmd+s" }
 
-slu = { name = "Scroll Line Up", command = "scrollLineUp", shortcut = "ctrl+pageup" }
+slu = { name = "Scroll Line Up", lua = "command('scrollLineUp')", shortcut = "ctrl+pageup" }
 
-# sn = { name = "Show Next", command = "editor.action.inlineSuggest.showNext", shortcut = "alt+]" }
+# sn = { name = "Show Next", lua = "command('editor.action.inlineSuggest.showNext')", shortcut = "alt+]" }
 
-sns = { name = "selectNextSuggestion", command = "selectNextSuggestion" }
+sns = { name = "selectNextSuggestion", lua = "command('selectNextSuggestion')" }
 
-sp = { name = "Show Previous", command = "editor.action.inlineSuggest.showPrevious", shortcut = "alt+[" }
+sp = { name = "Show Previous", lua = "command('editor.action.inlineSuggest.showPrevious')", shortcut = "alt+[" }
 
-spd = { name = "Scroll Page Down", command = "scrollPageDown", shortcut = "cmd+pagedown" }
+spd = { name = "Scroll Page Down", lua = "command('scrollPageDown')", shortcut = "cmd+pagedown" }
 
-sps = { name = "selectPrevSuggestion", command = "selectPrevSuggestion" }
+sps = { name = "selectPrevSuggestion", lua = "command('selectPrevSuggestion')" }
 
-spu = { name = "Scroll Page Up", command = "scrollPageUp", shortcut = "cmd+pageup" }
+spu = { name = "Scroll Page Up", lua = "command('scrollPageUp')", shortcut = "cmd+pageup" }
 
-ssa = { name = "editor.action.setSelectionAnchor", command = "editor.action.setSelectionAnchor", shortcut = "cmd+k cmd+b" }
+ssa = { name = "editor.action.setSelectionAnchor", lua = "command('editor.action.setSelectionAnchor')", shortcut = "cmd+k cmd+b" }
 
-sse = { name = "Smart Select Expand", command = "editor.action.smartSelect.expand", shortcut = "ctrl+shift+right" }
+sse = { name = "Smart Select Expand", lua = "command('editor.action.smartSelect.expand')", shortcut = "ctrl+shift+right" }
 
-sss = { name = "Smart Select Contract", command = "editor.action.smartSelect.shrink", shortcut = "ctrl+shift+left" }
+sss = { name = "Smart Select Contract", lua = "command('editor.action.smartSelect.shrink')", shortcut = "ctrl+shift+left" }
 
-st = { name = "Select Theme", command = "workbench.action.selectTheme", shortcut = "cmd+k cmd+t" }
+st = { name = "Select Theme", lua = "command('workbench.action.selectTheme')", shortcut = "cmd+k cmd+t" }
 
-stb = { name = "Scroll to Bottom", command = "Scroll to Bottom" }
+stb = { name = "Scroll to Bottom", lua = "command('Scroll to Bottom')" }
 
-stcw = { name = "workbench.action.terminal.sizeToContentWidth", command = "workbench.action.terminal.sizeToContentWidth", shortcut = "alt+z" }
+stcw = { name = "workbench.action.terminal.sizeToContentWidth", lua = "command('workbench.action.terminal.sizeToContentWidth')", shortcut = "alt+z" }
 
-stt = { name = "Scroll to Top", command = "Scroll to Top" }
+stt = { name = "Scroll to Top", lua = "command('Scroll to Top')" }
 
-sv = { name = "Save", command = "workbench.action.files.save", shortcut = "cmd+s" }
+sv = { name = "Save", lua = "command('workbench.action.files.save')", shortcut = "cmd+s" }
 
-svwf = { name = "Save Without Formatting", command = "workbench.action.files.saveWithoutFormatting", shortcut = "cmd+k s" }
+svwf = { name = "Save Without Formatting", lua = "command('workbench.action.files.saveWithoutFormatting')", shortcut = "cmd+k s" }
 
-# sw = { name = "Search Workspace", command = "workbench.action.searchWorkspace" }
+# sw = { name = "Search Workspace", lua = "command('workbench.action.searchWorkspace')" }
 
-swa = { name = "search.action.searchWithAI", command = "search.action.searchWithAI", shortcut = "cmd+i" }
+swa = { name = "search.action.searchWithAI", lua = "command('search.action.searchWithAI')", shortcut = "cmd+i" }
 
-swc = { name = "suggestWidgetCopy", command = "suggestWidgetCopy" }
+swc = { name = "suggestWidgetCopy", lua = "command('suggestWidgetCopy')" }
 
-sww = { name = "Switch Window", command = "workbench.action.switchWindow", shortcut = "ctrl+w" }
+sww = { name = "Switch Window", lua = "command('workbench.action.switchWindow')", shortcut = "ctrl+w" }
 
-tab = { name = "workbench.action.toggleAuxiliaryBar", command = "workbench.action.toggleAuxiliaryBar", shortcut = "alt+cmd+b" }
+tab = { name = "workbench.action.toggleAuxiliaryBar", lua = "command('workbench.action.toggleAuxiliaryBar')", shortcut = "alt+cmd+b" }
 
-tas = { name = "settings.action.toggleAiSearch", command = "settings.action.toggleAiSearch", shortcut = "cmd+i" }
+tas = { name = "settings.action.toggleAiSearch", lua = "command('settings.action.toggleAiSearch')", shortcut = "cmd+i" }
 
-tbi = { name = "mergeEditor.toggleBetweenInputs", command = "mergeEditor.toggleBetweenInputs", shortcut = "shift+cmd+t" }
+tbi = { name = "mergeEditor.toggleBetweenInputs", lua = "command('mergeEditor.toggleBetweenInputs')", shortcut = "shift+cmd+t" }
 
-tdt = { name = "workbench.action.toggleDevTools", command = "workbench.action.toggleDevTools", shortcut = "alt+cmd+i" }
+tdt = { name = "workbench.action.toggleDevTools", lua = "command('workbench.action.toggleDevTools')", shortcut = "alt+cmd+i" }
 
-teg = { name = "workbench.action.toggleEditorGroupLayout", command = "workbench.action.toggleEditorGroupLayout", shortcut = "alt+cmd+0" }
+teg = { name = "workbench.action.toggleEditorGroupLayout", lua = "command('workbench.action.toggleEditorGroupLayout')", shortcut = "alt+cmd+0" }
 
 tem = [
-  { name = "toggleExplainMode", command = "toggleExplainMode" },
-  { name = "terminalSuggestToggleExplainMode", command = "terminalSuggestToggleExplainMode" }
+  { name = "toggleExplainMode", lua = "command('toggleExplainMode')" },
+  { name = "terminalSuggestToggleExplainMode", lua = "command('terminalSuggestToggleExplainMode')" }
 ]
 
 ts = [
-  { name = "workbench.action.toggleSidebarVisibility", command = "workbench.action.toggleSidebarVisibility", shortcut = "cmd+b" },
-  { name = "workbench.action.terminal.split", command = "workbench.action.terminal.split", shortcut = "ctrl+shift+5" },
-  { name = "workbench.action.terminal.triggerSuggest", command = "workbench.action.terminal.triggerSuggest", shortcut = "ctrl+space" }
+  { name = "workbench.action.toggleSidebarVisibility", lua = "command('workbench.action.toggleSidebarVisibility')", shortcut = "cmd+b" },
+  { name = "workbench.action.terminal.split", lua = "command('workbench.action.terminal.split')", shortcut = "ctrl+shift+5" },
+  { name = "workbench.action.terminal.triggerSuggest", lua = "command('workbench.action.terminal.triggerSuggest')", shortcut = "ctrl+space" }
 ]
 
 tfcs = [
-  { name = "Toggle Find Case Sensitive", command = "toggleFindCaseSensitive", shortcut = "alt+cmd+c" },
-  { name = "workbench.action.terminal.toggleFindCaseSensitive", command = "workbench.action.terminal.toggleFindCaseSensitive", shortcut = "alt+cmd+c" }
+  { name = "Toggle Find Case Sensitive", lua = "command('toggleFindCaseSensitive')", shortcut = "alt+cmd+c" },
+  { name = "workbench.action.terminal.toggleFindCaseSensitive", lua = "command('workbench.action.terminal.toggleFindCaseSensitive')", shortcut = "alt+cmd+c" }
 ]
 
-tfis = { name = "Toggle Find In Selection", command = "toggleFindInSelection", shortcut = "alt+cmd+l" }
+tfis = { name = "Toggle Find In Selection", lua = "command('toggleFindInSelection')", shortcut = "alt+cmd+l" }
 
 tfr = [
-  { name = "Toggle Find Regex", command = "toggleFindRegex", shortcut = "alt+cmd+r" },
-  { name = "workbench.action.terminal.toggleFindRegex", command = "workbench.action.terminal.toggleFindRegex", shortcut = "alt+cmd+r" }
+  { name = "Toggle Find Regex", lua = "command('toggleFindRegex')", shortcut = "alt+cmd+r" },
+  { name = "workbench.action.terminal.toggleFindRegex", lua = "command('workbench.action.terminal.toggleFindRegex')", shortcut = "alt+cmd+r" }
 ]
 
 tfww = [
-  { name = "Toggle Find Whole Word", command = "toggleFindWholeWord", shortcut = "alt+cmd+w" },
-  { name = "workbench.action.terminal.toggleFindWholeWord", command = "workbench.action.terminal.toggleFindWholeWord", shortcut = "alt+cmd+w" }
+  { name = "Toggle Find Whole Word", lua = "command('toggleFindWholeWord')", shortcut = "alt+cmd+w" },
+  { name = "workbench.action.terminal.toggleFindWholeWord", lua = "command('workbench.action.terminal.toggleFindWholeWord')", shortcut = "alt+cmd+w" }
 ]
 
-tl = { name = "Transpose Letters", command = "editor.action.transposeLetters", shortcut = "ctrl+t" }
+tl = { name = "Transpose Letters", lua = "command('editor.action.transposeLetters')", shortcut = "ctrl+t" }
 
-tme = { name = "workbench.action.toggleMaximizeEditorGroup", command = "workbench.action.toggleMaximizeEditorGroup", shortcut = "cmd+k cmd+m" }
+tme = { name = "workbench.action.toggleMaximizeEditorGroup", lua = "command('workbench.action.toggleMaximizeEditorGroup')", shortcut = "cmd+k cmd+m" }
 
-tn = { name = "workbench.action.terminal.new", command = "workbench.action.terminal.new", shortcut = "ctrl+shift+`" }
+tn = { name = "workbench.action.terminal.new", lua = "command('workbench.action.terminal.new')", shortcut = "ctrl+shift+`" }
 
-tnc = { name = "workbench.action.terminal.openNativeConsole", command = "workbench.action.terminal.openNativeConsole", shortcut = "shift+cmd+c" }
+tnc = { name = "workbench.action.terminal.openNativeConsole", lua = "command('workbench.action.terminal.openNativeConsole')", shortcut = "shift+cmd+c" }
 
-tnw = { name = "workbench.action.terminal.newInNewWindow", command = "workbench.action.terminal.newInNewWindow", shortcut = "ctrl+shift+alt+`" }
+tnw = { name = "workbench.action.terminal.newInNewWindow", lua = "command('workbench.action.terminal.newInNewWindow')", shortcut = "ctrl+shift+alt+`" }
 
-to = { name = "Toggle Output", command = "workbench.action.output.toggleOutput", shortcut = "shift+cmd+u" }
+to = { name = "Toggle Output", lua = "command('workbench.action.output.toggleOutput')", shortcut = "shift+cmd+u" }
 
-tpc = { name = "Toggle Preserve Case", command = "togglePreserveCase", shortcut = "alt+cmd+p" }
+tpc = { name = "Toggle Preserve Case", lua = "command('togglePreserveCase')", shortcut = "alt+cmd+p" }
 
-tpf = { name = "togglePeekWidgetFocus", command = "togglePeekWidgetFocus" }
+tpf = { name = "togglePeekWidgetFocus", lua = "command('togglePeekWidgetFocus')" }
 
-tph = { name = "Trigger Parameter Hints", command = "editor.action.triggerParameterHints", shortcut = "shift+cmd+space" }
+tph = { name = "Trigger Parameter Hints", lua = "command('editor.action.triggerParameterHints')", shortcut = "shift+cmd+space" }
 
 tqd = [
-  { name = "toggleQuickDiffWidgetFocus", command = "toggleQuickDiffWidgetFocus" },
-  { name = "toggleQuickDiffWidgetFocus", command = "toggleQuickDiffWidgetFocus" }
+  { name = "toggleQuickDiffWidgetFocus", lua = "command('toggleQuickDiffWidgetFocus')" },
+  { name = "toggleQuickDiffWidgetFocus", lua = "command('toggleQuickDiffWidgetFocus')" }
 ]
 
-tsca = { name = "testing.coverageAll", command = "testing.coverageAll", shortcut = "cmd+; shift+cmd+a" }
+tsca = { name = "testing.coverageAll", lua = "command('testing.coverageAll')", shortcut = "cmd+; shift+cmd+a" }
 
-tscc = { name = "testing.coverageAtCursor", command = "testing.coverageAtCursor", shortcut = "cmd+; shift+cmd+c" }
+tscc = { name = "testing.coverageAtCursor", lua = "command('testing.coverageAtCursor')", shortcut = "cmd+; shift+cmd+c" }
 
-tsccf = { name = "testing.coverageCurrentFile", command = "testing.coverageCurrentFile", shortcut = "cmd+; shift+cmd+f" }
+tsccf = { name = "testing.coverageCurrentFile", lua = "command('testing.coverageCurrentFile')", shortcut = "cmd+; shift+cmd+f" }
 
-tscl = { name = "testing.coverageLastRun", command = "testing.coverageLastRun", shortcut = "cmd+; shift+cmd+l" }
+tscl = { name = "testing.coverageLastRun", lua = "command('testing.coverageLastRun')", shortcut = "cmd+; shift+cmd+l" }
 
-tscr = { name = "testing.cancelRun", command = "testing.cancelRun", shortcut = "cmd+; cmd+x" }
+tscr = { name = "testing.cancelRun", lua = "command('testing.cancelRun')", shortcut = "cmd+; cmd+x" }
 
-tsda = { name = "testing.debugAll", command = "testing.debugAll", shortcut = "cmd+; cmd+a" }
+tsda = { name = "testing.debugAll", lua = "command('testing.debugAll')", shortcut = "cmd+; cmd+a" }
 
-tsdc = { name = "testing.debugAtCursor", command = "testing.debugAtCursor", shortcut = "cmd+; cmd+c" }
+tsdc = { name = "testing.debugAtCursor", lua = "command('testing.debugAtCursor')", shortcut = "cmd+; cmd+c" }
 
-tsdcf = { name = "testing.debugCurrentFile", command = "testing.debugCurrentFile", shortcut = "cmd+; cmd+f" }
+tsdcf = { name = "testing.debugCurrentFile", lua = "command('testing.debugCurrentFile')", shortcut = "cmd+; cmd+f" }
 
-tsdf = { name = "testing.debugFailTests", command = "testing.debugFailTests", shortcut = "cmd+; cmd+e" }
+tsdf = { name = "testing.debugFailTests", lua = "command('testing.debugFailTests')", shortcut = "cmd+; cmd+e" }
 
-tsdl = { name = "testing.debugLastRun", command = "testing.debugLastRun", shortcut = "cmd+; cmd+l" }
+tsdl = { name = "testing.debugLastRun", lua = "command('testing.debugLastRun')", shortcut = "cmd+; cmd+l" }
 
-tsg = { name = "editor.action.triggerSuggest", command = "editor.action.triggerSuggest", shortcut = "cmd+i" }
+tsg = { name = "editor.action.triggerSuggest", lua = "command('editor.action.triggerSuggest')", shortcut = "cmd+i" }
 
-tsgd = { name = "toggleSuggestionDetails", command = "toggleSuggestionDetails" }
+tsgd = { name = "toggleSuggestionDetails", lua = "command('toggleSuggestionDetails')" }
 
-tsgf = { name = "toggleSuggestionFocus", command = "toggleSuggestionFocus" }
+tsgf = { name = "toggleSuggestionFocus", lua = "command('toggleSuggestionFocus')" }
 
-tsh = { name = "Toggle Suggest Details", command = "toggleSuggestionDetails", shortcut = "cmd+i" }
+tsh = { name = "Toggle Suggest Details", lua = "command('toggleSuggestionDetails')", shortcut = "cmd+i" }
 
-tsic = { name = "testing.toggleInlineCoverage", command = "testing.toggleInlineCoverage", shortcut = "cmd+; shift+cmd+i" }
+tsic = { name = "testing.toggleInlineCoverage", lua = "command('testing.toggleInlineCoverage')", shortcut = "cmd+; shift+cmd+i" }
 
-tsop = { name = "testing.openOutputPeek", command = "testing.openOutputPeek", shortcut = "cmd+; cmd+m" }
+tsop = { name = "testing.openOutputPeek", lua = "command('testing.openOutputPeek')", shortcut = "cmd+; cmd+m" }
 
-tsr = { name = "editor.action.toggleScreenReaderAccessibilityMode", command = "editor.action.toggleScreenReaderAccessibilityMode", shortcut = "cmd+e" }
+tsr = { name = "editor.action.toggleScreenReaderAccessibilityMode", lua = "command('editor.action.toggleScreenReaderAccessibilityMode')", shortcut = "cmd+e" }
 
-tsra = { name = "testing.runAll", command = "testing.runAll", shortcut = "cmd+; a" }
+tsra = { name = "testing.runAll", lua = "command('testing.runAll')", shortcut = "cmd+; a" }
 
-tsrc = { name = "testing.runAtCursor", command = "testing.runAtCursor", shortcut = "cmd+; c" }
+tsrc = { name = "testing.runAtCursor", lua = "command('testing.runAtCursor')", shortcut = "cmd+; c" }
 
-tsrcf = { name = "testing.runCurrentFile", command = "testing.runCurrentFile", shortcut = "cmd+; f" }
+tsrcf = { name = "testing.runCurrentFile", lua = "command('testing.runCurrentFile')", shortcut = "cmd+; f" }
 
-tsrf = { name = "testing.reRunFailTests", command = "testing.reRunFailTests", shortcut = "cmd+; e" }
+tsrf = { name = "testing.reRunFailTests", lua = "command('testing.reRunFailTests')", shortcut = "cmd+; e" }
 
-tsrl = { name = "testing.reRunLastRun", command = "testing.reRunLastRun", shortcut = "cmd+; l" }
+tsrl = { name = "testing.reRunLastRun", lua = "command('testing.reRunLastRun')", shortcut = "cmd+; l" }
 
-tsro = { name = "testing.showMostRecentOutput", command = "testing.showMostRecentOutput", shortcut = "cmd+; cmd+o" }
+tsro = { name = "testing.showMostRecentOutput", lua = "command('testing.showMostRecentOutput')", shortcut = "cmd+; cmd+o" }
 
-tsrt = { name = "testing.refreshTests", command = "testing.refreshTests", shortcut = "cmd+; cmd+r" }
+tsrt = { name = "testing.refreshTests", lua = "command('testing.refreshTests')", shortcut = "cmd+; cmd+r" }
 
-tst = { name = "workbench.action.terminal.splitActiveTab", command = "workbench.action.terminal.splitActiveTab", shortcut = "ctrl+shift+5" }
+tst = { name = "workbench.action.terminal.splitActiveTab", lua = "command('workbench.action.terminal.splitActiveTab')", shortcut = "ctrl+shift+5" }
 
-tsto = { name = "testing.toggleInlineTestOutput", command = "testing.toggleInlineTestOutput", shortcut = "cmd+; cmd+i" }
+tsto = { name = "testing.toggleInlineTestOutput", lua = "command('testing.toggleInlineTestOutput')", shortcut = "cmd+; cmd+i" }
 
-tstp = { name = "testing.toggleTestingPeekHistory", command = "testing.toggleTestingPeekHistory", shortcut = "alt+h" }
+tstp = { name = "testing.toggleTestingPeekHistory", lua = "command('testing.toggleTestingPeekHistory')", shortcut = "alt+h" }
 
-tsw = { name = "workbench.action.terminal.searchWorkspace", command = "workbench.action.terminal.searchWorkspace", shortcut = "shift+cmd+f" }
+tsw = { name = "workbench.action.terminal.searchWorkspace", lua = "command('workbench.action.terminal.searchWorkspace')", shortcut = "shift+cmd+f" }
 
-tt = { name = "Toggle Terminal", command = "workbench.action.terminal.toggleTerminal", shortcut = "ctrl+`" }
+tt = { name = "Toggle Terminal", lua = "command('workbench.action.terminal.toggleTerminal')", shortcut = "ctrl+`" }
 
-ttf = { name = "editor.action.toggleTabFocusMode", command = "editor.action.toggleTabFocusMode", shortcut = "ctrl+shift+m" }
+ttf = { name = "editor.action.toggleTabFocusMode", lua = "command('editor.action.toggleTabFocusMode')", shortcut = "ctrl+shift+m" }
 
-ttw = { name = "editor.action.trimTrailingWhitespace", command = "editor.action.trimTrailingWhitespace", shortcut = "cmd+k cmd+x" }
+ttw = { name = "editor.action.trimTrailingWhitespace", lua = "command('editor.action.trimTrailingWhitespace')", shortcut = "cmd+k cmd+x" }
 
-tww = { name = "Toggle Word Wrap", command = "editor.action.toggleWordWrap", shortcut = "alt+z" }
+tww = { name = "Toggle Word Wrap", lua = "command('editor.action.toggleWordWrap')", shortcut = "alt+z" }
 
-tzm = { name = "Toggle Zen Mode", command = "workbench.action.toggleZenMode", shortcut = "cmd+k z" }
+tzm = { name = "Toggle Zen Mode", lua = "command('workbench.action.toggleZenMode')", shortcut = "cmd+k z" }
 
-ud = { name = "Undo", command = "undo", shortcut = "cmd+z" }
+ud = { name = "Undo", lua = "command('undo')", shortcut = "cmd+z" }
 
 
-whn = { name = "editor.action.wordHighlight.next", command = "editor.action.wordHighlight.next", shortcut = "f7" }
+whn = { name = "editor.action.wordHighlight.next", lua = "command('editor.action.wordHighlight.next')", shortcut = "f7" }
 
-whp = { name = "editor.action.wordHighlight.prev", command = "editor.action.wordHighlight.prev", shortcut = "shift+f7" }
+whp = { name = "editor.action.wordHighlight.prev", lua = "command('editor.action.wordHighlight.prev')", shortcut = "shift+f7" }
 
-zi = { name = "Zoom In", command = "workbench.action.zoomIn", shortcut = "cmd+NumpadAdd" }
+zi = { name = "Zoom In", lua = "command('workbench.action.zoomIn')", shortcut = "cmd+NumpadAdd" }
 
-zo = { name = "Zoom Out", command = "workbench.action.zoomOut", shortcut = "cmd+NumpadSubtract" }
+zo = { name = "Zoom Out", lua = "command('workbench.action.zoomOut')", shortcut = "cmd+NumpadSubtract" }
 
-std = { name = "workbench.action.terminal.suggestToggleDetails", command = "workbench.action.terminal.suggestToggleDetails", shortcut = "cmd+i" }
+std = { name = "workbench.action.terminal.suggestToggleDetails", lua = "command('workbench.action.terminal.suggestToggleDetails')", shortcut = "cmd+i" }
 
-stf = { name = "workbench.action.terminal.suggestToggleDetailsFocus", command = "workbench.action.terminal.suggestToggleDetailsFocus", shortcut = "ctrl+alt+space" }
+stf = { name = "workbench.action.terminal.suggestToggleDetailsFocus", lua = "command('workbench.action.terminal.suggestToggleDetailsFocus')", shortcut = "ctrl+alt+space" }
 
-odl = { name = "workbench.action.terminal.openDetectedLink", command = "workbench.action.terminal.openDetectedLink", shortcut = "shift+cmd+o" }
+odl = { name = "workbench.action.terminal.openDetectedLink", lua = "command('workbench.action.terminal.openDetectedLink')", shortcut = "shift+cmd+o" }
 
-apa = { name = "notification.acceptPrimaryAction", command = "notification.acceptPrimaryAction", shortcut = "shift+cmd+a" }
+apa = { name = "notification.acceptPrimaryAction", lua = "command('notification.acceptPrimaryAction')", shortcut = "shift+cmd+a" }
