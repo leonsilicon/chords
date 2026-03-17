@@ -1,7 +1,7 @@
-[_config]
+[config]
 name = "VSCode"
 
-[_config.lua]
+[config.lua]
 # This script allows us to execute VSCode commands directly via https://marketplace.visualstudio.com/items?itemName=pokey.command-server if it's active, and otherwise falls back to built-in shortcuts.
 init = """
 local h = io.popen("id -u")
@@ -47,6 +47,7 @@ function atomic_write(path, content)
 end
 """
 
+[chords]
 # Find
 fi = [
   { name = "Find", lua = "command('actions.find')", shortcut = "cmd+f" },

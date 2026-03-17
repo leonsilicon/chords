@@ -1,4 +1,3 @@
-_config = {
-  name = "RustRover",
-  extends = "com.jetbrains.intellij"
-}
+[config]
+name = "RustRover",
+extends = "com.jetbrains.intellij"

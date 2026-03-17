@@ -1,4 +1,3 @@
-_config = {
-  name = "WebStorm",
-  extends = "com.jetbrains.intellij"
-}
+[config]
+name = "WebStorm"
+extends = "com.jetbrains.intellij"

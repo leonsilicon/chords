@@ -1,7 +1,7 @@
-_config = {
-  name = "IntelliJ IDEA"
-}
+[config]
+name = "IntelliJ IDEA"
 
+[chords]
 # https://www.jetbrains.com/help/idea/reference-keymap-mac-default.html
 si = { name = "Select In...", command = "Select In...", shortcut = "option+f1" }
 rv = { name = "Reveal", shortcut = "option+f1 1" }

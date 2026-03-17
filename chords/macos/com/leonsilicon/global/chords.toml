@@ -1,4 +1,5 @@
 # @leonsilicon's custom global chords
+[chords]
 "/w" = { name = "Warp", command = "Open Warp", shell = "open -a 'Warp'" }
 "/b" = { name = "Browser", command = "Open Browser", shell = """open -a "ChatGPT Atlas"; osascript -e 'tell application "System Events" to set frontmost of process "ChatGPT Atlas" to true'""" }
 "/r" = { name = "Raycast", command = "Open Raycast", shell = "open -a 'Raycast'" }

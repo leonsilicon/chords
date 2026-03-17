@@ -1,4 +1,3 @@
-_config = {
-  name = "ChatGPT Atlas",
-  extends = "com.google.Chrome"
-}
+[config]
+name = "ChatGPT Atlas"
+extends = "com.google.Chrome"

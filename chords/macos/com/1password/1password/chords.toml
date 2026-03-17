@@ -1,7 +1,7 @@
-_config = {
-    name = "1Password"
-}
+[config]
+name = "1Password"
 
+[chords]
 ce = { name = "Copy Email", shortcut = "cmd+c" }
 cu = { name = "Copy Username", shortcut = "cmd+c" }
 cp = { name = "Copy Password", shortcut = "cmd+shift+c" }

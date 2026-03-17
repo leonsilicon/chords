@@ -1,14 +1,14 @@
 # Global commands for Rift
 
-_config = {
-  prefixes = {
-    "?" = {
-      name = "Prefix",
-      default = ","
-    }
+[config]
+prefixes = {
+  "?" = {
+    name = "Prefix",
+    default = ","
   }
 }
 
+[chords]
 # Calibrate
 #"?c" = { name = "Calibrate", shell = "rift-cli execute workspace next && rift-cli execute workspace prev"}
 #"?n" = { name = "Next", shell = "rift-cli execute window next"}

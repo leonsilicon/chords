@@ -1,8 +1,8 @@
-_config = {
-  name = "Warp",
-  url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
-}
+[config]
+name = "Warp"
+url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 
+[chords]
 # Warp Essentials
 lcp = { name = "Launch Configuration Palette", command = "workspace:toggle_launch_config_palette", shortcut = "ctrl+cmd+l" }
 cs = { name = "Command Search", command = "workspace:show_command_search", shortcut = "ctrl+r" }
