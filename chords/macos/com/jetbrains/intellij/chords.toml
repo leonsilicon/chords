@@ -2,13 +2,6 @@
 name = "IntelliJ IDEA"
 
 [chords]
-# https://www.jetbrains.com/help/idea/reference-keymap-mac-default.html
-si = { name = "Select In...", command = "Select In...", shortcut = "option+f1" }
-rv = { name = "Reveal", shortcut = "option+f1 1" }
-rvf = { name = "Reveal in Finder", shortcut = "option+f1 9" }
-rvt = { name = "Reveal in Terminal", shortcut = "option+f1 0" }
-set = { name = "Window: Settings", command = "Settings...", shortcut = "cmd+," }
-
 # Find
 fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
 fr = { name = "Find and Replace", command = "Replace...", shortcut = "cmd+r" }
@@ -19,11 +12,15 @@ frg = { name = "Find and Replace Globally", command = "Replace in Files...", sho
 fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a" }
 
 # File Actions
+fp = { name = "File: Path", shortcut = "cmd+shift+c" }
 fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
-fnf = { name = "File: New File", shortcut = "ctrl+option+n f enter" }
+fc = { name = "File: Here", command = "New in This Directory", shortcut = "ctrl+option+n" }
+fd = { name = "File: Directory", lua = "command('explorer.newFolder')" }
+ft = { name = "File: Trash", shortcut = "cmd+delete" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
-fos = { name = "File: Open Structure", command = "File Structure", shortcut = "cmd+f12" }
+fvs = { name = "File: View Structure", command = "File Structure", shortcut = "cmd+f12" }
+fs = { name = "File: Show", shortcut = "opt+f1 enter" }
 
 bp = { name = "Build Project", command = "Build Project", shortcut = "cmd+f9" }
 br = { name = "Build: Rebuild", command = "Rebuild", shortcut = "cmd+shift+f9" }
@@ -51,13 +48,12 @@ fsd = { name = "Font Size: Decrease", command = "Decrease Font Size in All Edito
 
 # Code Folding
 ff = { name = "Folding: Fold", command = "Collapse", shortcut = "cmd+NumpadSubtract" }
+ffs = { name = "Folding: Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 ffa = { name = "Folding: Fold All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
 ffr = { name = "Folding: Fold Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
 fu = { name = "Folding: Unfold", command = "Expand", shortcut = "cmd+NumpadAdd" }
+fua = { name = "Folding: Unfold All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
 fur = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
-fua = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
-ca = { name = "Collapse All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
-fs = { name = "Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 
 # Multiple carets and selection ranges
 # = { name = "Add/Remove Caret", command = "Add/Remove Caret", shortcut = "option+shift+click" }
@@ -79,7 +75,7 @@ sbc = { name = "Second Basic Completion", command = "Second Basic Completion", s
 cai = { name = "Complete Code with AI Assistant", command = "Complete Code with AI Assistant", shortcut = "option+backslash" }
 gai = { name = "Generate Code with AI Assistant", command = "Generate Code with AI Assistant", shortcut = "cmd+backslash" }
 ccs = { name = "Complete Current Statement", command = "Complete Current Statement", shortcut = "cmd+shift+enter" }
-fc = { name = "Reformat Code", command = "Reformat Code", shortcut = "cmd+option+l" }
+# fc = { name = "Reformat Code", command = "Reformat Code", shortcut = "cmd+option+l" }
 pi = { name = "Parameter Info", command = "Parameter Info", shortcut = "cmd+p" }
 qd = { name = "Quick Documentation", command = "Quick Documentation", shortcut = "f1" }
 msu = { name = "Move Statement Up", command = "Move Statement Up", shortcut = "cmd+shift+up" }

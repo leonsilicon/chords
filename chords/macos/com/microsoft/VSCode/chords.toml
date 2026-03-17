@@ -70,13 +70,16 @@ frg = { name = "Find Replace Globally", lua = "command('workbench.action.replace
 
 # File Actions
 fp = { name = "File: Path", lua = "command('copyFilePath')", shortcut = "alt+cmd+c" }
-fcp = { name = "File: Current Path", lua = "command('workbench.action.files.copyPathOfActiveFile')", shortcut = "cmd+k p" }
+# fp = { name = "File: Path", lua = "command('workbench.action.files.copyPathOfActiveFile')", shortcut = "cmd+k p" }
 frp = { name = "File: Relative Path", lua = "command('copyRelativeFilePath')", shortcut = "shift+alt+cmd+c" }
-fn = { name = "File: New", lua = "command('explorer.newFile')" }
+fn = { name = "File: New", shortcut = "ctrl+opt+cmd+n" }
+fh = { name = "File: Here", lua = "command('explorer.newFile')" }
+fd = { name = "File: Directory", lua = "command('explorer.newFolder')" }
+fc = { name = "File: Close Directory", lua = "command('workbench.action.closeFolder')", shortcut = "cmd+k f" }
 fnu = { name = "File: New Untitled File", lua = "command('workbench.action.files.newUntitledFile')", shortcut = "cmd+n" }
-fd = { name = "File: Delete", lua = "command('deleteFile')", shortcut = "alt+cmd+backspace" }
+ft = { name = "File: Trash", lua = "command('deleteFile')", shortcut = "alt+cmd+backspace" }
 fm = { name = "File: Format", lua = "command('editor.action.formatDocument')", shortcut = "shift+alt+f" }
-fl = { name = "File: Locate", lua = "command('workbench.action.files.revealActiveFileInWindows')", shortcut = "cmd+k r" }
+fs = { name = "File: Show", lua = "command('revealInExplorer')"  }
 fra = { name = "search.action.replaceAllInFile", lua = "command('search.action.replaceAllInFile')", shortcut = "shift+cmd+enter" }
 fo = { name = "File: Open", lua = "command('workbench.action.files.openFile')", shortcut = "cmd+o" }
 for = { name = "File: Open Recent", lua = "command('workbench.action.openRecent')", shortcut = "ctrl+r" }
@@ -266,8 +269,6 @@ cepc = { name = "workbench.action.compareEditor.previousChange", lua = "command(
 
 cetnw = { name = "workbench.action.copyEditorToNewWindow", lua = "command('workbench.action.copyEditorToNewWindow')", shortcut = "cmd+k o" }
 
-cf = { name = "Close Folder", lua = "command('workbench.action.closeFolder')", shortcut = "cmd+k f" }
-
 cml = { name = "Comment Line", lua = "command('editor.action.commentLine')", shortcut = "cmd+/" }
 
 cl = { name = "workbench.action.terminal.clear", lua = "command('workbench.action.terminal.clear')", shortcut = "cmd+k" }
@@ -315,7 +316,7 @@ ddp = { name = "editor.action.dirtydiff.previous", lua = "command('editor.action
 
 dib = { name = "editor.debug.action.toggleInlineBreakpoint", lua = "command('editor.debug.action.toggleInlineBreakpoint')", shortcut = "shift+f9" }
 
-dc = { name = "workbench.debug.panel.action.clearReplAction", lua = "command('workbench.debug.panel.action.clearReplAction')", shortcut = "cmd+k" }
+# dc = { name = "workbench.debug.panel.action.clearReplAction", lua = "command('workbench.debug.panel.action.clearReplAction')", shortcut = "cmd+k" }
 
 dk = { name = "editor.action.defineKeybinding", lua = "command('editor.action.defineKeybinding')", shortcut = "cmd+k cmd+k" }
 
@@ -369,10 +370,10 @@ fdn = { name = "Format Document None", lua = "command('editor.action.formatDocum
 foev = { name = "workbench.files.action.focusOpenEditorsView", lua = "command('workbench.files.action.focusOpenEditorsView')", shortcut = "cmd+k e" }
 
 
-fs = [
-  { name = "Format Selection", lua = "command('editor.action.formatSelection')", shortcut = "cmd+k cmd+f" },
-  { name = "Full Screen", lua = "command('workbench.action.toggleFullScreen')", shortcut = "ctrl+cmd+f" }
-]
+# fs = [
+#   { name = "Format Selection", lua = "command('editor.action.formatSelection')", shortcut = "cmd+k cmd+f" },
+#   { name = "Full Screen", lua = "command('workbench.action.toggleFullScreen')", shortcut = "ctrl+cmd+f" }
+# ]
 
 fsb = { name = "Focus Side Bar", lua = "command('workbench.action.focusSideBar')", shortcut = "cmd+0" }
 
