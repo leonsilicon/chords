@@ -1,2 +1,2 @@
 install:
-  lx --lua-version 5.4 build && rm .lux/.gitignore
+  lx --lua-version 5.4 build --no-lock && rm .lux/.gitignore
