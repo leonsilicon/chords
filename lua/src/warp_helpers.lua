@@ -1,6 +1,7 @@
 local M = {}
 
 local file = require("pl.file")
+local file_helpers = require("file")
 local path = require("pl.path")
 local generate_synthetic_keybinds = require("keybinds").generate_synthetic_keybinds
 local expand_all = require("brace_expansion_helpers").expand_all
@@ -73,7 +74,7 @@ function M.create_command(chords)
       file.write(keybindings_path, "")
     end
 
-    file.upsert_block(
+    file_helpers.upsert_block(
       keybindings_path,
       keybindings_yaml,
       "# >>> chords:auto:start",
