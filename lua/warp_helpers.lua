@@ -91,7 +91,8 @@ function M.create_command(chords)
       return false
     end
 
-    tap(keybind)
+    -- Warp stores keybinds using -, but we use +
+    tap(keybind:gsub("%-", "+"))
 
     return true
   end
