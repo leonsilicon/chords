@@ -29,8 +29,8 @@ tl = { name = "Tab: Left Move", command = "Move tabs right or left", shortcut = 
 tr = { name = "Tab: Right Move", command = "Move tabs right or left", shortcut = "cmd+shift+pgdown"}
 
 # History
-hw = { name = "History: Forward", command = "Open the next page from your browsing history in the current tab", shortcut = "cmd+]"}
-hk = { name = "History: Back", command = "Open the previous page from your browsing history in the current tab", shortcut = "cmd+["}
+hb = { name = "History: Back", command = "Open the next page from your browsing history in the current tab", shortcut = "cmd+]"}
+hf = { name = "History: Forward", command = "Open the previous page from your browsing history in the current tab", shortcut = "cmd+["}
 
 # Pages
 ps = { name = "Page: Settings", command = "Open the Settings page in a new tab", shortcut = "cmd+,"}

@@ -42,8 +42,6 @@ fs = { name = "File: Show", lua = "command('revealInExplorer')"  }
 fra = { name = "search.action.replaceAllInFile", lua = "command('search.action.replaceAllInFile')", shortcut = "shift+cmd+enter" }
 fo = { name = "File: Open", lua = "command('workbench.action.files.openFile')", shortcut = "cmd+o" }
 for = { name = "File: Open Recent", lua = "command('workbench.action.openRecent')", shortcut = "ctrl+r" }
-fw = { name = "Editor: Forward", lua = "command('workbench.action.quickOpenLeastRecentlyUsedEditorInGroup')", shortcut = "ctrl+shift+tab" }
-fk = { name = "Editor: Back", lua = "command('workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup')", shortcut = "ctrl+tab" }
 
 # Folding
 ## Fold
@@ -74,7 +72,7 @@ f6 = { name = "editor.foldLevel6", lua = "command('editor.foldLevel6')", shortcu
 f7 = { name = "editor.foldLevel7", lua = "command('editor.foldLevel7')", shortcut = "cmd+k cmd+7" }
 
 # History
-hk = { name = "History: Back", lua = "command('workbench.action.navigateBack')", shortcut = "BrowserBack" }
+hb = { name = "History: Back", lua = "command('workbench.action.navigateBack')", shortcut = "BrowserBack" }
 hf = { name = "History: Forward", lua = "command('workbench.action.navigateForward')", shortcut = "BrowserForward" }
 
 # Panels
@@ -91,7 +89,7 @@ ps = { name = "Panel: Search", lua = "command('workbench.view.search')", shortcu
 pm = { name = "Panel: Marketplace", lua = "command('workbench.view.extensions')", shortcut = "shift+cmd+x" }
 po = { name = "Panel: Open", lua = "command('workbench.action.quickOpenView')", shortcut = "cmd+shift+p v i e w space" }
 pf = { name = "Panel: Forward", lua = "command('workbench.action.quickOpenNavigateNextInViewPicker')", shortcut = "ctrl+q" }
-pk = { name = "Panel: Back", lua = "command('workbench.action.quickOpenNavigatePreviousInViewPicker')", shortcut = "ctrl+shift+q" }
+pb = { name = "Panel: Back", lua = "command('workbench.action.quickOpenNavigatePreviousInViewPicker')", shortcut = "ctrl+shift+q" }
 pi = { name = "Panel: Info", lua = "command('workbench.action.togglePanel')", shortcut = "cmd+j" }
 px = { name = "Panel: Next", lua = "command('workbench.action.focusNextPart')", shortcut = "f6" }
 pv = { name = "Panel: Forward", lua = "command('workbench.action.focusPreviousPart')", shortcut = "shift+f6" }
@@ -100,8 +98,8 @@ pgs = { name = "Page: Settings", lua = "command('workbench.action.openSettings')
 
 # Editor
 ea = { name = "Editor: Actions", lua = "command('editor.action.quickFix')", shortcut = "cmd+." }
-es = { name = "Editor: Solutions", lua = "command('editor.action.quickFix')", shortcut = "cmd+." }
-ef = { name = "Editor: Focus", lua = "command('workbench.action.focusActiveEditorGroup')" }
+ek = { name = "Editor: Kwik Fix", lua = "command('editor.action.quickFix')", shortcut = "cmd+." }
+es = { name = "Editor: Focus", lua = "command('workbench.action.focusActiveEditorGroup')" }
 ep = { name = "Editor: Pin", lua = "command('workbench.action.pinEditor')", shortcut = "cmd+k shift+enter" }
 eu = { name = "Editor: Unpin", lua = "command('workbench.action.unpinEditor')", shortcut = "cmd+k shift+enter" }
 esa = { name = "Editor: Show All", lua = "command('workbench.action.showAllEditors')", shortcut = "alt+cmd+tab" }
@@ -109,8 +107,8 @@ eo = { name = "Editor: Open Recently Closed", lua = "command('workbench.action.r
 ev = { name = "Editor: Previous", lua = "command('workbench.action.previousEditorInGroup')", shortcut = "cmd+k alt+cmd+left" }
 ex = { name = "Editor: Next", lua = "command('workbench.action.nextEditor')", shortcut = "shift+cmd+]" }
 exg = { name = "Editor: Next in Group", lua = "command('workbench.action.nextEditorInGroup')", shortcut = "cmd+k alt+cmd+right" }
-ew = { name = "Editor: Forward", lua = "command('workbench.action.quickOpenLeastRecentlyUsedEditorInGroup')", shortcut = "ctrl+shift+tab" }
-ek = { name = "Editor: Back", lua = "command('workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup')", shortcut = "ctrl+tab" }
+ef = { name = "Editor: Forward", lua = "command('workbench.action.quickOpenLeastRecentlyUsedEditorInGroup')", shortcut = "ctrl+shift+tab" }
+eb = { name = "Editor: Back", lua = "command('workbench.action.quickOpenPreviousRecentlyUsedEditorInGroup')", shortcut = "ctrl+tab" }
 eq = { name = "Editor: Quit", lua = "command('workbench.action.closeActiveEditor')", shortcut = "cmd+w" }
 eqa = { name = "Editor: Quit All", lua = "command('workbench.action.closeAllEditors')", shortcut = "cmd+k cmd+w" }
 eqo = { name = "Editor: Quit Others", lua = "command('workbench.action.closeOtherEditors')", shortcut = "alt+cmd+t" }
@@ -233,8 +231,6 @@ as = { name = "editor.action.addSelectionToNextFindMatch", lua = "command('edito
 
 asc = { name = "acceptSelectedCodeAction", lua = "command('acceptSelectedCodeAction')" }
 
-bk = { name = "Back", lua = "command('workbench.action.browser.goBack')", shortcut = "cmd+left" }
-
 bf = { name = "breadcrumbs.focus", lua = "command('breadcrumbs.focus')", shortcut = "shift+cmd+;" }
 
 bfs = { name = "breadcrumbs.focusAndSelect", lua = "command('breadcrumbs.focusAndSelect')", shortcut = "shift+cmd+." }
@@ -353,8 +349,6 @@ foev = { name = "workbench.files.action.focusOpenEditorsView", lua = "command('w
 fsb = { name = "Focus Side Bar", lua = "command('workbench.action.focusSideBar')", shortcut = "cmd+0" }
 
 fsg = { name = "focusSuggestion", lua = "command('focusSuggestion')" }
-
-# fw = { name = "Forward", lua = "command('workbench.action.browser.goForward')", shortcut = "cmd+right" }
 
 fws = { name = "Find With Selection", lua = "command('actions.findWithSelection')", shortcut = "cmd+e" }
 

@@ -8,16 +8,16 @@ name = "dwmac"
 ",v" = { name = "Previous", shell = "dwmac focus prev"}
 ",l" = { name = "Resize Left", shell = "dwmac mfact +0.05"}
 ",r" = { name = "Resize Right", shell = "dwmac mfact -0.05"}
-",f" = { name = "Focus master", shell = "dwmac focus-master-or-back"}
-",m" = { name = "Move to master", shell = "dwmac move-node-to-master"}
-",k" = { name = "Back", shell = "dwmac swap prev"}
-",w" = { name = "Forward", shell = "dwmac swap next"}
-",p" = { name = "Swap master", shell = "dwmac swap master"}
+",m" = { name = "Focus master", shell = "dwmac focus-master-or-back"}
+",p" = { name = "Promote to master", shell = "dwmac move-node-to-master"}
+",b" = { name = "Back", shell = "dwmac swap prev"}
+",f" = { name = "Forward", shell = "dwmac swap next"}
+",w" = { name = "Swap master", shell = "dwmac swap master"}
 ",lf" = { name = "Layout Float", shell = "dwmac layout floating"}
 ",lt" = { name = "Layout Tiling", shell = "dwmac layout tiling"}
 ",e" = { name = "Enable", shell = "dwmac enable"}
 ",t" = { name = "Top", shell = "dwmac focus next"}
-",b" = { name = "Bottom", shell = "dwmac focus prev"}
+",g" = { name = "Ground", shell = "dwmac focus prev"}
 
 # Workspaces
 ",1" = { name = "Focus 1", shell = "dwmac workspace 1"}

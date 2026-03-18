@@ -15,7 +15,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 `n` = North / New\
 `e` = East / End\
 `s` = South / Start\
-`w` = West / Forward
+`w` = West
 
 `b` = Back\
 `f` = Forward

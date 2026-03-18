@@ -25,7 +25,7 @@ eqp = { name = "Editor: Quit Pinless", lua = "action('CloseUnpinnedEditors')" }
 ta = { name = "Tab: All", command = "action('TabList')" }
 tv = { name = "Tab: Right", command = "action('PreviousTab')" }
 tx = { name = "Tab: Left", command = "action('NextTab')" }
-tk = { name = "Tab: Back", command = "action('GoToLastTab')" }
+tb = { name = "Tab: Back", command = "action('GoToLastTab')" }
 to = { name = "Tab: Open Recently Closed", command = "action('ReopenClosedTab')" }
 t1 = { name = "Tab 1", lua = "action('GoToTab1')" }
 t2 = { name = "Tab 2", lua = "action('GoToTab2')" }
@@ -50,7 +50,7 @@ fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a
 
 # File Actions
 fp = { name = "File: Path", shortcut = "cmd+shift+c" }
-fk = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
+fb = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
 fnn = { name = "File: New Name", lua = "action('RenameFile')" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
@@ -152,8 +152,8 @@ sw = { name = "Surround With...", command = "Surround With...", shortcut = "cmd+
 gn = { name = "Generate...", command = "Generate...", shortcut = "cmd+n" }
 
 # History
-hw = { name = "Context: Forward", command = "Forward", shortcut = "cmd+]" }
-hk = { name = "Context: Back", command = "Back", shortcut = "cmd+[" }
+hf = { name = "Context: Forward", command = "Forward", shortcut = "cmd+]" }
+hb = { name = "Context: Back", command = "Back", shortcut = "cmd+[" }
 
 # Context navigation
 mx = { name = "Method: Next", command = "Next Method", shortcut = "ctrl+shift+down" }
@@ -300,17 +300,17 @@ dss = { name = "Diff: Show Settings", command = "Show Diff Settings Popup...", s
 # Panels
 phc = { name = "Panel: Hide Current", command = "Hide Active Tool Window", shortcut = "shift+esc" }
 pha = { name = "Panel: Hide All", command = "Hide All Tool Windows", shortcut = "cmd+shift+f12" }
-pk = { name = "Panel: Back", command = "Jump to Last Tool Window", shortcut = "f12" }
+pb = { name = "Panel: Back", command = "Jump to Last Tool Window", shortcut = "f12" }
 psl = { name = "Panel: Stretch Left", command = "Stretch to Left", shortcut = "ctrl+option+left" }
 psr = { name = "Panel: Stretch Right", command = "Stretch to Right", shortcut = "ctrl+option+right" }
 pst = { name = "Panel: Stretch Top", command = "Stretch to Top", shortcut = "ctrl+option+up" }
 psb = { name = "Panel: Stretch Bottom", command = "Stretch to Bottom", shortcut = "ctrl+option+down" }
-pp = { name = "Panel: Project", command = "Show Project window", shortcut = "cmd+1" }
+pj = { name = "Panel: Project", command = "Show Project window", shortcut = "cmd+1" }
 pm = { name = "Panel: Marks", command = "Show Bookmarks window", shortcut = "cmd+2" }
 pf = { name = "Panel: Find", command = "Show Find window", shortcut = "cmd+3" }
 pr = { name = "Panel: Run", command = "Show Run window", shortcut = "cmd+4" }
 pd = { name = "Panel: Debug", command = "Show Debug window", shortcut = "cmd+5" }
-pb = { name = "Panel: Problems", command = "Show Problems window", shortcut = "cmd+6" }
+pp = { name = "Panel: Problems", command = "Show Problems window", shortcut = "cmd+6" }
 ps = { name = "Panel: Structure", command = "Show Structure window", shortcut = "cmd+7" }
 pv = { name = "Panel: Services", command = "Show Services window", shortcut = "cmd+9" }
 pg = { name = "Panel: Git", command = "Show Version Control window", shortcut = "cmd+9" }
