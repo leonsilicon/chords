@@ -2,10 +2,25 @@ local M = {}
 
 local brace_expansion = require('brace_expansion')
 
+local function sorted_unique(list)
+  local seen = {}
+  local out = {}
+
+  for _, v in ipairs(list) do
+    if not seen[v] then
+      seen[v] = true
+      table.insert(out, v)
+    end
+  end
+
+  table.sort(out)
+  return out
+end
+
 function M.generate_synthetic_keybinds(commands, patterns)
   local available_keybinds = {}
 
-  -- expand all patterns
+  -- expand all patterns (order doesn't matter anymore)
   for _, pattern in ipairs(patterns) do
     local expansions = brace_expansion.expand(pattern)
 
@@ -14,12 +29,14 @@ function M.generate_synthetic_keybinds(commands, patterns)
     end
   end
 
-  -- assign keybinds to commands
-  local result = {}
+  -- normalize both sides
+  local keybinds = sorted_unique(available_keybinds)
+  local cmds = sorted_unique(commands)
 
-  for _, command in ipairs(commands) do
-    local keybind = table.remove(available_keybinds)
-    result[command] = keybind
+  -- deterministic mapping
+  local result = {}
+  for i, command in ipairs(cmds) do
+    result[command] = keybinds[i] -- nil if exhausted
   end
 
   return result
