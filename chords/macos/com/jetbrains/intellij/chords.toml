@@ -23,8 +23,8 @@ eqp = { name = "Editor: Quit Pinless", lua = "action('CloseUnpinnedEditors')" }
 
 # Tabs
 ta = { name = "Tab: All", command = "action('TabList')" }
-tv = { name = "Tab: Right", command = "action('PreviousTab')" }
-tx = { name = "Tab: Left", command = "action('NextTab')" }
+tv = { name = "Tab: Previous", command = "action('PreviousTab')" }
+tx = { name = "Tab: Next", command = "action('NextTab')" }
 tb = { name = "Tab: Back", command = "action('GoToLastTab')" }
 to = { name = "Tab: Open Recently Closed", command = "action('ReopenClosedTab')" }
 t1 = { name = "Tab 1", lua = "action('GoToTab1')" }

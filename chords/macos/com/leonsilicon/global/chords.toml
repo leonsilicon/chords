@@ -1,7 +1,7 @@
 # @leonsilicon's custom global chords
 [chords]
 "/w" = { name = "Warp", command = "Open Warp", shell = "open -a 'Warp'" }
-"/b" = { name = "Browser", command = "Open Browser", shell = """open -a "ChatGPT Atlas"; osascript -e 'tell application "System Events" to set frontmost of process "ChatGPT Atlas" to true'""" }
+"/b" = { name = "Browser", command = "Open Browser", shell = """osascript -e 'tell application id "com.openai.atlas" to reopen'""" }
 "/r" = { name = "Raycast", command = "Open Raycast", shell = "open -a 'Raycast'" }
 "`bu" = { name = "Brightness Up", shortcut = "BrightnessUp" }
 "`bd" = { name = "Brightness Down", shortcut = "BrightnessDown" }
