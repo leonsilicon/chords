@@ -6,35 +6,34 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 
 # Directions
 
-l = Left
-c = Center
-r = Right
+`l` = Left\
+`c` = Center\
+`r` = Right
+`u` = Up\
+`d` = Down
 
-n = North / New
-e = East / End
-s = South / Start
-w = West / Forward
+`n` = North / New\
+`e` = East / End\
+`s` = South / Start\
+`w` = West / Forward
 
-t = Top
-m = Middle
-b = Bottom
+`b` = Back
+`f` = Forward
 
-u = Up
-d = Down
+`t` = Top\
+`m` = Middle\
+`g` = Ground (Bottom)
 
-a = After
-o = Before
+`a` = After\
+`o` = Old (Before)
 
-k = Back
-
-v for Prev
-x for Next
-
-g for Goto
+`v` = Prev\
+`x` = Next
 
 # Other
 
-q = Quit (instead of Close)
+`g` = Goto
+`q` = Quit (instead of Close)
 
 ## Browsers
 `p` = `P`age
