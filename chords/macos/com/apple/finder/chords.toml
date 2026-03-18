@@ -58,7 +58,7 @@ ss = { name = "Sort: Size", shortcut = "cmd+opt+ctrl+7" }
 st = { name = "Sort: Tags", shortcut = "cmd+opt+ctrl+8" }
 
 # Clean
-cn = { name = "Clean: Name", shortcut = "cmd+opt++1" }
+cn = { name = "Clean: Name", shortcut = "cmd+opt+1" }
 ck = { name = "Clean: Kind", shortcut = "cmd+opt+2" }
 cm = { name = "Clean: Modified Date", shortcut = "cmd+opt+5" }
 cc = { name = "Clean: Created Date" }

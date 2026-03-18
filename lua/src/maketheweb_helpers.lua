@@ -2,10 +2,10 @@ local M = {}
 
 local mac_keycode = require('mac_keycode')
 local json = require("lunajson")
-local parse = require("plist").parse;
+local plist = require("plist")
 
 function M.make_shortcut(filepath)
-  local plist = parse(filepath)
+  local plist = plist.parse_file(filepath)
 
   return function (property)
     local value = json.decode(plist[1][property])

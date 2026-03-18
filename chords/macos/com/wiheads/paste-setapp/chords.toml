@@ -3,10 +3,10 @@ name = "Paste (Setapp)"
 
 [config.lua]
 init = '''
-local parse = require("plist").parse
+local plist = require("plist").parse_file
 local mac_keycode = require('mac_keycode')
 function shortcut(property)
-  local value = parse("/Users/leonsilicon/Library/Preferences/com.wiheads.paste-setapp.plist")[1][property]
+  local value = plist.parse_file("~/Library/Preferences/com.wiheads.paste-setapp.plist")[1][property]
   local keys = mac_keycode.modifiers_to_strings(value.internalModifiers)
   table.insert(keys, mac_keycode.keycode_to_string(value.keyCode))
   tap(table.concat(keys, "+"))
