@@ -1,0 +1,4 @@
+# TODO: Some shortcuts are probably Firefox-specific
+[config]
+name = "Firefox"
+extends = "com.google.Chrome"

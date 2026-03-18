@@ -1,0 +1,15 @@
+package = "chords"
+version = "0.1.0"
+lua = "==5.4" # This is the Lua version bundled with Chords
+
+[description]
+summary = ""
+maintainer = "Leon Si"
+labels = [ "" ]
+
+[dependencies]
+bplist-parser-lua = "0.1.1-1"
+json4lua = "0.9.30-1"
+
+[build]
+type = "builtin"
