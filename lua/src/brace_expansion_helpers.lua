@@ -1,6 +1,6 @@
 local M = {}
 
-local brace = require("brace_expansion_lua")
+local brace = require("brace_expansion")
 
 local function dedup(list)
   local seen = {}
