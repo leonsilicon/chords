@@ -9,7 +9,7 @@ labels = [ "" ]
 
 [dependencies]
 bplist-parser-lua = "0.1.1-1"
-balanced-match-lua = "0.1.0-1"
+brace-expansion-lua = "0.1.0-1"
 lunajson = "1.2.3-1"
 penlight = "1.15.0-1"
 
