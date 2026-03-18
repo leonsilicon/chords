@@ -1,7 +1,7 @@
 local M = {}
 
 local file = require("file")
-local json = require("json")
+local json = require("lunajson")
 
 local function get_uid()
   local h = io.popen("id -u")
