@@ -1,0 +1,19 @@
+[config]
+name = "Paste (Setapp)"
+
+[config.lua]
+init = '''
+local parse = require("plist").parse
+local mac_keycode = require('mac_keycode')
+function shortcut(property)
+  local value = parse("/Users/leonsilicon/Library/Preferences/com.wiheads.paste-setapp.plist")[1][property]
+  local keys = mac_keycode.modifiers_to_strings(value.internalModifiers)
+  table.insert(keys, mac_keycode.keycode_to_string(value.keyCode))
+  tap(table.concat(keys, "+"))
+end
+
+'''
+
+[chords]
+"/v" = { name = "Paste", lua = "shortcut('kPSTPreferencesActivationShortcut')" }
+"/vs" = { name = "Paste Stack", lua = "shortcut('paste-stack-shortcut')" }

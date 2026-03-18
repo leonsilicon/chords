@@ -3,7 +3,9 @@ name = "PixelSnap 2 (Setapp)"
 
 [config.lua]
 init = '''
-local shortcut = require("plist").make_shortcut("~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist")
+local shortcut = require('maketheweb_helpers').make_shortcut(
+  "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist",
+)
 '''
 
 [chords]
