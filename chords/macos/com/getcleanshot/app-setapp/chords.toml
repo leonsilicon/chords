@@ -1,0 +1,19 @@
+[config]
+name = "CleanShot X (Setapp)"
+
+[config.lua]
+init = '''
+local shortcut = require("plist").make_shortcut("~/Library/Preferences/com.getcleanshot.app-setapp.plist")
+'''
+
+[chords]
+"/c" = { name = "CleanShotX: All-In-One", lua = "shortcut('LAVAtakeAllInOne')" }
+"/cf" = { name = "CleanShotX: Fullscreen", lua = "shortcut('LAVAtakeFullscreen')" }
+"/co" = { name = "CleanShotX: OCR", lua = "shortcut('LAVAtakeOCR')" }
+"/col" = { name = "CleanShotX: OCR w/ Line Breaks", lua = "shortcut('LAVAtakeOCR')" }
+"/con" = { name = "CleanShotX: OCR No Line Breaks", lua = "shortcut('LAVAtakeOCR')" }
+"/ca" = { name = "CleanShotX: Area", lua = "shortcut('LAVAstartGIFRecording')" }
+"/cav" = { name = "CleanShotX: Area Previous", lua = "shortcut('LAVAstartGIFRecording')" }
+"/cs" = { name = "CleanShotX: Scrolling", lua = "shortcut('LAVAscrollingCapture')" }
+"/cv" = { name = "CleanShotX: Video Recording", lua = "shortcut('LAVAstartVideoRecording')" }
+"/cg" = { name = "CleanShotX: GIF Recording", lua = "shortcut('LAVAstartGIFRecording')" }

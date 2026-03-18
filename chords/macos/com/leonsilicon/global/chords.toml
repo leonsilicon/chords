@@ -1,22 +1,6 @@
 # @leonsilicon's custom global chords
 [chords]
+"/f" = { name = "Finder", shell = "open -a Finder" }
 "/w" = { name = "Warp", command = "Open Warp", shell = "open -a 'Warp'" }
 "/b" = { name = "Browser", command = "Open Browser", shell = """osascript -e 'tell application id "com.openai.atlas" to reopen'""" }
 "/r" = { name = "Raycast", command = "Open Raycast", shell = "open -a 'Raycast'" }
-"`bu" = { name = "Brightness Up", shortcut = "BrightnessUp" }
-"`bd" = { name = "Brightness Down", shortcut = "BrightnessDown" }
-"`vu" = { name = "Volume Up", shortcut = "AudioVolumeUp" }
-"`vd" = { name = "Volume Down", shortcut = "AudioVolumeDown" }
-"`vm" = { name = "Volume Mute", shortcut = "AudioVolumeMute" }
-"`1" = { name = "F1", shortcut = "F1" }
-"`2" = { name = "F2", shortcut = "F2" }
-"`3" = { name = "F3", shortcut = "F3" }
-"`4" = { name = "F4", shortcut = "F4" }
-"`5" = { name = "F5", shortcut = "F5" }
-"`6" = { name = "F6", shortcut = "F6" }
-"`7" = { name = "F7", shortcut = "F7" }
-"`8" = { name = "F8", shortcut = "F8" }
-"`9" = { name = "F9", shortcut = "F9" }
-"`0" = { name = "F10", shortcut = "F10" }
-"`[" = { name = "F11", shortcut = "F11" }
-"`]" = { name = "F12", shortcut = "F12" }

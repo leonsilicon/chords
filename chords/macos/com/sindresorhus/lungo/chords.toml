@@ -1,0 +1,9 @@
+[config]
+name = "Lungo (Setapp)"
+
+[chords]
+# TODO: Figure out how to set indefinitely
+'/l' = { name = "Lungo", shell = "open --background 'lungo:activate?hours=9999'" }
+# TODO: Support parsing Regex chords
+'/l(\d+)' = { name = "Lungo: Minutes", shell = "open --background 'lungo:activate?minutes=$1'" }
+'/lh(\d+)' = { name = "Lungo: Hours", shell = "open --background 'lungo:activate?hours=$1'" }

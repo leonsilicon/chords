@@ -5,5 +5,6 @@ local json = require("lunajson")
 
 local plist_path = path.expanduser("~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist")
 local bplist = file.read(plist_path)
-local parsed = require("bplist_parser").parseBuffer(bplist)[1].LAVAglobalHotkey
-pretty.dump(json.decode(parsed))
+local parsed = require("bplist_parser").parseBuffer(bplist)
+pretty.dump(parsed)
+
