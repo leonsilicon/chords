@@ -40,7 +40,7 @@ function M.upsert_block(path, new_content, start_marker, end_marker)
     updated = existing .. "\n" .. block .. "\n"
   end
 
-  return M.write(path, updated)
+  return file.write(path, updated)
 end
 
 return M

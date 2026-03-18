@@ -11,8 +11,11 @@ local plist_path = path.expanduser("~/Library/Preferences/pl.maketheweb.pixelsna
 local bplist = file.read(plist_path)
 local plist = require("bplist_parser").parseBuffer(bplist)
 local hotkey = json.decode(plist[1].LAVAglobalHotkey)
-local shortcut = carbon_shortcut_to_string(hotkey.carbonKey, hotkey.carbonModifiers)
+shortcut = carbon_shortcut_to_string(hotkey.carbonKey, hotkey.carbonModifiers)
+function tap_shortcut()
+  tap(shortcut)
+end
 '''
 
 [chords]
-"/x" = { name = "PixelSnap", lua = "tap(shortcut)" }
+"/x" = { name = "PixelSnap", lua = "tap_shortcut()" }
