@@ -1,6 +1,7 @@
 local M = {}
 
 local file = require("file")
+local json = require("json")
 
 local function get_uid()
   local h = io.popen("id -u")
@@ -13,13 +14,9 @@ local function get_uid()
   return uid:gsub("%s+", "")
 end
 
-local function json_escape(s)
-  return tostring(s)
-    :gsub("\\", "\\\\")
-    :gsub('"', '\\"')
-end
-
--- This script allows us to execute VSCode commands directly via https://marketplace.visualstudio.com/items?itemName=pokey.command-server if it's active, and otherwise falls back to built-in shortcuts.
+-- This script allows us to execute VSCode commands directly via
+-- https://marketplace.visualstudio.com/items?itemName=pokey.command-server
+-- if it's active, and otherwise falls back to built-in shortcuts.
 function M.create_command()
   local uid = get_uid()
   if not uid then
@@ -38,10 +35,10 @@ function M.create_command()
     local request_path = dir .. "/request.json"
     local response_path = dir .. "/response.json"
 
-    local payload = string.format(
-      '{"commandId":"%s","args":[]}',
-      json_escape(cmd)
-    )
+    local payload = json.encode({
+      commandId = cmd,
+      args = {}
+    })
 
     if not file.write(request_path, payload) then
       return false
