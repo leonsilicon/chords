@@ -7,6 +7,9 @@ summary = ""
 maintainer = "Leon Si"
 labels = [ "" ]
 
+[run]
+args = ["src/playground.lua"]
+
 [dependencies]
 bplist-parser-lua = "0.1.1-1"
 brace-expansion-lua = "0.1.0-1"

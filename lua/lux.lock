@@ -2,6 +2,24 @@
   "version": "1.0.0",
   "dependencies": {
     "rocks": {
+      "3cd9c2355d9fb973a62edf03391125ec0d72108552d3e20bde2eb3c2901792d6": {
+        "name": "balanced-match-lua",
+        "version": "0.1.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": ">=0.1.0",
+        "binaries": [],
+        "source": "luarocks_rock+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://luarocks.org/"
+        },
+        "hashes": {
+          "rockspec": "sha256-gBPWSr2Fl+aqfmxXiCw6XTAi9Ws65Pz9nPKDFUAK+H8=",
+          "source": "sha256-GDJ6gxmxrIPTMZ9QW8jMMOvBp76pZIMTC3+cHsmU/Ww="
+        }
+      },
       "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1": {
         "name": "luafilesystem",
         "version": "1.9.0-1",
@@ -58,25 +76,6 @@
           "source": "sha256-weHnGYpA8W8St86RoCbFpSqUoP0Qbds1sxzYP3/uuu0="
         }
       },
-      "b8463523b3c133a6e44d11871970d8620660e7e355956e600711957ec77061d1": {
-        "name": "luafilesystem",
-        "version": "1.9.0-1",
-        "pinned": false,
-        "opt": false,
-        "dependencies": [],
-        "constraint": "==1.9.0",
-        "binaries": [],
-        "source": "luarocks_rockspec+https://luarocks.org/",
-        "source_url": {
-          "type": "git",
-          "url": "https://github.com/lunarmodules/luafilesystem",
-          "ref": "v1_9_0"
-        },
-        "hashes": {
-          "rockspec": "sha256-Mrv7QKI6EAY6jzMrh0VWAZIy5KAem82cDPtCIRji4ck=",
-          "source": "sha256-xoNJra/yqxRG11TePcUKrAUU6cwypGnXIoLKZXNaoW0="
-        }
-      },
       "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8": {
         "name": "penlight",
         "version": "1.15.0-1",
@@ -97,14 +96,34 @@
           "rockspec": "sha256-blt3sqlz+76U8RAtPtfvEqw4+VACI90TFHn+fTcQlVQ=",
           "source": "sha256-yEkzr4v8avygFxp+NUvffg2fRxQJWTpRdIvluh/QBpY="
         }
+      },
+      "f8f1b546f576b72f79c2b89ad14e42cbdf09d36b4adc11e2c232c00c0f94a7b0": {
+        "name": "brace-expansion-lua",
+        "version": "0.1.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [
+          "3cd9c2355d9fb973a62edf03391125ec0d72108552d3e20bde2eb3c2901792d6"
+        ],
+        "constraint": "==0.1.0",
+        "binaries": [],
+        "source": "luarocks_rock+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://luarocks.org/"
+        },
+        "hashes": {
+          "rockspec": "sha256-HLR/r5fD4hgSLV+E+1V6HYGqXAgdDqCt52k2vw7+VsY=",
+          "source": "sha256-N3SKUt5ZcSds47+bVgMkJX+FGZWs3NiLyBi4M7LYEK4="
+        }
       }
     },
     "entrypoints": [
       "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1",
       "a943eee5bce2b518092862291a9add115e24533a560cde5bc801d73068ac6eae",
       "aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729",
-      "b8463523b3c133a6e44d11871970d8620660e7e355956e600711957ec77061d1",
-      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8"
+      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8",
+      "f8f1b546f576b72f79c2b89ad14e42cbdf09d36b4adc11e2c232c00c0f94a7b0"
     ]
   }
 }

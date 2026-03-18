@@ -1,0 +1,16 @@
+[config]
+name = "PixelSnap 2 (Setapp)"
+
+[config.lua]
+init = '''
+local path = require("pl.path")
+local file = require("pl.file")
+local json = require("lunajson")
+
+local plist_path = path.expanduser("~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist")
+local bplist = file.read(plist_path)
+local hotkey = json.parse(require("bplist_parser").parseBuffer(bplist).LAVAglobalHotkey)
+local shortcut = carbon_shortcut_to_string(hotkey.carbonKey, hotkey.carbonModifiers)
+'''
+
+"/X" = { name = "PixelSnap", lua = "tap(shortcut)" }
