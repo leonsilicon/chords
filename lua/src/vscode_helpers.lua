@@ -37,7 +37,7 @@ function M.create_command()
 
     local payload = json.encode({
       commandId = cmd,
-      args = {}
+      args = { [0] = 0 }
     })
 
     if not file.write(request_path, payload) then
