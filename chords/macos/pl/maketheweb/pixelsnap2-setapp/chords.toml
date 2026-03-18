@@ -9,7 +9,8 @@ local json = require("lunajson")
 
 local plist_path = path.expanduser("~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist")
 local bplist = file.read(plist_path)
-local hotkey = json.decode(require("bplist_parser").parseBuffer(bplist).LAVAglobalHotkey)
+local plist = require("bplist_parser").parseBuffer(bplist)
+local hotkey = json.decode(plist[1].LAVAglobalHotkey)
 local shortcut = carbon_shortcut_to_string(hotkey.carbonKey, hotkey.carbonModifiers)
 '''
 
