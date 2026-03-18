@@ -4,5 +4,5 @@ extends = "com.jetbrains.intellij"
 
 [config.lua]
 init = '''
-ide = "/Applications/RustRover.app/Contents/MacOS/rustrover"
+action = require('jetbrains_helpers').create_action("/Applications/RustRover.app/Contents/MacOS/rustrover")
 '''

@@ -1,3 +1,8 @@
 [config]
 name = "WebStorm"
 extends = "com.jetbrains.intellij"
+
+[config.lua]
+init = '''
+action = require('jetbrains_helpers').create_action("/Applications/WebStorm.app/Contents/MacOS/webstorm")
+'''

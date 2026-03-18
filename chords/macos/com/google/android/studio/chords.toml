@@ -1,7 +1,8 @@
 [config]
+name = "Android Studio"
 extends = "com.jetbrains.intellij"
 
 [config.lua]
 init = '''
-ide = "/Applications/Android Studio.app/Contents/MacOS/studio"
+action = require('jetbrains_helpers').create_action("/Applications/Android Studio.app/Contents/MacOS/studio")
 '''

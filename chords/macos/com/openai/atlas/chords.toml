@@ -1,3 +1,8 @@
 [config]
 name = "ChatGPT Atlas"
 extends = "com.google.Chrome"
+
+[config.lua]
+init = '''
+command = require("vscode_helpers").create_command()
+'''

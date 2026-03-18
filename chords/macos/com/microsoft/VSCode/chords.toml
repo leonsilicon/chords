@@ -2,51 +2,9 @@
 name = "VSCode"
 
 [config.lua]
-# This script allows us to execute VSCode commands directly via https://marketplace.visualstudio.com/items?itemName=pokey.command-server if it's active, and otherwise falls back to built-in shortcuts.
-init = """
-local h = io.popen("id -u")
-local uid = h:read("*a"):gsub("%s+", "")
-h:close()
-
-local tmp = os.getenv("TMPDIR") or "/tmp"
-local dir = tmp .. "/vscode-command-server-" .. uid
-
-function command(cmd)
-  if os.rename(dir, dir) == nil then
-    return false
-  end
-
-  atomic_write(
-    dir .. "/request.json",
-    '{"commandId":"' .. cmd .. '","args":[]}'
-  )
-  os.remove(dir .. "/response.json")
-  tap("cmd+shift+f17")
-  return true
-end
-
-function atomic_write(path, content)
-  local tmp_path = path .. ".tmp." .. tostring(os.time())
-
-  local f = io.open(tmp_path, "w")
-  if not f then return false end
-
-  local ok = f:write(content)
-  f:close()
-
-  if not ok then
-    os.remove(tmp_path)
-    return false
-  end
-
-  if os.rename(tmp_path, path) == nil then
-    os.remove(tmp_path)
-    return false
-  end
-
-  return true
-end
-"""
+init = '''
+command = require("vscode_helpers").create_command()
+'''
 
 [chords]
 # Find

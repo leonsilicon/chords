@@ -3,98 +3,94 @@ name = "Warp"
 url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 
 [config.lua]
-# This works by modifying keybindings.yml
-init = """
-function command(cmd)
-  # keybind = to_synthetic_keybind(cmd)
-end
-"""
-
+init = '''
+local command = require('warp_helpers').create_command(chords)
+'''
 
 [chords]
 # Warp Essentials
-lcp = { name = "Launch Configuration Palette", command = "workspace:toggle_launch_config_palette", shortcut = "ctrl+cmd+l" }
-cs = { name = "Command Search", command = "workspace:show_command_search", shortcut = "ctrl+r" }
-wf = { name = "Workflows", command = "input:toggle_workflows", shortcut = "ctrl+shift+r" }
-gn = { name = "Generate", command = "input:toggle_natural_language_command_search", shortcut = "ctrl+`" }
-ft = { name = "Focus Terminal", command = "terminal:focus_input", shortcut = "cmd+l" }
-ws = { name = "Warpify Shell", command = "terminal:trigger_subshell_bootstrap", shortcut = "ctrl+i" }
+lcp = { name = "Launch Configuration Palette", lua = "command('workspace:toggle_launch_config_palette')", shortcut = "ctrl+cmd+l" }
+cs = { name = "Command Search", lua = "command('workspace:show_command_search')", shortcut = "ctrl+r" }
+wf = { name = "Workflows", lua = "command('input:toggle_workflows')", shortcut = "ctrl+shift+r" }
+gn = { name = "Generate", lua = "command('input:toggle_natural_language_command_search')", shortcut = "ctrl+`" }
+ft = { name = "Focus Terminal", lua = "command('terminal:focus_input')", shortcut = "cmd+l" }
+ws = { name = "Warpify Shell", lua = "command('terminal:trigger_subshell_bootstrap')", shortcut = "ctrl+i" }
 fs = { name = "File Search", shortcut = "cmd+o" }
-cp = { name = "Open Command Palette", command = "terminal:open_command_palette", shortcut = "cmd+p" }
+cp = { name = "Open Command Palette", lua = "command('terminal:open_command_palette')", shortcut = "cmd+p" }
 
 # Find
 fv = { name = "Find: Next Match", lua = "command('editor:previous_find_match')" }
 fx = { name = "Find: Next Match", lua = "command('editor:next_find_match')" }
 
 # Blocks
-co = { name = "Copy Command Output", command = "terminal:copy_outputs", shortcut = "alt+shift+cmd+c" }
-ba = { name = "Block: All Select", command = "terminal:select_all_blocks", shortcut = "cmd+a" }
-bs = { name = "Block: Share", command = "terminal:open_share_modal", shortcut = "shift+cmd+s" }
-bc = { name = "Blocks: Clear", command = "terminal:clear_blocks", shortcut = "cmd+k" }
-bm = { name = "Block: Menu", command = "terminal:open_block_list_context_menu_via_keybinding", shortcut = "cmd+m" }
-bx = { name = "Select Next Block", command = "terminal:select_next_block", shortcut = "cmd+down" }
-bv = { name = "Select Previous Block", command = "terminal:select_previous_block", shortcut = "cmd+up" }
-rc = { name = "Reinput Selected Commands", command = "terminal:reinput_commands", shortcut = "cmd+i" }
-cc = { name = "Copy Command", command = "terminal:copy_commands", shortcut = "shift+cmd+c" }
-rr = { name = "Reinput Selected Commands as Root", command = "terminal:reinput_commands_with_sudo", shortcut = "shift+cmd+i" }
-bu = { name = "Block: Up Expand Selected Blocks Above", command = "terminal:expand_block_selection_above", shortcut = "shift+cmd+up" }
-bd = { name = "Block: Down Expand Selected Blocks Below", command = "terminal:expand_block_selection_below", shortcut = "shift+cmd+down" }
+co = { name = "Copy Command Output", lua = "command('terminal:copy_outputs')", shortcut = "alt+shift+cmd+c" }
+ba = { name = "Block: All Select", lua = "command('terminal:select_all_blocks')", shortcut = "cmd+a" }
+bs = { name = "Block: Share", lua = "command('terminal:open_share_modal')", shortcut = "shift+cmd+s" }
+bc = { name = "Blocks: Clear", lua = "command('terminal:clear_blocks')", shortcut = "cmd+k" }
+bm = { name = "Block: Menu", lua = "command('terminal:open_block_list_context_menu_via_keybinding')", shortcut = "cmd+m" }
+bx = { name = "Select Next Block", lua = "command('terminal:select_next_block')", shortcut = "cmd+down" }
+bv = { name = "Select Previous Block", lua = "command('terminal:select_previous_block')", shortcut = "cmd+up" }
+rc = { name = "Reinput Selected Commands", lua = "command('terminal:reinput_commands')", shortcut = "cmd+i" }
+cc = { name = "Copy Command", lua = "command('terminal:copy_commands')", shortcut = "shift+cmd+c" }
+rr = { name = "Reinput Selected Commands as Root", lua = "command('terminal:reinput_commands_with_sudo')", shortcut = "shift+cmd+i" }
+bu = { name = "Block: Up Expand Selected Blocks Above", lua = "command('terminal:expand_block_selection_above')", shortcut = "shift+cmd+up" }
+bd = { name = "Block: Down Expand Selected Blocks Below", lua = "command('terminal:expand_block_selection_below')", shortcut = "shift+cmd+down" }
 
 # Bookmarks
-mb = { name = "Mark: Block", command = "terminal:bookmark_selected_block", shortcut = "cmd+b" }
-mu = { name = "Mark: Up", command = "terminal:select_bookmark_up", shortcut = "alt+up" }
-md = { name = "Mark: Down", command = "terminal:select_bookmark_down", shortcut = "alt+down" }
+mb = { name = "Mark: Block", lua = "command('terminal:bookmark_selected_block')", shortcut = "cmd+b" }
+mu = { name = "Mark: Up", lua = "command('terminal:select_bookmark_up')", shortcut = "alt+up" }
+md = { name = "Mark: Down", lua = "command('terminal:select_bookmark_down')", shortcut = "alt+down" }
 
 # Scrolling
-slu = { name = "Scroll Terminal Output Up One Line", command = "terminal:scroll_line_up" }
-sld = { name = "Scroll Terminal Output Down One Line", command = "terminal:scroll_line_down" }
-spu = { name = "Scroll Up One Page", command = "terminal:page_up", shortcut = "pageup" }
-spd = { name = "Scroll Down One Page", command = "terminal:page_down", shortcut = "pagedown" }
-st = { name = "Scroll to Top", command = "terminal:scroll_home", shortcut = "shift+cmd+up" }
-sb = { name = "Scroll to Bottom", command = "terminal:scroll_end", shortcut = "shift+cmd+down" }
+slu = { name = "Scroll Terminal Output Up One Line", lua = "command('terminal:scroll_line_up')" }
+sld = { name = "Scroll Terminal Output Down One Line", lua = "command('terminal:scroll_line_down')" }
+spu = { name = "Scroll Up One Page", lua = "command('terminal:page_up')", shortcut = "pageup" }
+spd = { name = "Scroll Down One Page", lua = "command('terminal:page_down')", shortcut = "pagedown" }
+st = { name = "Scroll to Top", lua = "command('terminal:scroll_home')", shortcut = "shift+cmd+up" }
+sb = { name = "Scroll to Bottom", lua = "command('terminal:scroll_end')", shortcut = "shift+cmd+down" }
 
 # Terminal
-mr = { name = "Mouse Reporting", command = "workspace:toggle_mouse_reporting" }
-td = { name = "Duplicate Current Tab", command = "workspace:duplicate_tab", shortcut = "shift+cmd+d" }
-tn = { name = "New Tab", command = "workspace:new_tab", shortcut = "cmd+t" }
+mr = { name = "Mouse Reporting", lua = "command('workspace:toggle_mouse_reporting')" }
+td = { name = "Duplicate Current Tab", lua = "command('workspace:duplicate_tab')", shortcut = "shift+cmd+d" }
+tn = { name = "New Tab", lua = "command('workspace:new_tab')", shortcut = "cmd+t" }
 
 # Tabs
-tq = { name = "Tab: Quit", command = "workspace:close_current_tab", shortcut = "cmd+w" }
-to = { name = "Tab: Open Closed", command = "workspace:reopen_closed_tab", shortcut = "shift+cmd+t" }
+tq = { name = "Tab: Quit", lua = "command('workspace:close_current_tab')", shortcut = "cmd+w" }
+to = { name = "Tab: Open Closed", lua = "command('workspace:reopen_closed_tab')", shortcut = "shift+cmd+t" }
 tqr = { name = "Tab: Quit to Right", lua = "command('workspace:close_tabs_right_active_tab')", shortcut = "shift+cmd+t" }
 tqo = { name = "Tab: Quit Others", lua = "command('workspace:close_other_tabs')", shortcut = "shift+cmd+t" }
-t1 = { name = "Switch to tab 1", command = "workspace:switch_tab:0", shortcut = "cmd+1" }
-t2 = { name = "Switch to tab 2", command = "workspace:switch_tab:1", shortcut = "cmd+2" }
-t3 = { name = "Switch to tab 3", command = "workspace:switch_tab:2", shortcut = "cmd+3" }
-t4 = { name = "Switch to tab 4", command = "workspace:switch_tab:3", shortcut = "cmd+4" }
-t5 = { name = "Switch to tab 5", command = "workspace:switch_tab:4", shortcut = "cmd+5" }
-t6 = { name = "Switch to tab 6", command = "workspace:switch_tab:5", shortcut = "cmd+6" }
-t7 = { name = "Switch to tab 7", command = "workspace:switch_tab:6", shortcut = "cmd+7" }
-t8 = { name = "Switch to tab 8", command = "workspace:switch_tab:7", shortcut = "cmd+8" }
-tx = { name = "Switch to next tab", command = "workspace:next_tab", shortcut = "ctrl+tab" }
-tv = { name = "Switch to previous tab", command = "workspace:previous_tab", shortcut = "ctrl+shift+tab" }
-tl = { name = "Move current tab left", command = "workspace:move_tab_left", shortcut = "shift+cmd+[" }
-tr = { name = "Move current tab right", command = "workspace:move_tab_right", shortcut = "shift+cmd+]" }
+t1 = { name = "Switch to tab 1", lua = "command('workspace:switch_tab:0')", shortcut = "cmd+1" }
+t2 = { name = "Switch to tab 2", lua = "command('workspace:switch_tab:1')", shortcut = "cmd+2" }
+t3 = { name = "Switch to tab 3", lua = "command('workspace:switch_tab:2')", shortcut = "cmd+3" }
+t4 = { name = "Switch to tab 4", lua = "command('workspace:switch_tab:3')", shortcut = "cmd+4" }
+t5 = { name = "Switch to tab 5", lua = "command('workspace:switch_tab:4')", shortcut = "cmd+5" }
+t6 = { name = "Switch to tab 6", lua = "command('workspace:switch_tab:5')", shortcut = "cmd+6" }
+t7 = { name = "Switch to tab 7", lua = "command('workspace:switch_tab:6')", shortcut = "cmd+7" }
+t8 = { name = "Switch to tab 8", lua = "command('workspace:switch_tab:7')", shortcut = "cmd+8" }
+tx = { name = "Switch to next tab", lua = "command('workspace:next_tab')", shortcut = "ctrl+tab" }
+tv = { name = "Switch to previous tab", lua = "command('workspace:previous_tab')", shortcut = "ctrl+shift+tab" }
+tl = { name = "Move current tab left", lua = "command('workspace:move_tab_left')", shortcut = "shift+cmd+[" }
+tr = { name = "Move current tab right", lua = "command('workspace:move_tab_right')", shortcut = "shift+cmd+]" }
 
 # Split
-sn = { name = "Split: North", command = "pane_group:focus_up", shortcut = "ctrl+alt+up" }
-se = { name = "Split: East", command = "pane_group:focus_right", shortcut = "ctrl+alt+right" }
-ss = { name = "Split: South", command = "pane_group:focus_down", shortcut = "ctrl+alt+down" }
-sw = { name = "Split: West", command = "pane_group:focus_left", shortcut = "ctrl+alt+left" }
+sn = { name = "Split: North", lua = "command('pane_group:focus_up')", shortcut = "ctrl+alt+up" }
+se = { name = "Split: East", lua = "command('pane_group:focus_right')", shortcut = "ctrl+alt+right" }
+ss = { name = "Split: South", lua = "command('pane_group:focus_down')", shortcut = "ctrl+alt+down" }
+sw = { name = "Split: West", lua = "command('pane_group:focus_left')", shortcut = "ctrl+alt+left" }
 su = { name = "Split: Up", lua = "command('pane_group:add_up')" }
-sd = { name = "Split: Down", command = "pane_group:add_down", shortcut = "ctrl+alt+cmd+d" }
-sr = { name = "Split: Right", command = "pane_group:add_right", shortcut = "cmd+d" }
+sd = { name = "Split: Down", lua = "command('pane_group:add_down')", shortcut = "ctrl+alt+cmd+d" }
+sr = { name = "Split: Right", lua = "command('pane_group:add_right')", shortcut = "cmd+d" }
 sl = { name = "Split: Left", lua = "command('pane_group:add_left')" }
 
 # Zoom
-zi = { name = "Increase font size", command = "window:increase_font_size", shortcut = "cmd+=" }
-zo = { name = "Decrease font size", command = "window:decrease_font_size", shortcut = "cmd+-" }
+zi = { name = "Increase font size", lua = "command('window:increase_font_size')", shortcut = "cmd+=" }
+zo = { name = "Decrease font size", lua = "command('window:decrease_font_size')", shortcut = "cmd+-" }
 zr = { name = "Reset font size", lua = "command('window:reset_font_size')" }
 zf = { name = "Zoom: Full Screen", lua = "command('root_view:toggle_fullscreen')" }
 
 # Panels
-pa = { name = "Panel: AI", command = "workspace:toggle_ai_panel", shortcut = "ctrl+`" }
-pt = { name = "Panel: Theme", command = "workspace:show_theme_chooser", shortcut = "ctrl+cmd+t" }
-pd = { name = "Panel: Drive", command = "terminal:toggle_warp_drive", shortcut = "cmd+backslash" }
+pa = { name = "Panel: AI", lua = "command('workspace:toggle_ai_panel')", shortcut = "ctrl+`" }
+pt = { name = "Panel: Theme", lua = "command('workspace:show_theme_chooser')", shortcut = "ctrl+cmd+t" }
+pd = { name = "Panel: Drive", lua = "command('terminal:toggle_warp_drive')", shortcut = "cmd+backslash" }
 
-# sw = { name = "Search workspaces", command = "workspace:search_workspaces", shortcut = "ctrl+shift+o" }
+# sw = { name = "Search workspaces", lua = "command('workspace:search_workspaces')", shortcut = "ctrl+shift+o" }
