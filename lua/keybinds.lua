@@ -1,6 +1,8 @@
+local M = {}
+
 local brace_expansion = require('brace_expansion')
 
-function generate_synthetic_keybinds(commands, patterns)
+function M.generate_synthetic_keybinds(commands, patterns)
   local available_keybinds = {}
 
   -- expand all patterns
@@ -16,9 +18,11 @@ function generate_synthetic_keybinds(commands, patterns)
   local result = {}
 
   for _, command in ipairs(commands) do
-    local keybind = table.remove(available_keybinds) -- pop last
-    result[command] = keybind -- map command → keybind (nil if exhausted)
+    local keybind = table.remove(available_keybinds)
+    result[command] = keybind
   end
 
   return result
 end
+
+return M
