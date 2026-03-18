@@ -36,30 +36,10 @@
         "rockspec": "sha256-8iwZg6RM2YUQ8pO2gX5hClT59gLeZhA97H2jfV6EMKk=",
         "source": "sha256-rxly/fj/767xsyitRshbTSVhG+EUQeYUFwbhLaVEyFY="
       }
-    },
-    "e8d61d5f6bcfe8d456dc27a0d8aca1352fecf081444ccfd3b6519e0f3965bfde": {
-      "name": "chords",
-      "version": "0.1.0-1",
-      "pinned": false,
-      "opt": false,
-      "dependencies": [
-        "aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729",
-        "d911ccd5062c7c34f8959a54d47d0b9246439f6b2adbb7eda2d27bb57f21a498"
-      ],
-      "constraint": null,
-      "binaries": [],
-      "source": "local",
-      "source_url": {
-        "type": "file",
-        "path": "/Users/leonsilicon/Developer/github/leonsilicon/chords/lua"
-      },
-      "hashes": {
-        "rockspec": "sha256-a8VkCL7pZmTBWxY8NGbmq78WZlXRxTbTlId12dmHiRc=",
-        "source": "sha256-pVDEEfhl1xvZh8YUvxbzFOGLJiXs6lImIjAJroWsuUk="
-      }
     }
   },
   "entrypoints": [
-    "e8d61d5f6bcfe8d456dc27a0d8aca1352fecf081444ccfd3b6519e0f3965bfde"
+    "aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729",
+    "d911ccd5062c7c34f8959a54d47d0b9246439f6b2adbb7eda2d27bb57f21a498"
   ]
 }
