@@ -8,7 +8,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 
 `l` = Left\
 `c` = Center\
-`r` = Right
+`r` = Right\
 `u` = Up\
 `d` = Down
 
@@ -17,7 +17,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 `s` = South / Start\
 `w` = West / Forward
 
-`b` = Back
+`b` = Back\
 `f` = Forward
 
 `t` = Top\
@@ -32,7 +32,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 
 # Other
 
-`g` = Goto
+`g` = Goto\
 `q` = Quit (instead of Close)
 
 ## Browsers
@@ -45,16 +45,16 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
   - `fu` = Folding: Unfold
 `p` = `P`anel (Tool Window in IntelliJ, View in VSCode)
   `pg` = `P`age
-`s` = `S`plit (Split in Intellij, Editor Group in VSCode, Pane in Warp)
-`t` = `T`ab/`T`erminal
+`s` = `S`plit (Split in Intellij, Editor Group in VSCode, Pane in Warp)\
+`t` = `T`ab/`T`erminal\
 `g` = `G`oto/`G`it
 
 ## Universal Shortcuts
 
 No need to redefine chords for certain universal shortcuts:
 
-cmd+a - Select All
-cmd+c - Copy
+cmd+a - Select All\
+cmd+c - Copy\
 cmd+x - Cut
 cmd+v - Paste
 cmd+z - Undo
