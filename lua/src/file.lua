@@ -5,42 +5,6 @@ local function escape_pattern(s)
   return s:gsub("([^%w])", "%%%1")
 end
 
--- read entire file (nil if not exists)
-function M.read(path)
-  local f = io.open(path, "r")
-  if not f then return nil end
-  local content = f:read("*a")
-  f:close()
-  return content
-end
-
--- atomic write (best effort)
-function M.write(path, content)
-  local tmp_path = path
-    .. ".tmp."
-    .. tostring(os.time())
-    .. "."
-    .. tostring(math.random(100000, 999999))
-
-  local f = io.open(tmp_path, "w")
-  if not f then return nil, "open failed" end
-
-  local ok = f:write(content)
-  f:close()
-
-  if not ok then
-    os.remove(tmp_path)
-    return nil, "write failed"
-  end
-
-  if os.rename(tmp_path, path) == nil then
-    os.remove(tmp_path)
-    return nil, "rename failed"
-  end
-
-  return true
-end
-
 -- upsert block between markers
 function M.upsert_block(path, new_content, start_marker, end_marker)
   start_marker = start_marker or "# START"
@@ -75,13 +39,6 @@ function M.upsert_block(path, new_content, start_marker, end_marker)
   end
 
   return M.write(path, updated)
-end
-
-function M.touch(path)
-  local f = io.open(path, "a")
-  if not f then return nil, "open failed" end
-  f:close()
-  return true
 end
 
 return M

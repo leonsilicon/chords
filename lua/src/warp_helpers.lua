@@ -1,6 +1,6 @@
 local M = {}
 
-local file = require("file")
+local file = require("pl.file")
 local generate_synthetic_keybinds = require("keybinds").generate_synthetic_keybinds
 local expand_all = require("brace_expansion_helpers").expand_all
 
@@ -68,7 +68,9 @@ function M.create_command(chords)
     local home = os.getenv("HOME") or "~"
     local path = home .. "/.warp/keybindings.yaml"
 
-    file.touch(path)
+    if not file.exists(path) then
+      file.write(path, "")
+    end
 
     file.upsert_block(
       path,

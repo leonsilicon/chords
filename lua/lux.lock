@@ -1,0 +1,110 @@
+{
+  "version": "1.0.0",
+  "dependencies": {
+    "rocks": {
+      "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1": {
+        "name": "luafilesystem",
+        "version": "1.9.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": null,
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/lunarmodules/luafilesystem",
+          "ref": "v1_9_0"
+        },
+        "hashes": {
+          "rockspec": "sha256-Mrv7QKI6EAY6jzMrh0VWAZIy5KAem82cDPtCIRji4ck=",
+          "source": "sha256-xoNJra/yqxRG11TePcUKrAUU6cwypGnXIoLKZXNaoW0="
+        }
+      },
+      "a943eee5bce2b518092862291a9add115e24533a560cde5bc801d73068ac6eae": {
+        "name": "lunajson",
+        "version": "1.2.3-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==1.2.3",
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/grafi-tt/lunajson.git",
+          "ref": "1.2.3"
+        },
+        "hashes": {
+          "rockspec": "sha256-dzm6LDQ3nNuE80NBY17Pk30euqa565jrqlBODVLzEv8=",
+          "source": "sha256-LZipetkhtScHhI78OFLVkEjpQyvdkbMM0Y2TGFQ7dvg="
+        }
+      },
+      "aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729": {
+        "name": "bplist-parser-lua",
+        "version": "0.1.1-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==0.1.1",
+        "binaries": [],
+        "source": "luarocks_rock+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://luarocks.org/"
+        },
+        "hashes": {
+          "rockspec": "sha256-CwPgrCMeNWI4K5a836z1U/2ekKo7sLT4jCURXTnNLzg=",
+          "source": "sha256-weHnGYpA8W8St86RoCbFpSqUoP0Qbds1sxzYP3/uuu0="
+        }
+      },
+      "b8463523b3c133a6e44d11871970d8620660e7e355956e600711957ec77061d1": {
+        "name": "luafilesystem",
+        "version": "1.9.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==1.9.0",
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/lunarmodules/luafilesystem",
+          "ref": "v1_9_0"
+        },
+        "hashes": {
+          "rockspec": "sha256-Mrv7QKI6EAY6jzMrh0VWAZIy5KAem82cDPtCIRji4ck=",
+          "source": "sha256-xoNJra/yqxRG11TePcUKrAUU6cwypGnXIoLKZXNaoW0="
+        }
+      },
+      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8": {
+        "name": "penlight",
+        "version": "1.15.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [
+          "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1"
+        ],
+        "constraint": "==1.15.0",
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/lunarmodules/penlight.git",
+          "ref": "1.15.0"
+        },
+        "hashes": {
+          "rockspec": "sha256-blt3sqlz+76U8RAtPtfvEqw4+VACI90TFHn+fTcQlVQ=",
+          "source": "sha256-yEkzr4v8avygFxp+NUvffg2fRxQJWTpRdIvluh/QBpY="
+        }
+      }
+    },
+    "entrypoints": [
+      "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1",
+      "a943eee5bce2b518092862291a9add115e24533a560cde5bc801d73068ac6eae",
+      "aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729",
+      "b8463523b3c133a6e44d11871970d8620660e7e355956e600711957ec77061d1",
+      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8"
+    ]
+  }
+}

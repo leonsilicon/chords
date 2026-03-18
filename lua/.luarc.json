@@ -1,8 +1,9 @@
 {
   "workspace": {
     "library": [
+      ".lux/5.4/a943eee5bce2b518092862291a9add115e24533a560cde5bc801d73068ac6eae-lunajson@1.2.3-1/src",
       ".lux/5.4/aabb12081b317b88ca5931e12dc3628e0850469831c75fba5a40e12ae33f3729-bplist-parser-lua@0.1.1-1/src",
-      ".lux/5.4/d911ccd5062c7c34f8959a54d47d0b9246439f6b2adbb7eda2d27bb57f21a498-json4lua@0.9.30-1/src"
+      ".lux/5.4/b8463523b3c133a6e44d11871970d8620660e7e355956e600711957ec77061d1-luafilesystem@1.9.0-1/src"
     ]
   }
 }

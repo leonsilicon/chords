@@ -1,6 +1,6 @@
 local M = {}
 
-local file = require("file")
+local file = require("pl.file")
 
 local function escape(s)
   return tostring(s)
