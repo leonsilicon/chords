@@ -29,7 +29,7 @@ local function quote(str)
 end
 
 -- Factory
--- This works by modifying keybindings.yml
+-- This works by modifying keybindings.yaml
 function M.create_command(chords)
   -- 1. extract + generate once
   local commands = extract_commands(chords)
@@ -57,22 +57,22 @@ function M.create_command(chords)
     end
     table.sort(sorted_commands)
 
-    local keybindings_yml = ""
+    local keybindings_yaml = ""
 
     for _, cmd in ipairs(sorted_commands) do
       local keybind = synthetic_keybinds[cmd]
-      keybindings_yml = keybindings_yml
+      keybindings_yaml = keybindings_yaml
         .. string.format("%s: %s\n", quote(cmd), normalize_keybind(keybind))
     end
 
     local home = os.getenv("HOME") or "~"
-    local path = home .. "/.warp/keybindings.yml"
+    local path = home .. "/.warp/keybindings.yaml"
 
     file.touch(path)
 
     file.upsert_block(
       path,
-      keybindings_yml,
+      keybindings_yaml,
       "# >>> chords:auto:start",
       "# >>> chords:auto:end"
     )
