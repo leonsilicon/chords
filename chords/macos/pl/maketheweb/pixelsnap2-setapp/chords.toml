@@ -15,4 +15,4 @@ local shortcut = carbon_shortcut_to_string(hotkey.carbonKey, hotkey.carbonModifi
 '''
 
 [chords]
-"/X" = { name = "PixelSnap", lua = "tap(shortcut)" }
+"/x" = { name = "PixelSnap", lua = "tap(shortcut)" }
