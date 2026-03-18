@@ -1,25 +1,19 @@
 local M = {}
 
 local file = require("pl.file")
-
-local function escape(s)
-  return tostring(s)
-    :gsub("\\", "\\\\")
-    :gsub('"', '\\"')
-    :gsub("\r", "\\r")
-    :gsub("\n", "\\n")
-end
+local utils = require("pl.utils")
+local json = require("lunajson")
 
 -- This function makes it possible to programmatically execute IntelliJ commands
 local GROOVY_TEMPLATE = [[
 import com.intellij.openapi.actionSystem.ActionManager
 
 def actionManager = ActionManager.getInstance()
-def resultFile = new File("%s")
+def resultFile = new File(%s)
 
 IDE.application.invokeAndWait {
   try {
-    def action = actionManager.getAction("%s")
+    def action = actionManager.getAction(%s)
     if (action == null) {
       resultFile.text = "0"
       return
@@ -33,10 +27,6 @@ IDE.application.invokeAndWait {
 }
 ]]
 
-local function shell_escape(s)
-  return tostring(s):gsub("'", "'\\''")
-end
-
 function M.create_action(bin_path)
   local ide = tostring(bin_path)
 
@@ -48,16 +38,20 @@ function M.create_action(bin_path)
     local result_path = tmp .. "/jetbrains_action_" .. id .. ".txt"
 
     local script = GROOVY_TEMPLATE:format(
-      escape(result_path),
-      escape(command_name)
+      json.encode(result_path),
+      json.encode(command_name)
     )
 
     if not file.write(script_path, script) then
       return false
     end
 
-    os.execute(
-      "'" .. shell_escape(ide) .. "' ideScript '" .. shell_escape(script_path) .. "'"
+    utils.execute(
+      utils.quote_arg {
+        ide,
+        'ideScript',
+        script_path
+      }
     )
 
     local result = file.read(result_path) or ""
