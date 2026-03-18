@@ -28,8 +28,8 @@ ba = { name = "Block: All Select", lua = "command('terminal:select_all_blocks')"
 bs = { name = "Block: Share", lua = "command('terminal:open_share_modal')", shortcut = "shift+cmd+s" }
 bc = { name = "Blocks: Clear", lua = "command('terminal:clear_blocks')", shortcut = "cmd+k" }
 bm = { name = "Block: Menu", lua = "command('terminal:open_block_list_context_menu_via_keybinding')", shortcut = "cmd+m" }
-bx = { name = "Select Next Block", lua = "command('terminal:select_next_block')", shortcut = "cmd+down" }
-bv = { name = "Select Previous Block", lua = "command('terminal:select_previous_block')", shortcut = "cmd+up" }
+bx = { name = "Block: Next", lua = "command('terminal:select_next_block')", shortcut = "cmd+down" }
+bv = { name = "Block: Previous", lua = "command('terminal:select_previous_block')", shortcut = "cmd+up" }
 rc = { name = "Reinput Selected Commands", lua = "command('terminal:reinput_commands')", shortcut = "cmd+i" }
 cc = { name = "Copy Command", lua = "command('terminal:copy_commands')", shortcut = "shift+cmd+c" }
 rr = { name = "Reinput Selected Commands as Root", lua = "command('terminal:reinput_commands_with_sudo')", shortcut = "shift+cmd+i" }
@@ -73,14 +73,18 @@ tl = { name = "Move current tab left", lua = "command('workspace:move_tab_left')
 tr = { name = "Move current tab right", lua = "command('workspace:move_tab_right')", shortcut = "shift+cmd+]" }
 
 # Split
-sn = { name = "Split: North", lua = "command('pane_group:focus_up')", shortcut = "ctrl+alt+up" }
-se = { name = "Split: East", lua = "command('pane_group:focus_right')", shortcut = "ctrl+alt+right" }
-ss = { name = "Split: South", lua = "command('pane_group:focus_down')", shortcut = "ctrl+alt+down" }
-sw = { name = "Split: West", lua = "command('pane_group:focus_left')", shortcut = "ctrl+alt+left" }
+sn = { name = "Split: North", lua = "command('pane_group:focus_up')", shortcut = "cmd+alt+up" }
+se = { name = "Split: East", lua = "command('pane_group:focus_right')", shortcut = "cmd+alt+right" }
+ss = { name = "Split: South", lua = "command('pane_group:focus_down')", shortcut = "cmd+alt+down" }
+sw = { name = "Split: West", lua = "command('pane_group:focus_left')", shortcut = "cmd+alt+left" }
 su = { name = "Split: Up", lua = "command('pane_group:add_up')" }
-sd = { name = "Split: Down", lua = "command('pane_group:add_down')", shortcut = "ctrl+alt+cmd+d" }
+sd = { name = "Split: Down", lua = "command('pane_group:add_down')", shortcut = "cmd+shift+d" }
 sr = { name = "Split: Right", lua = "command('pane_group:add_right')", shortcut = "cmd+d" }
 sl = { name = "Split: Left", lua = "command('pane_group:add_left')" }
+sru = { name = "Split: Resize Up", lua = "command('pane_group:resize_up')", shortcut = "ctrl+cmd+up" }
+srd = { name = "Split: Resize Down", lua = "command('pane_group:resize_down')", shortcut = "ctrl+cmd+down" }
+srr = { name = "Split: Resize Right", lua = "command('pane_group:resize_right')", shortcut = "ctrl+cmd+right" }
+srl = { name = "Split: Resize Left", lua = "command('pane_group:resize_left')", shortcut = "ctrl+cmd+left" }
 
 # Zoom
 zi = { name = "Increase font size", lua = "command('window:increase_font_size')", shortcut = "cmd+=" }
