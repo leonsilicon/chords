@@ -1,7 +1,7 @@
 import fs from "fs";
 import { outdent } from "outdent";
-import path from 'path'
-import { run } from '#/utils/exec.ts'
+import path from "path";
+import { run } from "#/utils/exec.ts";
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {

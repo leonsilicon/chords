@@ -1,8 +1,9 @@
 import { parseBuffer } from "bplist-parser-pure";
 import fs from "fs";
-import { modifiersToStrings, keycodeToString } from "#/utils/mac-keycode.ts";
+import { modifiersToStrings } from "#/utils/mac-keycode.ts";
+import { keyname } from "os-keycode";
 import untildify from "untildify";
-import {Buffer} from 'buffer'
+import { Buffer } from "buffer";
 
 export function makeShortcut(tildepath: string) {
   const filepath = untildify(tildepath);
@@ -14,11 +15,16 @@ export function makeShortcut(tildepath: string) {
       return false;
     }
 
-    const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString('utf8') : String(rawValue);
+    const valueString =
+      rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
 
     const value = JSON.parse(valueString);
     const keys = modifiersToStrings(value.internalModifiers);
-    keys.push(keycodeToString(value.keyCode)!);
+    const keyInfo = keyname(value.carbonKey);
+    if (!keyInfo || !("key" in keyInfo)) {
+      return false;
+    }
+    keys.push(keyInfo.key);
     tap(keys.join("+"));
   };
 }

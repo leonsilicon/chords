@@ -1,7 +1,7 @@
 import { run } from "#/utils/exec.ts";
 import fs from "fs";
 import { exists } from "#/utils/file.ts";
-import path from 'path'
+import path from "path";
 
 // TODO: make this work for Cursor
 export async function createCommand() {
@@ -29,5 +29,5 @@ export async function createCommand() {
     tap("cmd+shift+f17");
 
     return true;
-  }
+  };
 }

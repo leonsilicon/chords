@@ -4,16 +4,15 @@ declare global {
   function release(key: string): void;
 
   interface ImportMeta {
-     chords: Record<string, Chord>
+    chords: Record<string, Chord>;
   }
 }
 
 type Chord = {
-  name: string,
-  shortcut?: string
-  shell?: string
-  args?: string[]
-}
-
+  name: string;
+  shortcut?: string;
+  shell?: string;
+  args?: string[];
+};
 
 export {};

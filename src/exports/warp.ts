@@ -2,11 +2,11 @@ import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
 import fs from "fs";
 import { expand } from "brace-expansion";
 import { exists } from "#/utils/file.ts";
-import yaml from 'js-yaml';
-import os from 'os'
-import path from 'path'
+import yaml from "js-yaml";
+import os from "os";
+import path from "path";
 
-function extractCommands(chords: ImportMeta['chords']): string[] {
+function extractCommands(chords: ImportMeta["chords"]): string[] {
   const result: string[] = [];
 
   for (const chord of Object.values(chords ?? {})) {
@@ -22,7 +22,7 @@ function normalizeKeybind(k: string): string {
   return k.replace(/\+/g, "-");
 }
 
-export async function createCommand(chords: ImportMeta['chords']) {
+export async function createCommand(chords: ImportMeta["chords"]) {
   const commands = extractCommands(chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(
@@ -46,8 +46,8 @@ export async function createCommand(chords: ImportMeta['chords']) {
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
   let keybindings: Record<string, string> = {};
   if (exists(keybindingsPath)) {
-    const yml = yaml.load(fs.readFileSync(keybindingsPath, 'utf8'));
-    if (typeof yml === 'object' && yml !== null) {
+    const yml = yaml.load(fs.readFileSync(keybindingsPath, "utf8"));
+    if (typeof yml === "object" && yml !== null) {
       keybindings = yml as Record<string, string>;
     }
   }
@@ -56,7 +56,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
     const keybind = normalizeKeybind(syntheticKeybinds[cmd]!);
     keybindings[cmd] = keybind;
   }
-  fs.writeFileSync(keybindingsPath, '---\n' + yaml.dump(keybindings));
+  fs.writeFileSync(keybindingsPath, "---\n" + yaml.dump(keybindings));
 
   return function command(cmd: string): boolean {
     const keybind = keybindings[cmd];
@@ -64,7 +64,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
       return false;
     }
 
-    tap(keybind.replaceAll('-', "+"));
+    tap(keybind.replaceAll("-", "+"));
     return true;
   };
 }
