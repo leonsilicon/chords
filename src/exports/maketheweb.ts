@@ -1,4 +1,4 @@
-import { parseBuffer } from "@ban12/bplist-parser";
+import { parseBuffer } from "bplist-parser-pure";
 import fs from "fs";
 import { carbonModifiersToStrings, keycodeToString } from "#/utils/mac-keycode.ts";
 import untildify from "untildify";

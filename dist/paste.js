@@ -1,5 +1,5 @@
 // @bun
-// node_modules/.pnpm/@ban12+bplist-parser@0.0.1/node_modules/@ban12/bplist-parser/dist/bplist-parser.mjs
+// node_modules/.pnpm/bplist-parser-pure@0.0.1/node_modules/bplist-parser-pure/dist/bplist-parser.mjs
 function _define_property(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
@@ -8,7 +8,6 @@ function _define_property(obj, key, value) {
   }
   return obj;
 }
-var debug = false;
 var maxObjectSize = 100 * 1000 * 1000;
 var maxObjectCount = 32768;
 var EPOCH = 978307200000;
@@ -28,25 +27,10 @@ var parseBuffer = function(_buffer) {
   }
   const trailerOffset = buffer.byteLength - 32;
   const offsetSize = view.getUint8(trailerOffset + 6);
-  if (debug) {
-    console.log("offsetSize: " + offsetSize);
-  }
   const objectRefSize = view.getUint8(trailerOffset + 7);
-  if (debug) {
-    console.log("objectRefSize: " + objectRefSize);
-  }
   const numObjects = readUInt64BE(view, trailerOffset + 8);
-  if (debug) {
-    console.log("numObjects: " + numObjects);
-  }
   const topObject = readUInt64BE(view, trailerOffset + 16);
-  if (debug) {
-    console.log("topObject: " + topObject);
-  }
   const offsetTableOffset = readUInt64BE(view, trailerOffset + 24);
-  if (debug) {
-    console.log("offsetTableOffset: " + offsetTableOffset);
-  }
   if (numObjects > maxObjectCount) {
     throw new Error("maxObjectCount exceeded");
   }
@@ -66,9 +50,6 @@ var parseBuffer = function(_buffer) {
       case 8:
         offsetTable.push(Number(view.getBigUint64(offset)));
         break;
-    }
-    if (debug) {
-      console.log("Offset for Object #" + i + " is " + offsetTable[i] + " [" + offsetTable[i].toString(16) + "]");
     }
   }
   function parseObject(tableOffset) {
@@ -182,11 +163,7 @@ var parseBuffer = function(_buffer) {
         const intInfo = int_type & 15;
         const intLength = Math.pow(2, intInfo);
         dataOffset = 2 + intLength;
-        if (intLength < 3) {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        } else {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        }
+        length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
       }
       if (length < maxObjectSize) {
         return buffer.slice(offset + dataOffset, offset + dataOffset + length);
@@ -194,7 +171,6 @@ var parseBuffer = function(_buffer) {
       throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
     }
     function parsePlistString(isUtf16 = 0) {
-      let enc = "utf8";
       let length = objInfo;
       let strOffset = 1;
       if (objInfo == 15) {
@@ -206,22 +182,14 @@ var parseBuffer = function(_buffer) {
         const intInfo = int_type & 15;
         const intLength = Math.pow(2, intInfo);
         strOffset = 2 + intLength;
-        if (intLength < 3) {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        } else {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        }
+        length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
       }
-      length *= isUtf16 + 1;
-      if (length < maxObjectSize) {
-        let plistString = buffer.slice(offset + strOffset, offset + strOffset + length);
-        if (isUtf16) {
-          plistString = swapBytes(plistString);
-          enc = "utf-16";
-        }
-        return new TextDecoder(enc).decode(plistString);
+      const byteLength = isUtf16 ? length * 2 : length;
+      if (byteLength >= maxObjectSize) {
+        throw new Error("Too little heap space available! Wanted to read " + byteLength + " bytes, but only " + maxObjectSize + " are available.");
       }
-      throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
+      const bytes = buffer.slice(offset + strOffset, offset + strOffset + byteLength);
+      return isUtf16 ? decodeUtf16BE(bytes) : decodeAscii(bytes);
     }
     function parseArray() {
       let length = objInfo;
@@ -235,11 +203,7 @@ var parseBuffer = function(_buffer) {
         const intInfo = int_type & 15;
         const intLength = Math.pow(2, intInfo);
         arrayOffset = 2 + intLength;
-        if (intLength < 3) {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        } else {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        }
+        length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
       }
       if (length * objectRefSize > maxObjectSize) {
         throw new Error("Too little heap space available!");
@@ -263,17 +227,10 @@ var parseBuffer = function(_buffer) {
         const intInfo = int_type & 15;
         const intLength = Math.pow(2, intInfo);
         dictOffset = 2 + intLength;
-        if (intLength < 3) {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        } else {
-          length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
-        }
+        length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
       }
       if (length * 2 * objectRefSize > maxObjectSize) {
         throw new Error("Too little heap space available!");
-      }
-      if (debug) {
-        console.log("Parsing dictionary #" + tableOffset);
       }
       const dict = {};
       for (let i = 0;i < length; i++) {
@@ -281,9 +238,6 @@ var parseBuffer = function(_buffer) {
         const valRef = readUInt(buffer.slice(offset + dictOffset + length * objectRefSize + i * objectRefSize, offset + dictOffset + length * objectRefSize + (i + 1) * objectRefSize));
         const key = parseObject(keyRef);
         const val = parseObject(valRef);
-        if (debug) {
-          console.log("  DICT #" + tableOffset + ": Mapped " + key + " to " + val);
-        }
         dict[key] = val;
         if (key === "flags" && typeof val === "number") {
           dict[key] = parseRunTimeFlags(val);
@@ -305,14 +259,29 @@ function readUInt(buffer, start = 0) {
 function readUInt64BE(view, start) {
   return view.getUint32(start + 4);
 }
-function swapBytes(buffer) {
-  const len = buffer.length;
-  for (let i = 0;i < len; i += 2) {
-    const a = buffer[i];
-    buffer[i] = buffer[i + 1];
-    buffer[i + 1] = a;
+function decodeAscii(bytes) {
+  let result = "";
+  const chunkSize = 32768;
+  for (let i = 0;i < bytes.length; i += chunkSize) {
+    result += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
   }
-  return buffer;
+  return result;
+}
+function decodeUtf16BE(bytes) {
+  if (bytes.length % 2 !== 0) {
+    throw new Error("Invalid UTF-16BE string length");
+  }
+  let result = "";
+  const chunkSize = 16384;
+  for (let i = 0;i < bytes.length; i += chunkSize * 2) {
+    const end = Math.min(i + chunkSize * 2, bytes.length);
+    const codeUnits = [];
+    for (let j = i;j < end; j += 2) {
+      codeUnits.push(bytes[j] << 8 | bytes[j + 1]);
+    }
+    result += String.fromCharCode(...codeUnits);
+  }
+  return result;
 }
 function parseRunTimeFlags(value) {
   const flagDefinitions = { 0: "Valid", 1: "Has been rounded", 2: "Positive infinity", 3: "Negative infinity", 4: "Indefinite" };
