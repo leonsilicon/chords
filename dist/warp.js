@@ -2941,31 +2941,27 @@ function normalizeKeybind(k) {
 async function createCommand(chords) {
   const commands = extractCommands(chords);
   const syntheticKeybinds = generateSyntheticKeybinds(commands, [
-    "opt+{0..9}",
-    "opt+cmd+{0..9}",
-    "opt+cmd+ctrl+{0..9}",
-    "opt+cmd+ctrl+shift+{0..9}",
+    "alt+{0..9}",
+    "alt+cmd+{0..9}",
+    "alt+cmd+ctrl+{0..9}",
+    "alt+cmd+ctrl+shift+{0..9}",
     "cmd+ctrl+{0..9}",
     "cmd+ctrl+shift+{0..9}",
     "ctrl+shift+{0..9}",
-    "opt+shift+{0..9}",
+    "alt+shift+{0..9}",
     "cmd+shift+{0..9}"
   ].flatMap((pattern) => expand(pattern)));
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
   const keybindings = exists(keybindingsPath) ? jsYaml.load(readFileSync2(keybindingsPath, "utf8")) || {} : {};
   for (const cmd of sortedCommands) {
-    const keybind = syntheticKeybinds[cmd];
+    const keybind = normalizeKeybind(syntheticKeybinds[cmd]);
     keybindings[cmd] = keybind;
   }
   writeFileSync2(keybindingsPath, `---
 ` + jsYaml.dump(keybindings));
-  const commandToKey = {};
-  for (const [cmd, key] of Object.entries(syntheticKeybinds)) {
-    commandToKey[cmd] = normalizeKeybind(key);
-  }
   return function(cmd) {
-    const keybind = commandToKey[cmd];
+    const keybind = keybindings[cmd];
     if (!keybind) {
       return false;
     }
