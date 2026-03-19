@@ -3,9 +3,9 @@
 import { env } from "process";
 
 // src/utils/file.ts
-import fs from "fs";
+import { readFileSync, writeFileSync, statSync } from "fs";
 function upsertBlock(path, newContent, startMarker = "# START", endMarker = "# END") {
-  let existing = fs.readFileSync(path, "utf8") ?? "";
+  let existing = readFileSync(path, "utf8") ?? "";
   const block = `${startMarker}
 ${newContent}
 ${endMarker}`;
@@ -25,7 +25,17 @@ ${endMarker}`;
 ${block}
 `;
   }
-  fs.writeFileSync(path, updated);
+  writeFileSync(path, updated);
+}
+function exists(path) {
+  try {
+    statSync(path);
+    return true;
+  } catch (err) {
+    if (err.code === "ENOENT")
+      return false;
+    throw err;
+  }
 }
 
 // node_modules/balanced-match/dist/esm/index.js
@@ -254,7 +264,7 @@ function generateSyntheticKeybinds(commands, patterns) {
 }
 
 // src/exports/warp.ts
-import { existsSync, writeFileSync } from "fs";
+import { writeFileSync as writeFileSync2 } from "fs";
 function extractCommands(chords) {
   const result = [];
   for (const chord of Object.values(chords ?? {})) {
@@ -295,8 +305,8 @@ function createCommand(chords) {
   }
   const home = env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-  if (existsSync(keybindingsPath)) {
-    writeFileSync(keybindingsPath, "");
+  if (exists(keybindingsPath)) {
+    writeFileSync2(keybindingsPath, "");
   }
   upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   const commandToKey = {};

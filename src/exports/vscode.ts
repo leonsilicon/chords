@@ -1,5 +1,6 @@
 import { run } from "#/utils/exec.ts";
-import { writeFileSync, rmSync, existsSync } from "fs";
+import { writeFileSync, rmSync, statSync } from "fs";
+import { exists } from '#/utils/file.ts'
 
 export async function createCommand() {
   let uid: string;
@@ -18,7 +19,7 @@ export async function createCommand() {
   const dir = `${tmp}/vscode-command-server-${uid}`;
 
   return function command(cmd: string) {
-    if (!fs.existsSync(dir)) {
+    if (!exists(dir)) {
       return false;
     }
 
@@ -34,7 +35,7 @@ export async function createCommand() {
 
     tap("cmd+shift+f17");
 
-    if (existsSync(responsePath)) {
+    if (statSync(responsePath)) {
       rmSync(responsePath);
     }
 

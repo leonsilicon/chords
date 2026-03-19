@@ -1,4 +1,4 @@
-import fs from 'fs'
+import { readFileSync, writeFileSync, statSync } from 'fs'
 
 export function upsertBlock(
   path: string,
@@ -6,7 +6,7 @@ export function upsertBlock(
   startMarker = "# START",
   endMarker = "# END"
 ) {
-  let existing = fs.readFileSync(path, 'utf8') ?? "";
+  let existing = readFileSync(path, 'utf8') ?? "";
 
   const block = `${startMarker}\n${newContent}\n${endMarker}`;
 
@@ -29,5 +29,15 @@ export function upsertBlock(
     updated = `${existing}\n${block}\n`;
   }
 
-  fs.writeFileSync(path, updated);
+  writeFileSync(path, updated);
+}
+
+export function exists(path: string) {
+  try {
+    statSync(path);
+    return true;
+  } catch (err: any) {
+    if (err.code === "ENOENT") return false;
+    throw err; // real error, don’t ignore
+  }
 }

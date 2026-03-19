@@ -23,7 +23,45 @@ function run(cmd, args = []) {
 }
 
 // src/exports/vscode.ts
-import { writeFileSync, rmSync, existsSync } from "fs";
+import { writeFileSync as writeFileSync2, rmSync, statSync as statSync2 } from "fs";
+
+// src/utils/file.ts
+import { readFileSync, writeFileSync, statSync } from "fs";
+function upsertBlock(path, newContent, startMarker = "# START", endMarker = "# END") {
+  let existing = readFileSync(path, "utf8") ?? "";
+  const block = `${startMarker}
+${newContent}
+${endMarker}`;
+  const startIndex = existing.indexOf(startMarker);
+  const endIndex = existing.indexOf(endMarker);
+  let updated;
+  if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
+    const endOfMarker = endIndex + endMarker.length;
+    updated = existing.slice(0, startIndex) + block + existing.slice(endOfMarker);
+  } else {
+    if (existing !== "" && !existing.endsWith(`
+`)) {
+      existing += `
+`;
+    }
+    updated = `${existing}
+${block}
+`;
+  }
+  writeFileSync(path, updated);
+}
+function exists(path) {
+  try {
+    statSync(path);
+    return true;
+  } catch (err) {
+    if (err.code === "ENOENT")
+      return false;
+    throw err;
+  }
+}
+
+// src/exports/vscode.ts
 async function createCommand() {
   let uid;
   try {
@@ -37,7 +75,7 @@ async function createCommand() {
   const tmp = process.env.TMPDIR ?? "/tmp";
   const dir = `${tmp}/vscode-command-server-${uid}`;
   return function command(cmd) {
-    if (!fs.existsSync(dir)) {
+    if (!exists(dir)) {
       return false;
     }
     const requestPath = `${dir}/request.json`;
@@ -46,9 +84,9 @@ async function createCommand() {
       commandId: cmd,
       args: []
     });
-    writeFileSync(requestPath, payload);
+    writeFileSync2(requestPath, payload);
     tap("cmd+shift+f17");
-    if (existsSync(responsePath)) {
+    if (statSync2(responsePath)) {
       rmSync(responsePath);
     }
     return true;
