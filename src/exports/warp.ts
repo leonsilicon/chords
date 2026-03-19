@@ -1,8 +1,11 @@
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
-import { writeFileSync } from "fs";
+import { readFileSync, writeFileSync } from "fs";
 import { expand } from "brace-expansion";
 import { exists } from "#/utils/file.ts";
+import yaml from 'yaml';
+import os from 'os'
+import path from 'path'
 
 function extractCommands(chords: ImportMeta['chords']): string[] {
   const result: string[] = [];
@@ -17,12 +20,9 @@ function extractCommands(chords: ImportMeta['chords']): string[] {
 }
 
 function normalizeKeybind(k: string): string {
-  return String(k).replace(/\+/g, "-");
+  return k.replace(/\+/g, "-");
 }
 
-function quote(str: string): string {
-  return `"${String(str).replace(/"/g, '\\"')}"`;
-}
 
 export async function createCommand(chords: ImportMeta['chords']) {
   const commands = extractCommands(chords);
@@ -44,21 +44,14 @@ export async function createCommand(chords: ImportMeta['chords']) {
 
   // write warp keybindings
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
-  let keybindingsYaml = "";
 
+  const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
+  const keybindings = exists(keybindingsPath) ? yaml.parse(readFileSync(keybindingsPath, 'utf8')) : {};
   for (const cmd of sortedCommands) {
     const keybind = syntheticKeybinds[cmd];
-    keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
+    keybindings[cmd] = keybind;
   }
-
-  const home = process.env.HOME || "~";
-  const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-
-  if (exists(keybindingsPath)) {
-    writeFileSync(keybindingsPath, "");
-  }
-
-  upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
+  writeFileSync(keybindingsPath, yaml.stringify(keybindings));
 
   const commandToKey: Record<string, string> = {};
 
@@ -67,7 +60,6 @@ export async function createCommand(chords: ImportMeta['chords']) {
   }
 
   return function (cmd: string): boolean {
-    console.log(cmd);
     const keybind = commandToKey[cmd];
     if (!keybind) {
       return false;
