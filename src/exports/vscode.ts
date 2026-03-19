@@ -5,7 +5,9 @@ import onetime from 'onetime'
 import path from 'path'
 
 const getUid = onetime(async () => {
+  console.log('Running id -u...')
     const uid = await run("id", ["-u"]);
+  console.log('UID:', uid);
     return uid
 })
 
@@ -13,6 +15,7 @@ const getUid = onetime(async () => {
 export function createCommand() {
   return async function command(cmd: string) {
     const uid = await getUid()
+    console.log('resolved UID:', uid);
     const tmp = process.env.TMPDIR ?? "/tmp";
     const dir = path.join(tmp, `vscode-command-server-${uid}`);
 

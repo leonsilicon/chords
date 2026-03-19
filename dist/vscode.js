@@ -116,12 +116,15 @@ var onetime_default = onetime;
 // src/exports/vscode.ts
 import path from "path";
 var getUid = onetime_default(async () => {
+  console.log("Running id -u...");
   const uid = await run("id", ["-u"]);
+  console.log("UID:", uid);
   return uid;
 });
 function createCommand() {
   return async function command(cmd) {
     const uid = await getUid();
+    console.log("resolved UID:", uid);
     const tmp = process.env.TMPDIR ?? "/tmp";
     const dir = path.join(tmp, `vscode-command-server-${uid}`);
     if (!exists(dir)) {

@@ -1,4 +1,55 @@
 // @bun
+// node_modules/.pnpm/array-uniq@3.0.0/node_modules/array-uniq/index.js
+function arrayUniq(array) {
+  return [...new Set(array)];
+}
+
+// node_modules/.pnpm/just-zip-it@3.2.0/node_modules/just-zip-it/index.mjs
+var arrayZip = zip;
+function zip() {
+  var args = Array.prototype.slice.call(arguments);
+  var argsLen = args.length;
+  var maxLen = 0;
+  if (!argsLen) {
+    throw new Error("zip requires at least one argument");
+  }
+  for (var i = 0;i < argsLen; i++) {
+    if (!Array.isArray(args[i])) {
+      throw new Error("all arguments must be arrays");
+    }
+    var arrLen = args[i].length;
+    if (arrLen > maxLen) {
+      maxLen = arrLen;
+    }
+  }
+  var result = [];
+  var group = [];
+  var p1 = 0;
+  var p2 = 0;
+  while (p1 < maxLen) {
+    group[p2] = args[p2][p1];
+    if (p2 < argsLen - 1) {
+      p2++;
+    } else {
+      p2 = 0;
+      result[p1] = group;
+      group = [];
+      p1++;
+    }
+  }
+  return result;
+}
+
+// src/utils/keybinds.ts
+function generateSyntheticKeybinds(commands, keybinds) {
+  const sortedKeybinds = arrayUniq(keybinds).sort();
+  const sortedCommands = arrayUniq(commands).sort();
+  return Object.fromEntries(arrayZip(sortedCommands, sortedKeybinds));
+}
+
+// src/exports/warp.ts
+import { readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "fs";
+
 // node_modules/.pnpm/balanced-match@4.0.4/node_modules/balanced-match/dist/esm/index.js
 var balanced = (a, b, str) => {
   const ma = a instanceof RegExp ? maybeMatch(a, str) : a;
@@ -210,22 +261,6 @@ function expand_(str, max, isTop) {
   }
   return expansions;
 }
-
-// node_modules/.pnpm/array-uniq@3.0.0/node_modules/array-uniq/index.js
-function arrayUniq(array) {
-  return [...new Set(array)];
-}
-
-// src/utils/keybinds.ts
-function generateSyntheticKeybinds(commands, patterns) {
-  const availableKeybinds = patterns.flatMap((pattern) => expand(pattern));
-  const keybinds = arrayUniq(availableKeybinds);
-  const cmds = arrayUniq(commands);
-  return Object.fromEntries(cmds.map((cmd, i) => [cmd, keybinds[i]]));
-}
-
-// src/exports/warp.ts
-import { readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "fs";
 
 // src/utils/file.ts
 import { readFileSync, writeFileSync, statSync } from "fs";
@@ -2953,19 +2988,25 @@ async function createCommand(chords) {
   ].flatMap((pattern) => expand(pattern)));
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
-  const keybindings = exists(keybindingsPath) ? jsYaml.load(readFileSync2(keybindingsPath, "utf8")) || {} : {};
+  let keybindings = {};
+  if (exists(keybindingsPath)) {
+    const yml = jsYaml.load(readFileSync2(keybindingsPath, "utf8"));
+    if (typeof yml === "object" && yml !== null) {
+      keybindings = yml;
+    }
+  }
   for (const cmd of sortedCommands) {
     const keybind = normalizeKeybind(syntheticKeybinds[cmd]);
     keybindings[cmd] = keybind;
   }
   writeFileSync2(keybindingsPath, `---
 ` + jsYaml.dump(keybindings));
-  return function(cmd) {
+  return function command(cmd) {
     const keybind = keybindings[cmd];
     if (!keybind) {
       return false;
     }
-    tap(keybind.replace(/-/g, "+"));
+    tap(keybind.replaceAll("-", "+"));
     return true;
   };
 }

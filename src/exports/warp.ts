@@ -45,20 +45,27 @@ export async function createCommand(chords: ImportMeta['chords']) {
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
 
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
-  const keybindings: Record<string, string> = exists(keybindingsPath) ? yaml.load(readFileSync(keybindingsPath, 'utf8')) || {} : {};
+  let keybindings: Record<string, string> = {};
+  if (exists(keybindingsPath)) {
+    const yml = yaml.load(readFileSync(keybindingsPath, 'utf8'));
+    if (typeof yml === 'object' && yml !== null) {
+      keybindings = yml as Record<string, string>;
+    }
+  }
+
   for (const cmd of sortedCommands) {
     const keybind = normalizeKeybind(syntheticKeybinds[cmd]!);
     keybindings[cmd] = keybind;
   }
   writeFileSync(keybindingsPath, '---\n' + yaml.dump(keybindings));
 
-  return function (cmd: string): boolean {
+  return function command(cmd: string): boolean {
     const keybind = keybindings[cmd];
     if (!keybind) {
       return false;
     }
 
-    tap(keybind.replace(/-/g, "+"));
+    tap(keybind.replaceAll('-', "+"));
     return true;
   };
 }

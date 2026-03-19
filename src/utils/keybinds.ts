@@ -1,13 +1,10 @@
-import { expand } from "brace-expansion";
 import arrayUnique from "array-uniq";
+import zip from 'just-zip-it'
 
-export function generateSyntheticKeybinds(commands: string[], patterns: string[]) {
-  // expand all patterns (order doesn't matter anymore)
-  const availableKeybinds = patterns.flatMap((pattern) => expand(pattern));
-
-  const keybinds = arrayUnique(availableKeybinds);
-  const cmds = arrayUnique(commands);
+export function generateSyntheticKeybinds(commands: string[], keybinds: string[]) {
+  const sortedKeybinds = arrayUnique(keybinds).sort();
+  const sortedCommands = arrayUnique(commands).sort();
 
   // deterministic mapping
-  return Object.fromEntries(cmds.map((cmd, i) => [cmd, keybinds[i]])); // undefined if exhausted
+  return Object.fromEntries(zip(sortedCommands, sortedKeybinds));
 }
