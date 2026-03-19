@@ -492,6 +492,7 @@ function untildify(pathWithTilde) {
 }
 
 // src/exports/wiheads.ts
+import { Buffer } from "buffer";
 function makeShortcut(tildepath) {
   const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
@@ -501,7 +502,8 @@ function makeShortcut(tildepath) {
     if (!rawValue) {
       return false;
     }
-    const value = JSON.parse(String(rawValue));
+    const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+    const value = JSON.parse(valueString);
     const keys = modifiersToStrings(value.internalModifiers);
     keys.push(keycodeToString(value.keyCode));
     tap(keys.join("+"));

@@ -2,6 +2,7 @@ import { parseBuffer } from "bplist-parser-pure";
 import fs from "fs";
 import { carbonModifiersToStrings, keycodeToString } from "#/utils/mac-keycode.ts";
 import untildify from "untildify";
+import { Buffer } from "buffer";
 
 export function makeShortcut(tildepath: string) {
   const filepath = untildify(tildepath);
@@ -13,7 +14,9 @@ export function makeShortcut(tildepath: string) {
       return false;
     }
 
-    const value = JSON.parse(String(rawValue));
+    const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString('utf8') : String(rawValue);
+
+    const value = JSON.parse(valueString);
     const keys = carbonModifiersToStrings(value.carbonModifiers);
     keys.push(keycodeToString(value.carbonKey)!);
     tap(keys.join("+"));

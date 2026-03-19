@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@ban12/bplist-parser':
+        specifier: ^0.0.1
+        version: 0.0.1
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -27,9 +30,6 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
     devDependencies:
-      '@ban12/bplist-parser':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@types/node':
         specifier: ^25.5.0
         version: 25.5.0
@@ -39,9 +39,6 @@ importers:
       array-uniq:
         specifier: ^3.0.0
         version: 3.0.0
-      bplist-universal:
-        specifier: ^1.1.0
-        version: 1.1.0
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
@@ -86,15 +83,8 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  big-integer@1.6.52:
-    resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
-    engines: {node: '>=0.6'}
-
   bplist-parser-pure@0.0.1:
     resolution: {integrity: sha512-Mw1dqhw9c0w4SzA8AlgwfBiaf7mXSCaluNNMHBikqvF+HGM/iN1lDZpVSyRckjdEthJ2VkrrTNTlifR75HGUFQ==}
-
-  bplist-universal@1.1.0:
-    resolution: {integrity: sha512-u9UfkFVlFI+PkuSX7BET3DDLx89/cH06lTG8TQs3CPzL9ZoaddYETqC6kSrJX4T21DXlSuH7F5+QvOuS4ayxDA==}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
@@ -234,13 +224,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  big-integer@1.6.52: {}
-
   bplist-parser-pure@0.0.1: {}
-
-  bplist-universal@1.1.0:
-    dependencies:
-      big-integer: 1.6.52
 
   brace-expansion@5.0.4:
     dependencies:
