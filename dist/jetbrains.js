@@ -1,11 +1,9 @@
 // @bun
-var __require = import.meta.require;
-
 // src/exports/jetbrains.ts
 import { writeFileSync, readFileSync, rmSync } from "fs";
 import { spawn } from "child_process";
 
-// node_modules/outdent/lib-module/index.js
+// node_modules/.pnpm/outdent@0.8.0/node_modules/outdent/lib-module/index.js
 function noop() {
   var args = [];
   for (var _i = 0;_i < arguments.length; _i++) {
@@ -140,8 +138,7 @@ if (typeof module_lib_module !== "undefined") {
 // src/exports/jetbrains.ts
 function createAction(ideBinPath) {
   return async function action(commandId) {
-    const { env } = await import("process");
-    const tmp = env.TMPDIR ?? "/tmp";
+    const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
     const resultPath = `${tmp}/jetbrains_action_${id}.txt`;

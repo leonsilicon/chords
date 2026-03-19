@@ -1,6 +1,4 @@
 // @bun
-var __require = import.meta.require;
-
 // src/utils/file.ts
 import { readFileSync, writeFileSync, statSync } from "fs";
 function upsertBlock(path, newContent, startMarker = "# START", endMarker = "# END") {
@@ -37,7 +35,7 @@ function exists(path) {
   }
 }
 
-// node_modules/balanced-match/dist/esm/index.js
+// node_modules/.pnpm/balanced-match@4.0.4/node_modules/balanced-match/dist/esm/index.js
 var balanced = (a, b, str) => {
   const ma = a instanceof RegExp ? maybeMatch(a, str) : a;
   const mb = b instanceof RegExp ? maybeMatch(b, str) : b;
@@ -90,7 +88,7 @@ var range = (a, b, str) => {
   return result;
 };
 
-// node_modules/brace-expansion/dist/esm/index.js
+// node_modules/.pnpm/brace-expansion@5.0.4/node_modules/brace-expansion/dist/esm/index.js
 var escSlash = "\x00SLASH" + Math.random() + "\x00";
 var escOpen = "\x00OPEN" + Math.random() + "\x00";
 var escClose = "\x00CLOSE" + Math.random() + "\x00";
@@ -249,7 +247,7 @@ function expand_(str, max, isTop) {
   return expansions;
 }
 
-// node_modules/array-uniq/index.js
+// node_modules/.pnpm/array-uniq@3.0.0/node_modules/array-uniq/index.js
 function arrayUniq(array) {
   return [...new Set(array)];
 }
@@ -302,8 +300,7 @@ async function createCommand(chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
 `;
   }
-  const { env } = await import("process");
-  const home = env.HOME || "~";
+  const home = process.env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
   if (exists(keybindingsPath)) {
     writeFileSync2(keybindingsPath, "");

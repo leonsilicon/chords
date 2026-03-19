@@ -62,8 +62,7 @@ export async function createCommand(chords: Chords) {
   }
 
 
-  const { env } = await import('process');
-  const home = env.HOME || "~";
+  const home = process.env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
 
   if (exists(keybindingsPath)) {

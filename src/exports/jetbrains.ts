@@ -5,8 +5,7 @@ import { outdent } from "outdent";
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {
   return async function action(commandId: string) {
-    const { env } = await import('process');
-    const tmp = env.TMPDIR ?? '/tmp'
+    const tmp = process.env.TMPDIR ?? '/tmp'
     const id = Math.random()
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`
     const resultPath = `${tmp}/jetbrains_action_${id}.txt`

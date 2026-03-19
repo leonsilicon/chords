@@ -1,7 +1,5 @@
 // @bun
-var __require = import.meta.require;
-
-// node_modules/@ban12/bplist-parser/dist/bplist-parser.mjs
+// node_modules/.pnpm/@ban12+bplist-parser@0.0.1/node_modules/@ban12/bplist-parser/dist/bplist-parser.mjs
 function _define_property(obj, key, value) {
   if (key in obj) {
     Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
