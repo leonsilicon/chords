@@ -1,5 +1,5 @@
 import { run } from "#/utils/exec.ts";
-import fs from "fs";
+import { writeFileSync, rmSync, existsSync } from "fs";
 
 export async function createCommand() {
   let uid: string;
@@ -30,12 +30,12 @@ export async function createCommand() {
       args: [],
     });
 
-    fs.writeFileSync(requestPath, payload);
+    writeFileSync(requestPath, payload);
 
     tap("cmd+shift+f17");
 
-    if (fs.existsSync(responsePath)) {
-      fs.unlinkSync(responsePath);
+    if (existsSync(responsePath)) {
+      rmSync(responsePath);
     }
 
     return true;

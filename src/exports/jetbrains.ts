@@ -1,4 +1,4 @@
-import { writeFileSync, readFileSync, unlinkSync } from "fs"
+import { writeFileSync, readFileSync, rmSync } from "fs"
 import { env } from "process";
 import { spawn } from 'child_process';
 import { outdent } from "outdent";
@@ -36,8 +36,8 @@ export function createAction(ideBinPath: string) {
     await spawn(ideBinPath, ['ideScript', scriptPath]);
     const result = readFileSync(resultPath, 'utf8')
 
-    unlinkSync(scriptPath)
-    unlinkSync(resultPath)
+    rmSync(scriptPath)
+    rmSync(resultPath)
 
     return result == "1"
   }

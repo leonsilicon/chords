@@ -23,7 +23,7 @@ function run(cmd, args = []) {
 }
 
 // src/exports/vscode.ts
-import fs from "fs";
+import { writeFileSync, rmSync, existsSync } from "fs";
 async function createCommand() {
   let uid;
   try {
@@ -46,10 +46,10 @@ async function createCommand() {
       commandId: cmd,
       args: []
     });
-    fs.writeFileSync(requestPath, payload);
+    writeFileSync(requestPath, payload);
     tap("cmd+shift+f17");
-    if (fs.existsSync(responsePath)) {
-      fs.unlinkSync(responsePath);
+    if (existsSync(responsePath)) {
+      rmSync(responsePath);
     }
     return true;
   };

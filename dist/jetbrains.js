@@ -1,6 +1,6 @@
 // @bun
 // src/exports/jetbrains.ts
-import { writeFileSync, readFileSync, unlinkSync } from "fs";
+import { writeFileSync, readFileSync, rmSync } from "fs";
 import { env } from "process";
 import { spawn } from "child_process";
 
@@ -166,8 +166,8 @@ function createAction(ideBinPath) {
     writeFileSync(scriptPath, script);
     await spawn(ideBinPath, ["ideScript", scriptPath]);
     const result = readFileSync(resultPath, "utf8");
-    unlinkSync(scriptPath);
-    unlinkSync(resultPath);
+    rmSync(scriptPath);
+    rmSync(resultPath);
     return result == "1";
   };
 }
