@@ -54,29 +54,27 @@ export function createCommand(chords: Chords) {
   );
 
   // write warp keybindings
-  {
-    const sortedCommands = Object.keys(syntheticKeybinds).sort();
-    let keybindingsYaml = "";
+  const sortedCommands = Object.keys(syntheticKeybinds).sort();
+  let keybindingsYaml = "";
 
-    for (const cmd of sortedCommands) {
-      const keybind = syntheticKeybinds[cmd];
-      keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
-    }
-
-    const home = process.env.HOME || "~";
-    const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-
-    if (fs.existsSync(keybindingsPath)) {
-      fs.writeFileSync(keybindingsPath, "");
-    }
-
-    upsertBlock(
-      keybindingsPath,
-      keybindingsYaml,
-      "# >>> chords:auto:start",
-      "# >>> chords:auto:end"
-    );
+  for (const cmd of sortedCommands) {
+    const keybind = syntheticKeybinds[cmd];
+    keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
   }
+
+  const home = process.env.HOME || "~";
+  const keybindingsPath = `${home}/.warp/keybindings.yaml`;
+
+  if (fs.existsSync(keybindingsPath)) {
+    fs.writeFileSync(keybindingsPath, "");
+  }
+
+  upsertBlock(
+    keybindingsPath,
+    keybindingsYaml,
+    "# >>> chords:auto:start",
+    "# >>> chords:auto:end"
+  );
 
   const commandToKey: Record<string, string> = {};
 

@@ -1,11 +1,11 @@
 import * as fs from "fs"
 import * as process from "process";
-import * as childProcess from 'child_process';
+import { spawn } from 'child_process';
 import { outdent } from "outdent";
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {
-  return function action(commandId: string) {
+  return async function action(commandId: string) {
     const tmp = process.env.TMPDIR ?? '/tmp'
     const id = Math.random()
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`
@@ -33,7 +33,7 @@ export function createAction(ideBinPath: string) {
     }`
 
     fs.writeFileSync(scriptPath, script)
-    childProcess.execFileSync(ideBinPath, ['ideScript', scriptPath]);
+    await spawn(ideBinPath, ['ideScript', scriptPath]);
     const result = fs.readFileSync(resultPath, 'utf8')
 
     fs.unlinkSync(scriptPath)
