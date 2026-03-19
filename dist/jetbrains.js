@@ -1,6 +1,7 @@
+// @bun
 // src/exports/jetbrains.ts
-import * as os from "qjs:os";
-import * as std from "qjs:std";
+import * as os from "os";
+import * as std from "std";
 
 // node_modules/outdent/lib-module/index.js
 function noop() {

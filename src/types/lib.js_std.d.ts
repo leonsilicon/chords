@@ -1,4 +1,4 @@
-declare module "qjs:std" {
+declare module "std" {
     //Exit the process.
     export function exit(n: number): void;
 

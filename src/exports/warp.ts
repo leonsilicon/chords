@@ -1,5 +1,5 @@
-import * as std from "qjs:std";
-import * as os from "qjs:os";
+import * as std from "std";
+import * as os from "os";
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
 

@@ -1,5 +1,5 @@
-import * as os from "qjs:os"
-import * as std from "qjs:std";
+import * as os from "os"
+import * as std from "std";
 import { outdent } from "outdent";
 
 // This function makes it possible to programmatically execute IntelliJ commands

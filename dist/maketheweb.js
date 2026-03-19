@@ -1,3 +1,4 @@
+// @bun
 // node_modules/@ban12/bplist-parser/dist/bplist-parser.mjs
 function _define_property(obj, key, value) {
   if (key in obj) {
@@ -323,7 +324,7 @@ function parseRunTimeFlags(value) {
 }
 
 // src/exports/maketheweb.ts
-import * as std from "qjs:std";
+import * as std from "std";
 
 // src/utils/mac-keycode.ts
 var KEYCODE_BY_STRING = {

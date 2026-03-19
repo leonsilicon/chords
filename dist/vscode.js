@@ -1,6 +1,7 @@
+// @bun
 // src/exports/vscode.ts
-import * as os from "qjs:os";
-import * as std from "qjs:std";
+import * as os from "os";
+import * as std from "std";
 function createCommand() {
   const f = std.popen("id -u", std.openFileFlags.r);
   if (!f) {

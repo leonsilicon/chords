@@ -1,4 +1,4 @@
-declare module "qjs:os" {
+declare module "os" {
     export const O_RDONLY: number;
     export const O_WRONLY: number;
     export const O_RDWR: number;
