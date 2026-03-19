@@ -2960,7 +2960,8 @@ async function createCommand(chords) {
     const keybind = syntheticKeybinds[cmd];
     keybindings[cmd] = keybind;
   }
-  writeFileSync2(keybindingsPath, jsYaml.dump(keybindings));
+  writeFileSync2(keybindingsPath, `---
+` + jsYaml.dump(keybindings));
   const commandToKey = {};
   for (const [cmd, key] of Object.entries(syntheticKeybinds)) {
     commandToKey[cmd] = normalizeKeybind(key);

@@ -50,7 +50,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
     const keybind = syntheticKeybinds[cmd];
     keybindings[cmd] = keybind;
   }
-  writeFileSync(keybindingsPath, yaml.dump(keybindings));
+  writeFileSync(keybindingsPath, '---\n' + yaml.dump(keybindings));
 
   const commandToKey: Record<string, string> = {};
 
