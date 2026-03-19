@@ -1,28 +1,20 @@
-import * as os from "qjs:os"
-import * as std from "qjs:std";
+import { execSync } from "child_process"
+import fs from 'fs'
 
 // This script allows us to execute VSCode commands directly via
 // https://marketplace.visualstudio.com/items?itemName=pokey.command-server
 // if it's active, and otherwise falls back to built-in shortcuts.
 export function createCommand() {
-  const f = std.popen("id -u", std.openFileFlags.r); // "r" = read stdout
-  if (!f) {
-    return () => false
-  }
-
-  const uid = f.readAsString().trim();
-  f.close();
-
+  const uid = execSync("id -u", { stdio: "pipe" }).toString();
   if (!uid) {
     return () => false
   }
 
-  const tmp = std.getenv("TMPDIR") ?? "/tmp"
+  const tmp = process.env.TMPDIR ?? "/tmp"
   const dir = `${tmp}/vscode-command-server-${uid}`
 
   return function command(cmd: string) {
-    const [stat, err] = os.stat(dir)
-    if (err) {
+    if (!fs.existsSync(dir)) {
       return false
     }
 
@@ -34,10 +26,10 @@ export function createCommand() {
       args: []
     });
 
-    std.writeFile(requestPath, payload);
+    fs.writeFileSync(requestPath, payload);
     tap('cmd+shift+f17')
 
-    os.remove(responsePath)
+    fs.unlinkSync(responsePath)
 
     return true
   }

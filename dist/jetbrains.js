@@ -1,7 +1,8 @@
 // @bun
 // src/exports/jetbrains.ts
-import * as os from "qjs:os";
-import * as std from "qjs:std";
+import * as fs from "fs";
+import * as process from "process";
+import * as childProcess from "child_process";
 
 // node_modules/outdent/lib-module/index.js
 function noop() {
@@ -138,7 +139,7 @@ if (typeof module_lib_module !== "undefined") {
 // src/exports/jetbrains.ts
 function createAction(ideBinPath) {
   return function action(commandId) {
-    const tmp = std.getenv("TMPDIR") ?? "/tmp";
+    const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
     const resultPath = `${tmp}/jetbrains_action_${id}.txt`;
@@ -162,11 +163,11 @@ function createAction(ideBinPath) {
         resultFile.text = "0"
       }
     }`;
-    std.writeFile(scriptPath, script);
-    os.exec([ideBinPath, "ideScript", scriptPath]);
-    const result = std.loadFile(resultPath);
-    os.remove(scriptPath);
-    os.remove(resultPath);
+    fs.writeFileSync(scriptPath, script);
+    childProcess.execFileSync(ideBinPath, ["ideScript", scriptPath]);
+    const result = fs.readFileSync(resultPath, "utf8");
+    fs.unlinkSync(scriptPath);
+    fs.unlinkSync(resultPath);
     return result == "1";
   };
 }

@@ -1,22 +1,16 @@
 // @bun
 // src/exports/vscode.ts
-import * as os from "qjs:os";
-import * as std from "qjs:std";
+import { execSync } from "child_process";
+import fs from "fs";
 function createCommand() {
-  const f = std.popen("id -u", std.openFileFlags.r);
-  if (!f) {
-    return () => false;
-  }
-  const uid = f.readAsString().trim();
-  f.close();
+  const uid = execSync("id -u", { stdio: "pipe" }).toString();
   if (!uid) {
     return () => false;
   }
-  const tmp = std.getenv("TMPDIR") ?? "/tmp";
+  const tmp = process.env.TMPDIR ?? "/tmp";
   const dir = `${tmp}/vscode-command-server-${uid}`;
   return function command(cmd) {
-    const [stat2, err] = os.stat(dir);
-    if (err) {
+    if (!fs.existsSync(dir)) {
       return false;
     }
     const requestPath = `${dir}/request.json`;
@@ -25,9 +19,9 @@ function createCommand() {
       commandId: cmd,
       args: []
     });
-    std.writeFile(requestPath, payload);
+    fs.writeFileSync(requestPath, payload);
     tap("cmd+shift+f17");
-    os.remove(responsePath);
+    fs.unlinkSync(responsePath);
     return true;
   };
 }

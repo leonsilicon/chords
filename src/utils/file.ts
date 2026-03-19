@@ -1,4 +1,4 @@
-import * as std from "qjs:std";
+import fs from 'fs'
 
 export function upsertBlock(
   path: string,
@@ -6,7 +6,7 @@ export function upsertBlock(
   startMarker = "# START",
   endMarker = "# END"
 ) {
-  let existing = std.loadFile(path)?.toString() ?? "";
+  let existing = fs.readFileSync(path, 'utf8') ?? "";
 
   const block = `${startMarker}\n${newContent}\n${endMarker}`;
 
@@ -29,5 +29,5 @@ export function upsertBlock(
     updated = `${existing}\n${block}\n`;
   }
 
-  std.writeFile(path, updated);
+  fs.writeFileSync(path, updated);
 }

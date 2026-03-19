@@ -1,12 +1,11 @@
 // @bun
 // src/exports/warp.ts
-import * as std2 from "qjs:std";
-import * as os from "qjs:os";
+import process from "process";
 
 // src/utils/file.ts
-import * as std from "qjs:std";
+import fs from "fs";
 function upsertBlock(path, newContent, startMarker = "# START", endMarker = "# END") {
-  let existing = std.loadFile(path)?.toString() ?? "";
+  let existing = fs.readFileSync(path, "utf8") ?? "";
   const block = `${startMarker}
 ${newContent}
 ${endMarker}`;
@@ -26,7 +25,7 @@ ${endMarker}`;
 ${block}
 `;
   }
-  std.writeFile(path, updated);
+  fs.writeFileSync(path, updated);
 }
 
 // node_modules/balanced-match/dist/esm/index.js
@@ -255,6 +254,7 @@ function generateSyntheticKeybinds(commands, patterns) {
 }
 
 // src/exports/warp.ts
+import fs2 from "fs";
 function extractCommands(chords) {
   const result = [];
   for (const chord of Object.values(chords ?? {})) {
@@ -294,11 +294,10 @@ function createCommand(chords) {
       keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
 `;
     }
-    const home = std2.getenv("HOME") || "~";
+    const home = process.env.HOME || "~";
     const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-    let [stat2, err] = os.stat(keybindingsPath);
-    if (err) {
-      std2.writeFile(keybindingsPath, "");
+    if (fs2.existsSync(keybindingsPath)) {
+      fs2.writeFileSync(keybindingsPath, "");
     }
     upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   }

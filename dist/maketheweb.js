@@ -324,7 +324,7 @@ function parseRunTimeFlags(value) {
 }
 
 // src/exports/maketheweb.ts
-import * as std from "qjs:std";
+import fs from "fs";
 
 // src/utils/mac-keycode.ts
 var KEYCODE_BY_STRING = {
@@ -494,10 +494,7 @@ function carbonModifiersToStrings(mask) {
 
 // src/exports/maketheweb.ts
 function makeShortcut(filepath) {
-  const plist = std.loadFile(filepath, { binary: true });
-  if (!plist) {
-    return () => false;
-  }
+  const plist = fs.readFileSync(filepath);
   return function shortcut(property) {
     const data = parseBuffer(plist.buffer);
     const rawValue = data[0]?.[property];

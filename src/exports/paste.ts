@@ -1,9 +1,9 @@
 import { parseBuffer } from '@ban12/bplist-parser'
-import * as std from 'qjs:std'
+import fs from "fs"
 import { modifiersToStrings, keycodeToString } from '#/utils/mac-keycode.ts'
 
 export function makeShortcut(filepath: string) {
-  const plist = std.loadFile(filepath, { binary: true }) as Uint8Array | null
+  const plist = fs.readFileSync(filepath);
   if (!plist) {
     return () => false
   }

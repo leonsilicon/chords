@@ -1,7 +1,7 @@
-import * as std from "qjs:std";
-import * as os from "qjs:os";
+import process from 'process'
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
+import fs from 'fs'
 
 type Chord = {
   js?: string;
@@ -63,12 +63,11 @@ export function createCommand(chords: Chords) {
       keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
     }
 
-    const home = std.getenv("HOME") || "~";
+    const home = process.env.HOME || "~";
     const keybindingsPath = `${home}/.warp/keybindings.yaml`;
 
-    let [stat, err] = os.stat(keybindingsPath);
-    if (err) {
-      std.writeFile(keybindingsPath, "");
+    if (fs.existsSync(keybindingsPath)) {
+      fs.writeFileSync(keybindingsPath, "");
     }
 
     upsertBlock(
