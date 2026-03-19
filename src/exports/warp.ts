@@ -77,6 +77,7 @@ export async function createCommand(chords: Chords) {
   }
 
   return function (cmd: string): boolean {
+    console.log(cmd);
     const keybind = commandToKey[cmd];
     if (!keybind) {
       return false;

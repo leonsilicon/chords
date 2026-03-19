@@ -311,6 +311,7 @@ async function createCommand(chords) {
     commandToKey[cmd] = normalizeKeybind(key);
   }
   return function(cmd) {
+    console.log(cmd);
     const keybind = commandToKey[cmd];
     if (!keybind) {
       return false;
