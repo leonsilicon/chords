@@ -15,9 +15,7 @@ lcp = { name = "Launch Configuration Palette", args = [
 ], shortcut = "ctrl+cmd+l" }
 cs = { name = "Command Search", args = ['workspace:show_command_search'], shortcut = "ctrl+r" }
 wf = { name = "Workflows", args = ['input:toggle_workflows'], shortcut = "ctrl+shift+r" }
-gn = { name = "Generate", args = [
-  'input:toggle_natural_language_command_search`", shortcut = "ctrl+',
-] }
+# gn = { name = "Generate", args = [ 'input:toggle_natural_language_command_search' ], shortcut = "ctrl+shift+g" }
 ft = { name = "Focus Terminal", args = ['terminal:focus_input'], shortcut = "cmd+l" }
 ws = { name = "Warpify Shell", args = ['terminal:trigger_subshell_bootstrap'], shortcut = "ctrl+i" }
 fs = { name = "File Search", shortcut = "cmd+o" }
@@ -122,7 +120,7 @@ zr = { name = "Reset font size", args = ['window:reset_font_size'] }
 zf = { name = "Zoom: Full Screen", args = ['root_view:toggle_fullscreen'] }
 
 # Panels
-pa = { name = "Panel: AI", args = ['workspace:toggle_ai_panel`", shortcut = "ctrl+'] }
+# pa = { name = "Panel: AI", args = ['workspace:toggle_ai_panel'], shortcut = "ctrl+]" }
 pt = { name = "Panel: Theme", args = ['workspace:show_theme_chooser'], shortcut = "ctrl+cmd+t" }
 pd = { name = "Panel: Drive", args = ['terminal:toggle_warp_drive'], shortcut = "cmd+backslash" }
 
