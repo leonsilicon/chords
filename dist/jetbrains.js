@@ -1,7 +1,7 @@
 // @bun
 // src/exports/jetbrains.ts
-import * as fs from "fs";
-import * as process from "process";
+import { writeFileSync, readFileSync, unlinkSync } from "fs";
+import { env } from "process";
 import { spawn } from "child_process";
 
 // node_modules/outdent/lib-module/index.js
@@ -139,7 +139,7 @@ if (typeof module_lib_module !== "undefined") {
 // src/exports/jetbrains.ts
 function createAction(ideBinPath) {
   return async function action(commandId) {
-    const tmp = process.env.TMPDIR ?? "/tmp";
+    const tmp = env.TMPDIR ?? "/tmp";
     const id = Math.random();
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
     const resultPath = `${tmp}/jetbrains_action_${id}.txt`;
@@ -163,11 +163,11 @@ function createAction(ideBinPath) {
         resultFile.text = "0"
       }
     }`;
-    fs.writeFileSync(scriptPath, script);
+    writeFileSync(scriptPath, script);
     await spawn(ideBinPath, ["ideScript", scriptPath]);
-    const result = fs.readFileSync(resultPath, "utf8");
-    fs.unlinkSync(scriptPath);
-    fs.unlinkSync(resultPath);
+    const result = readFileSync(resultPath, "utf8");
+    unlinkSync(scriptPath);
+    unlinkSync(resultPath);
     return result == "1";
   };
 }

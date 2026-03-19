@@ -1,7 +1,7 @@
-import process from 'process'
+import { env } from 'process'
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
-import fs from 'fs'
+import { existsSync, writeFileSync } from 'fs'
 import { expand } from 'brace-expansion'
 
 type Chord = {
@@ -61,11 +61,11 @@ export function createCommand(chords: Chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
   }
 
-  const home = process.env.HOME || "~";
+  const home = env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
 
-  if (fs.existsSync(keybindingsPath)) {
-    fs.writeFileSync(keybindingsPath, "");
+  if (existsSync(keybindingsPath)) {
+    writeFileSync(keybindingsPath, "");
   }
 
   upsertBlock(

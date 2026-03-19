@@ -1,6 +1,6 @@
 // @bun
 // src/exports/warp.ts
-import process from "process";
+import { env } from "process";
 
 // src/utils/file.ts
 import fs from "fs";
@@ -254,7 +254,7 @@ function generateSyntheticKeybinds(commands, patterns) {
 }
 
 // src/exports/warp.ts
-import fs2 from "fs";
+import { existsSync, writeFileSync } from "fs";
 function extractCommands(chords) {
   const result = [];
   for (const chord of Object.values(chords ?? {})) {
@@ -293,10 +293,10 @@ function createCommand(chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
 `;
   }
-  const home = process.env.HOME || "~";
+  const home = env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-  if (fs2.existsSync(keybindingsPath)) {
-    fs2.writeFileSync(keybindingsPath, "");
+  if (existsSync(keybindingsPath)) {
+    writeFileSync(keybindingsPath, "");
   }
   upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   const commandToKey = {};
