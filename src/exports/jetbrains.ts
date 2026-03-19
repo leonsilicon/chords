@@ -1,7 +1,7 @@
 import { writeFileSync, readFileSync, rmSync } from "fs";
-import { spawn } from "child_process";
 import { outdent } from "outdent";
 import path from 'path'
+import { run } from '#/utils/exec.ts'
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {
@@ -33,8 +33,9 @@ export function createAction(ideBinPath: string) {
     }`;
 
     writeFileSync(scriptPath, script);
-    await spawn(ideBinPath, ["ideScript", scriptPath]);
+    await run(ideBinPath, ["ideScript", scriptPath]);
     const result = readFileSync(resultPath, "utf8");
+    console.log('JetBrains script result:', result);
 
     rmSync(scriptPath);
     rmSync(resultPath);

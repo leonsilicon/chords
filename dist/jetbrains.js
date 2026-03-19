@@ -1,7 +1,6 @@
 // @bun
 // src/exports/jetbrains.ts
 import { writeFileSync, readFileSync, rmSync } from "fs";
-import { spawn } from "child_process";
 
 // node_modules/.pnpm/outdent@0.8.0/node_modules/outdent/lib-module/index.js
 function noop() {
@@ -137,6 +136,31 @@ if (typeof module_lib_module !== "undefined") {
 
 // src/exports/jetbrains.ts
 import path from "path";
+
+// src/utils/exec.ts
+import { spawn } from "child_process";
+function run(cmd, args = []) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(cmd, args);
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (data) => {
+      stdout += data.toString();
+    });
+    child.stderr.on("data", (data) => {
+      stderr += data.toString();
+    });
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve(stdout.trim());
+      } else {
+        reject(new Error(stderr || `Process exited with code ${code}`));
+      }
+    });
+  });
+}
+
+// src/exports/jetbrains.ts
 function createAction(ideBinPath) {
   return async function action(commandId) {
     const tmp = process.env.TMPDIR ?? "/tmp";
@@ -164,8 +188,9 @@ function createAction(ideBinPath) {
       }
     }`;
     writeFileSync(scriptPath, script);
-    await spawn(ideBinPath, ["ideScript", scriptPath]);
+    await run(ideBinPath, ["ideScript", scriptPath]);
     const result = readFileSync(resultPath, "utf8");
+    console.log("JetBrains script result:", result);
     rmSync(scriptPath);
     rmSync(resultPath);
     return result == "1";
