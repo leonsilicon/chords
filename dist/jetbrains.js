@@ -136,12 +136,13 @@ if (typeof module_lib_module !== "undefined") {
 }
 
 // src/exports/jetbrains.ts
+import path from "path";
 function createAction(ideBinPath) {
   return async function action(commandId) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
-    const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
-    const resultPath = `${tmp}/jetbrains_action_${id}.txt`;
+    const scriptPath = path.join(tmp, `jetbrains_action_${id}.groovy`);
+    const resultPath = path.join(tmp, `jetbrains_action_${id}.txt`);
     const script = defaultOutdent`
     import com.intellij.openapi.actionSystem.ActionManager
 

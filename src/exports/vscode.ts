@@ -1,30 +1,27 @@
 import { run } from "#/utils/exec.ts";
 import { writeFileSync, rmSync, statSync } from "fs";
 import { exists } from "#/utils/file.ts";
+import onetime from 'onetime'
+import path from 'path'
 
-export async function createCommand() {
-  let uid: string;
+const getUid = onetime(async () => {
+    const uid = await run("id", ["-u"]);
+    return uid
+})
 
-  try {
-    uid = await run("id", ["-u"]);
-  } catch {
-    return () => false;
-  }
+// TODO: make this work for Cursor
+export function createCommand() {
+  return async function command(cmd: string) {
+    const uid = await getUid()
+    const tmp = process.env.TMPDIR ?? "/tmp";
+    const dir = path.join(tmp, `vscode-command-server-${uid}`);
 
-  if (!uid) {
-    return () => false;
-  }
-
-  const tmp = process.env.TMPDIR ?? "/tmp";
-  const dir = `${tmp}/vscode-command-server-${uid}`;
-
-  return function command(cmd: string) {
     if (!exists(dir)) {
       return false;
     }
 
-    const requestPath = `${dir}/request.json`;
-    const responsePath = `${dir}/response.json`;
+    const requestPath = path.join(dir, "request.json");
+    const responsePath = path.join(dir, "response.json");
 
     const payload = JSON.stringify({
       commandId: cmd,
@@ -40,5 +37,5 @@ export async function createCommand() {
     }
 
     return true;
-  };
+  }
 }

@@ -1,14 +1,15 @@
 import { writeFileSync, readFileSync, rmSync } from "fs";
 import { spawn } from "child_process";
 import { outdent } from "outdent";
+import path from 'path'
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {
   return async function action(commandId: string) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
-    const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
-    const resultPath = `${tmp}/jetbrains_action_${id}.txt`;
+    const scriptPath = path.join(tmp, `jetbrains_action_${id}.groovy`);
+    const resultPath = path.join(tmp, `jetbrains_action_${id}.txt`);
 
     const script = outdent`
     import com.intellij.openapi.actionSystem.ActionManager

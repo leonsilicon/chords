@@ -28,6 +28,7 @@
   "packageManager": "pnpm@10.32.1",
   "dependencies": {
     "@types/js-yaml": "^4.0.9",
-    "js-yaml": "^4.1.1"
+    "js-yaml": "^4.1.1",
+    "onetime": "^8.0.0"
   }
 }

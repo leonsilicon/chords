@@ -238,7 +238,7 @@ function exists(path) {
   }
 }
 
-// node_modules/js-yaml/dist/js-yaml.mjs
+// node_modules/.pnpm/js-yaml@4.1.1/node_modules/js-yaml/dist/js-yaml.mjs
 /*! js-yaml 4.1.1 https://github.com/nodeca/js-yaml @license MIT */
 function isNothing(subject) {
   return typeof subject === "undefined" || subject === null;
