@@ -1,0 +1,37 @@
+[config]
+name = "WhatsApp"
+
+[chords]
+# Chat
+c1 = { name = "Chat 1", shortcut = "cmd+1" }
+c2 = { name = "Chat 2", shortcut = "cmd+2" }
+c3 = { name = "Chat 3", shortcut = "cmd+3" }
+c4 = { name = "Chat 4", shortcut = "cmd+4" }
+c5 = { name = "Chat 5", shortcut = "cmd+5" }
+c6 = { name = "Chat 6", shortcut = "cmd+6" }
+c7 = { name = "Chat 7", shortcut = "cmd+7" }
+c8 = { name = "Chat 8", shortcut = "cmd+8" }
+c9 = { name = "Chat 9", shortcut = "cmd+9" }
+cc = { name = "Chat: Close", shortcut = "esc" }
+cn = { name = "Chat: New", shortcut = "cmd+shift+n" }
+cs = { name = "Chat: Search", shortcut = "cmd+opt+f" }
+cp = { name = "Chat: Pin", shortcut = "cmd+p" }
+ca = { name = "Chat: Archive", shortcut = "cmd+shift+a" }
+cm = { name = "Chat: Mute", shortcut = "cmd+shift+m" }
+cu = { name = "Chat: Unread", shortcut = "cmd+shift+u" }
+cv = { name = "Chat: Previous", shortcut = "cmd+[" }
+cx = { name = "Chat: Next", shortcut = "cmd+]" }
+ci = { name = "Chat: Info", shortcut = "cmd+shift+i" }
+
+# Kall (Call)
+kn = { name = "Call: New", shortcut = "cmd+shift+l" }
+
+# Panels
+ie = { name = "Input: Emoji", shortcut = "cmd+e" }
+ig = { name = "Input: GIF", shortcut = "cmd+g" }
+is = { name = "Input: Sticker", shortcut = "cmd+g" }
+
+# Zoom
+zi = { name = "Zoom In", shortcut = "cmd+plus" }
+zo = { name = "Zoom Out", shortcut = "cmd+minus" }
+zr = { name = "Zoom Reset", shortcut = "cmd+0" }

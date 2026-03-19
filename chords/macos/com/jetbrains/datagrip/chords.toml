@@ -1,6 +1,6 @@
 [config]
 name = "DataGrip"
-extends = "com.jetbrains.datagrip"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''

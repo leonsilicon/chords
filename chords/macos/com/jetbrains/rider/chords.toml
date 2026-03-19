@@ -1,6 +1,6 @@
 [config]
 name = "Rider"
-extends = "com.jetbrains.rider"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''

@@ -1,6 +1,6 @@
 [config]
 name = "PhpStorm"
-extends = "com.jetbrains.PhpStorm"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''

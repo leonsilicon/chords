@@ -1,6 +1,6 @@
 [config]
 name = "PyCharm"
-extends = "com.jetbrains.pycharm"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''

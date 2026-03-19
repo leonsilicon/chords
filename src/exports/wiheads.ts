@@ -20,7 +20,7 @@ export function makeShortcut(tildepath: string) {
 
     const value = JSON.parse(valueString);
     const keys = modifiersToStrings(value.internalModifiers);
-    const keyInfo = keyname(value.carbonKey);
+    const keyInfo = keyname(value.keyCode);
     if (!keyInfo || !("key" in keyInfo)) {
       return false;
     }

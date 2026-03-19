@@ -1,6 +1,6 @@
 [config]
 name = "RubyMine"
-extends = "com.jetbrains.rubymine"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''

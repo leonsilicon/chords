@@ -1,6 +1,6 @@
 [config]
 name = "CLion"
-extends = "com.jetbrains.CLion"
+extends = "com.jetbrains.intellij"
 
 [config.js]
 module = '''
