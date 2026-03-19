@@ -53,8 +53,8 @@ async function createCommand() {
       args: []
     });
     fs2.writeFileSync(requestPath, payload);
-    tap("cmd+shift+f17");
     fs2.rmSync(responsePath, { force: true });
+    tap("cmd+shift+f17");
     return true;
   };
 }

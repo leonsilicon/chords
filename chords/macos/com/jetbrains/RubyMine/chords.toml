@@ -1,0 +1,9 @@
+[config]
+name = "RubyMine"
+extends = "com.jetbrains.rubymine"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/RubyMine.app/Contents/MacOS/rubymine")
+'''

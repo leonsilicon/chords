@@ -1,0 +1,9 @@
+[config]
+name = "DataGrip"
+extends = "com.jetbrains.datagrip"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/DataGrip.app/Contents/MacOS/datagrip")
+'''

@@ -1,0 +1,9 @@
+[config]
+name = "PyCharm"
+extends = "com.jetbrains.pycharm"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/PyCharm.app/Contents/MacOS/pycharm")
+'''

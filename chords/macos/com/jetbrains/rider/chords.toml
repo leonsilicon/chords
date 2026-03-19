@@ -1,0 +1,9 @@
+[config]
+name = "Rider"
+extends = "com.jetbrains.rider"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/Rider.app/Contents/MacOS/rider")
+'''

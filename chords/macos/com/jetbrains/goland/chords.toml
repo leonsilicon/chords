@@ -1,0 +1,9 @@
+[config]
+name = "GoLand"
+extends = "com.jetbrains.goland"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/GoLand.app/Contents/MacOS/goland")
+'''

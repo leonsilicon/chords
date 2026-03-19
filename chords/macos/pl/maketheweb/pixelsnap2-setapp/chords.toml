@@ -2,9 +2,9 @@
 name = "PixelSnap 2 (Setapp)"
 
 [config.js]
-init = '''
+module = '''
 import { makeShortcut } from 'dist/maketheweb.js';
-const shortcut = makeShortcut(
+export default makeShortcut(
   "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist"
 )
 '''

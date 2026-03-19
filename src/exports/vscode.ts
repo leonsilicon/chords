@@ -24,9 +24,9 @@ export async function createCommand() {
     });
 
     fs.writeFileSync(requestPath, payload);
-
-    tap("cmd+shift+f17");
+    // We need to remove the previous response.json before continuing
     fs.rmSync(responsePath, { force: true });
+    tap("cmd+shift+f17");
 
     return true;
   }

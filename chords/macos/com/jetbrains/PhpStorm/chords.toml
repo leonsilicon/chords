@@ -1,0 +1,9 @@
+[config]
+name = "PhpStorm"
+extends = "com.jetbrains.PhpStorm"
+
+[config.js]
+module = '''
+import { createAction } from 'dist/jetbrains.js';
+export default createAction("/Applications/PhpStorm.app/Contents/MacOS/phpstorm")
+'''

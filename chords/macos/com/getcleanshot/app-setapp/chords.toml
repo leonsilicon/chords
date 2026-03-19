@@ -2,11 +2,11 @@
 name = "CleanShot X (Setapp)"
 
 [config.js]
-init = '''
-import {}
-let shortcut = require('maketheweb_helpers').make_shortcut(
+module = '''
+import { makeShortcut } from 'dist/maketheweb.js';
+export default makeShortcut(
   "~/Library/Preferences/com.getcleanshot.app-setapp.plist",
-)
+);
 '''
 
 [chords]
