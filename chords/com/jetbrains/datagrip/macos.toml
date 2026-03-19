@@ -1,0 +1,9 @@
+[config]
+name = "DataGrip"
+extends = "com.jetbrains.intellij"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/jetbrains.js';
+export default buildHandler("/Applications/DataGrip.app/Contents/MacOS/datagrip")
+'''

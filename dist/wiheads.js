@@ -494,7 +494,7 @@ function untildify(pathWithTilde) {
 
 // src/exports/wiheads.ts
 import { Buffer } from "buffer";
-function makeShortcut(tildepath) {
+function buildWiheadsHandler(tildepath) {
   const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
   return function shortcut(property) {
@@ -506,7 +506,7 @@ function makeShortcut(tildepath) {
     const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
     const value = JSON.parse(valueString);
     const keys2 = modifiersToStrings(value.internalModifiers);
-    const keyInfo = $keyname(value.carbonKey);
+    const keyInfo = $keyname(value.keyCode);
     if (!keyInfo || !("key" in keyInfo)) {
       return false;
     }
@@ -515,5 +515,5 @@ function makeShortcut(tildepath) {
   };
 }
 export {
-  makeShortcut
+  buildWiheadsHandler as default
 };

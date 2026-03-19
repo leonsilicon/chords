@@ -1,9 +1,0 @@
-[config]
-name = "WebStorm"
-extends = "com.jetbrains.intellij"
-
-[config.js]
-module = '''
-import { createAction } from 'dist/jetbrains.js';
-export default createAction("/Applications/WebStorm.app/Contents/MacOS/webstorm")
-'''

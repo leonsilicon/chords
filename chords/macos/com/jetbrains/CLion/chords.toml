@@ -1,9 +1,0 @@
-[config]
-name = "CLion"
-extends = "com.jetbrains.intellij"
-
-[config.js]
-module = '''
-import { createAction } from 'dist/jetbrains.js';
-export default createAction("/Applications/CLion.app/Contents/MacOS/clion")
-'''

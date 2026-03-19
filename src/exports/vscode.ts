@@ -4,7 +4,7 @@ import { exists } from "#/utils/file.ts";
 import path from "path";
 
 // TODO: make this work for Cursor
-export async function createCommand() {
+export default async function buildVscodeHandler() {
   const uid = await run("id", ["-u"]);
 
   return async function command(cmd: string) {

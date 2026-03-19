@@ -5,7 +5,7 @@ import { keyname } from "os-keycode";
 import untildify from "untildify";
 import { Buffer } from "buffer";
 
-export function makeShortcut(tildepath: string) {
+export default function buildWiheadsHandler(tildepath: string) {
   const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
   return function shortcut(property: string) {

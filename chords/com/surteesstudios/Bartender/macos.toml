@@ -1,0 +1,16 @@
+[config]
+name = "Bartender"
+
+[config.js]
+module = '''
+import { makeShortcut } from 'dist/bartender.js';
+export default makeShortcut(
+  "~/Library/Preferences/com.surteesstudios.Bartender.plist"
+)
+'''
+
+[chords]
+'-t' = { name = "Bartender: Toggle Hidden Items", args = ['shortcut', "KeyboardShortcuts_showHiddenItems"] }
+'-s' = { name = "Bartender: Search", args = ['shortcut', "KeyboardShortcuts_quickSearch"] }
+'-h' = { name = "Bartender: Hide Left Application Menu", args = ['shortcut', "KeyboardShortcuts_hideLeftApplicationMenu"] }
+'-a' = { name = "Bartender: Show All Items", args = ['shortcut', "KeyboardShortcuts_showAllItems"] }

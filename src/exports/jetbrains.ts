@@ -4,7 +4,7 @@ import path from "path";
 import { run } from "#/utils/exec.ts";
 
 // This function makes it possible to programmatically execute IntelliJ commands
-export function createAction(ideBinPath: string) {
+export default function buildJetbrainsHandler(ideBinPath: string) {
   return async function action(commandId: string) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();

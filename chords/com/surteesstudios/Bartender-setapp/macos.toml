@@ -1,0 +1,11 @@
+[config]
+name = "Bartender (Setapp)"
+extends = "com.surteesstudios.Bartender"
+
+[config.js]
+module = '''
+import { makeShortcut } from 'dist/bartender.js';
+export default makeShortcut(
+  "~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"
+)
+'''

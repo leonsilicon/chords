@@ -1,9 +1,0 @@
-[config]
-name = "PyCharm"
-extends = "com.jetbrains.intellij"
-
-[config.js]
-module = '''
-import { createAction } from 'dist/jetbrains.js';
-export default createAction("/Applications/PyCharm.app/Contents/MacOS/pycharm")
-'''

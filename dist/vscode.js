@@ -38,7 +38,7 @@ function exists(path) {
 
 // src/exports/vscode.ts
 import path from "path";
-async function createCommand() {
+async function buildVscodeHandler() {
   const uid = await run("id", ["-u"]);
   return async function command(cmd) {
     const tmp = process.env.TMPDIR ?? "/tmp";
@@ -59,5 +59,5 @@ async function createCommand() {
   };
 }
 export {
-  createCommand
+  buildVscodeHandler as default
 };

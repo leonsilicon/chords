@@ -1,0 +1,9 @@
+[config]
+name = "CLion"
+extends = "com.jetbrains.intellij"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/jetbrains.js';
+export default buildHandler("/Applications/CLion.app/Contents/MacOS/clion")
+'''

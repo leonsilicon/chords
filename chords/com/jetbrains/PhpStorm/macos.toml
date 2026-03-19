@@ -1,0 +1,9 @@
+[config]
+name = "PhpStorm"
+extends = "com.jetbrains.intellij"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/jetbrains.js';
+export default buildHandler("/Applications/PhpStorm.app/Contents/MacOS/phpstorm")
+'''

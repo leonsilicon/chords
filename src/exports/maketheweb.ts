@@ -5,7 +5,7 @@ import { carbonModifiersToStrings } from "#/utils/mac-keycode.ts";
 import untildify from "untildify";
 import { Buffer } from "buffer";
 
-export function makeShortcut(tildepath: string) {
+export default function buildMakethewebHandler(tildepath: string) {
   const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
   return function shortcut(property: string) {

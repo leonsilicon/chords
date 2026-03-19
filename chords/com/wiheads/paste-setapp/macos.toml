@@ -1,0 +1,14 @@
+[config]
+name = "Paste (Setapp)"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/wiheads.js';
+export default buildHandler(
+  "~/Library/Preferences/com.wiheads.paste-setapp.plist"
+);
+'''
+
+[chords]
+"/v" = { name = "Paste", args = ['kPSTPreferencesActivationShortcut'] }
+"/vs" = { name = "Paste Stack", args = ['paste-stack-shortcut'] }

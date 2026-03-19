@@ -1,0 +1,9 @@
+[config]
+name = "PyCharm"
+extends = "com.jetbrains.intellij"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/jetbrains.js';
+export default buildHandler("/Applications/PyCharm.app/Contents/MacOS/pycharm")
+'''

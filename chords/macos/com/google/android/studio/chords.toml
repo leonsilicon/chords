@@ -1,9 +1,0 @@
-[config]
-name = "Android Studio"
-extends = "com.jetbrains.intellij"
-
-[config.js]
-module = '''
-import { createAction } from "dist/jetbrains.js";
-export default createAction("/Applications/Android Studio.app/Contents/MacOS/studio")
-'''

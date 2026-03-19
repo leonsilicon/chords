@@ -1,0 +1,14 @@
+[config]
+name = "PixelSnap 2 (Setapp)"
+
+[config.js]
+module = '''
+import { buildMakethewebHandler } from 'dist/maketheweb.js';
+export default buildMakethewebHandler(
+  "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist"
+)
+'''
+
+[chords]
+"/xc" = { name = "PixelSnap: Clear All", args = ['LAVAclearAll'] }
+"/x" = { name = "PixelSnap", args = ['LAVAglobalHotkey'] }

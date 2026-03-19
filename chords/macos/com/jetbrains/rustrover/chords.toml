@@ -1,9 +1,0 @@
-[config]
-name = "RustRover"
-extends = "com.jetbrains.intellij"
-
-[config.js]
-module = '''
-import { createAction } from 'dist/jetbrains.js';
-export default createAction("/Applications/RustRover.app/Contents/MacOS/rustrover")
-'''

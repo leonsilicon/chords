@@ -1,0 +1,9 @@
+[config]
+name = "RustRover"
+extends = "com.jetbrains.intellij"
+
+[config.js]
+module = '''
+import buildHandler from 'dist/jetbrains.js';
+export default buildHandler("/Applications/RustRover.app/Contents/MacOS/rustrover")
+'''

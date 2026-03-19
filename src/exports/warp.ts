@@ -22,7 +22,7 @@ function normalizeKeybind(k: string): string {
   return k.replace(/\+/g, "-");
 }
 
-export async function createCommand(chords: ImportMeta["chords"]) {
+export async function buildWarpHandler(chords: ImportMeta["chords"]) {
   const commands = extractCommands(chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(

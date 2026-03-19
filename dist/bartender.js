@@ -292,7 +292,7 @@ function parseRunTimeFlags(value) {
   }
 }
 
-// src/exports/maketheweb.ts
+// src/exports/bartender.ts
 import fs from "fs";
 
 // node_modules/.pnpm/os-keycode@1.0.0/node_modules/os-keycode/index.js
@@ -492,28 +492,51 @@ function untildify(pathWithTilde) {
   return pathWithTilde;
 }
 
-// src/exports/maketheweb.ts
+// src/utils/plist.ts
 import { Buffer } from "buffer";
-function buildMakethewebHandler(tildepath) {
+function plistValueToString(rawValue) {
+  const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  return valueString;
+}
+
+// src/exports/bartender.ts
+function buildBartenderHandler(tildepath) {
   const filepath = untildify(tildepath);
-  const plist = fs.readFileSync(filepath);
-  return function shortcut(property) {
-    const data = parseBuffer(plist.buffer);
-    const rawValue = data[0]?.[property];
+  const plist = parseBuffer(fs.readFileSync(filepath).buffer);
+  function itemHandler(bundleId) {
+    const rawValue = plist[0]?.["per-item-hotkeys"];
+    const value = JSON.parse(plistValueToString(rawValue));
+    const item = value.find((item2) => item2.appBundleIdentifier === bundleId);
+    if (item === undefined) {
+      return false;
+    }
+    const property = `KeyboardShortcuts_${item.keyName}`;
+    return shortcutHandler(property);
+  }
+  function shortcutHandler(property) {
+    const rawValue = plist[0]?.[property];
     if (!rawValue) {
       return false;
     }
-    const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
-    const value = JSON.parse(valueString);
+    const value = JSON.parse(plistValueToString(rawValue));
     const keys2 = carbonModifiersToStrings(value.carbonModifiers);
-    const keyInfo = $keyname(value.carbonKey);
+    const keyInfo = $keyname(value.carbonKeyCode);
     if (!keyInfo || !("key" in keyInfo)) {
       return false;
     }
     keys2.push(keyInfo.key);
     tap(keys2.join("+"));
-  };
+    return true;
+  }
+  function handler(type, bundleIdOrProperty) {
+    return type === "item" ? itemHandler(bundleIdOrProperty) : shortcutHandler(bundleIdOrProperty);
+  }
+  return handler;
+}
+function makeItemShortcut(tildepath) {
+  const filepath = untildify(tildepath);
 }
 export {
-  buildMakethewebHandler as default
+  makeItemShortcut,
+  buildBartenderHandler as default
 };
