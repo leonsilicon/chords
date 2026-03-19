@@ -14,6 +14,7 @@ const getUid = onetime(async () => {
 // TODO: make this work for Cursor
 export function createCommand() {
   return async function command(cmd: string) {
+    console.log('cmd:', cmd);
     const uid = await getUid()
     console.log('resolved UID:', uid);
     const tmp = process.env.TMPDIR ?? "/tmp";

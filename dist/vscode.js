@@ -123,6 +123,7 @@ var getUid = onetime_default(async () => {
 });
 function createCommand() {
   return async function command(cmd) {
+    console.log("cmd:", cmd);
     const uid = await getUid();
     console.log("resolved UID:", uid);
     const tmp = process.env.TMPDIR ?? "/tmp";
