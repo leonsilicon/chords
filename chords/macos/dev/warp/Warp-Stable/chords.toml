@@ -5,7 +5,7 @@ url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 [config.js]
 init = '''
 import { createCommand } from 'dist/warp.js';
-export const .command = createCommand(import.meta.chords);
+export const command = createCommand(import.meta.chords);
 '''
 
 [chords]
