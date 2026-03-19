@@ -4,22 +4,12 @@ import { writeFileSync } from "fs";
 import { expand } from "brace-expansion";
 import { exists } from "#/utils/file.ts";
 
-type Chord = {
-  js?: string;
-  shortcut?: string;
-};
-
-type Chords = Record<string, Chord>;
-
-function extractCommands(chords: Chords): string[] {
+function extractCommands(chords: ImportMeta['chords']): string[] {
   const result: string[] = [];
 
   for (const chord of Object.values(chords ?? {})) {
-    if (chord?.js && !chord.shortcut) {
-      const match = String(chord.js).match(/command\((['"])(.*?)\1\)/);
-      if (match) {
-        result.push(match[2]!);
-      }
+    if (chord?.args?.[0] && !chord.shortcut) {
+      result.push(chord.args[0]);
     }
   }
 
@@ -34,7 +24,7 @@ function quote(str: string): string {
   return `"${String(str).replace(/"/g, '\\"')}"`;
 }
 
-export async function createCommand(chords: Chords) {
+export async function createCommand(chords: ImportMeta['chords']) {
   const commands = extractCommands(chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(

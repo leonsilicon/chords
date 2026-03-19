@@ -265,11 +265,8 @@ import { writeFileSync as writeFileSync2 } from "fs";
 function extractCommands(chords) {
   const result = [];
   for (const chord of Object.values(chords ?? {})) {
-    if (chord?.js && !chord.shortcut) {
-      const match = String(chord.js).match(/command\((['"])(.*?)\1\)/);
-      if (match) {
-        result.push(match[2]);
-      }
+    if (chord?.args?.[0] && !chord.shortcut) {
+      result.push(chord.args[0]);
     }
   }
   return result;
