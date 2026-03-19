@@ -3,7 +3,6 @@ var __require = import.meta.require;
 
 // src/exports/jetbrains.ts
 import { writeFileSync, readFileSync, rmSync } from "fs";
-import { env } from "process";
 import { spawn } from "child_process";
 
 // node_modules/outdent/lib-module/index.js
@@ -141,6 +140,7 @@ if (typeof module_lib_module !== "undefined") {
 // src/exports/jetbrains.ts
 function createAction(ideBinPath) {
   return async function action(commandId) {
+    const { env } = await import("process");
     const tmp = env.TMPDIR ?? "/tmp";
     const id = Math.random();
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
