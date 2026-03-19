@@ -324,7 +324,7 @@ function parseRunTimeFlags(value) {
 }
 
 // src/exports/paste.ts
-import * as std from "std";
+import * as std from "qjs:std";
 
 // src/utils/mac-keycode.ts
 var KEYCODE_BY_STRING = {

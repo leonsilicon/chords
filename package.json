@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "rimraf dist/ && bun build ./src/exports/* --outdir dist/ --external std --external os --target bun"
+    "build": "rimraf dist/ && bun build ./src/exports/* --outdir dist/ --external qjs:std --external qjs:os --target bun"
   },
   "devDependencies": {
     "@types/bun": "latest",

@@ -1,10 +1,10 @@
 // @bun
 // src/exports/warp.ts
-import * as std2 from "std";
-import * as os from "os";
+import * as std2 from "qjs:std";
+import * as os from "qjs:os";
 
 // src/utils/file.ts
-import * as std from "std";
+import * as std from "qjs:std";
 function upsertBlock(path, newContent, startMarker = "# START", endMarker = "# END") {
   let existing = std.loadFile(path)?.toString() ?? "";
   const block = `${startMarker}

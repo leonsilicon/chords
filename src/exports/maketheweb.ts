@@ -1,5 +1,5 @@
 import { parseBuffer } from '@ban12/bplist-parser'
-import * as std from 'std'
+import * as std from 'qjs:std'
 import { carbonModifiersToStrings, keycodeToString } from '#/utils/mac-keycode.ts'
 
 export function makeShortcut(filepath: string) {

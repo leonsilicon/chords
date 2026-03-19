@@ -1,5 +1,5 @@
-import * as os from "os"
-import * as std from "std";
+import * as os from "qjs:os"
+import * as std from "qjs:std";
 
 // This script allows us to execute VSCode commands directly via
 // https://marketplace.visualstudio.com/items?itemName=pokey.command-server

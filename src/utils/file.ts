@@ -1,4 +1,4 @@
-import * as std from "std";
+import * as std from "qjs:std";
 
 export function upsertBlock(
   path: string,

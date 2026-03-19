@@ -1,4 +1,4 @@
-declare module "bjson" {
+declare module "qjs:bjson" {
     //allow serializing functions and modules
     export const WRITE_OBJ_BYTECODE: number;
     //allow serializing object references
