@@ -1,12 +1,7 @@
 # Global commands for Rift
 
 [config]
-prefixes = {
-  "?" = {
-    name = "Prefix",
-    default = ","
-  }
-}
+prefixes = { "?" = { name = "Prefix", default = "," } }
 
 [chords]
 # Calibrate

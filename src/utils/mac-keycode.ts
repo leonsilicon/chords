@@ -1,7 +1,7 @@
 type Modifier = {
-  string: string
-  mask: number
-}
+  string: string;
+  mask: number;
+};
 
 const KEYCODE_BY_STRING: Record<string, number> = {
   // letters
@@ -15,11 +15,11 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   x: 0x7,
   c: 0x8,
   v: 0x9,
-  b: 0xB,
-  q: 0xC,
-  w: 0xD,
-  e: 0xE,
-  r: 0xF,
+  b: 0xb,
+  q: 0xc,
+  w: 0xd,
+  e: 0xe,
+  r: 0xf,
   y: 0x10,
   t: 0x11,
   "1": 0x12,
@@ -30,12 +30,12 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   "5": 0x17,
   "=": 0x18,
   "9": 0x19,
-  "7": 0x1A,
-  "-": 0x1B,
-  "8": 0x1C,
-  "0": 0x1D,
-  "]": 0x1E,
-  o: 0x1F,
+  "7": 0x1a,
+  "-": 0x1b,
+  "8": 0x1c,
+  "0": 0x1d,
+  "]": 0x1e,
+  o: 0x1f,
   u: 0x20,
   "[": 0x21,
   i: 0x22,
@@ -46,12 +46,12 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   "'": 0x27,
   k: 0x28,
   ";": 0x29,
-  "\\": 0x2A,
-  ",": 0x2B,
-  "/": 0x2C,
-  n: 0x2D,
-  m: 0x2E,
-  ".": 0x2F,
+  "\\": 0x2a,
+  ",": 0x2b,
+  "/": 0x2c,
+  n: 0x2d,
+  m: 0x2e,
+  ".": 0x2f,
   tab: 0x30,
   space: 0x31,
   "`": 0x32,
@@ -62,12 +62,12 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   cmd: 0x37,
   shift: 0x38,
   caps_lock: 0x39,
-  alt: 0x3A,
-  ctrl: 0x3B,
-  right_shift: 0x3C,
-  right_alt: 0x3D,
-  right_ctrl: 0x3E,
-  fn: 0x3F,
+  alt: 0x3a,
+  ctrl: 0x3b,
+  right_shift: 0x3c,
+  right_alt: 0x3d,
+  right_ctrl: 0x3e,
+  fn: 0x3f,
 
   f17: 0x40,
   keypad_decimal: 0x41,
@@ -76,11 +76,11 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   keypad_clear: 0x47,
   volume_up: 0x48,
   volume_down: 0x49,
-  mute: 0x4A,
-  keypad_divide: 0x4B,
-  keypad_enter: 0x4C,
-  keypad_minus: 0x4E,
-  f18: 0x4F,
+  mute: 0x4a,
+  keypad_divide: 0x4b,
+  keypad_enter: 0x4c,
+  keypad_minus: 0x4e,
+  f18: 0x4f,
   f19: 0x50,
   keypad_equals: 0x51,
   keypad_0: 0x52,
@@ -91,13 +91,13 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   keypad_5: 0x57,
   keypad_6: 0x58,
   keypad_7: 0x59,
-  f20: 0x5A,
-  keypad_8: 0x5B,
-  keypad_9: 0x5C,
+  f20: 0x5a,
+  keypad_8: 0x5b,
+  keypad_9: 0x5c,
 
-  jis_yen: 0x5D,
-  jis_underscore: 0x5E,
-  jis_keypad_comma: 0x5F,
+  jis_yen: 0x5d,
+  jis_underscore: 0x5e,
+  jis_keypad_comma: 0x5f,
 
   f5: 0x60,
   f6: 0x61,
@@ -109,11 +109,11 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   f11: 0x67,
   jis_kana: 0x68,
   f13: 0x69,
-  f16: 0x6A,
-  f14: 0x6B,
-  f10: 0x6D,
-  contextual_menu: 0x6E,
-  f12: 0x6F,
+  f16: 0x6a,
+  f14: 0x6b,
+  f10: 0x6d,
+  contextual_menu: 0x6e,
+  f12: 0x6f,
   f15: 0x71,
   help: 0x72,
   home: 0x73,
@@ -123,18 +123,18 @@ const KEYCODE_BY_STRING: Record<string, number> = {
   end: 0x77,
   f2: 0x78,
   pagedown: 0x79,
-  f1: 0x7A,
-  left: 0x7B,
-  right: 0x7C,
-  down: 0x7D,
-  up: 0x7E,
+  f1: 0x7a,
+  left: 0x7b,
+  right: 0x7c,
+  down: 0x7d,
+  up: 0x7e,
 
-  iso_section: 0x0A,
-}
+  iso_section: 0x0a,
+};
 
-const STRING_BY_KEYCODE: Record<number, string> = {}
+const STRING_BY_KEYCODE: Record<number, string> = {};
 for (const [str, code] of Object.entries(KEYCODE_BY_STRING)) {
-  STRING_BY_KEYCODE[code] = str
+  STRING_BY_KEYCODE[code] = str;
 }
 
 const CARBON_MODIFIERS: Modifier[] = [
@@ -143,7 +143,7 @@ const CARBON_MODIFIERS: Modifier[] = [
   { string: "alt", mask: 0x80000 },
   { string: "ctrl", mask: 0x40000 },
   { string: "caps_lock", mask: 0x10000 },
-]
+];
 
 const MODERN_MODIFIERS: Modifier[] = [
   { string: "caps_lock", mask: 1 << 16 },
@@ -154,39 +154,39 @@ const MODERN_MODIFIERS: Modifier[] = [
   { string: "numeric_pad", mask: 1 << 21 },
   { string: "help", mask: 1 << 22 },
   { string: "fn", mask: 1 << 23 },
-]
+];
 
-export const Key = KEYCODE_BY_STRING
+export const Key = KEYCODE_BY_STRING;
 
 export function keycodeFromString(str: unknown): number | undefined {
-  if (typeof str !== "string") return undefined
-  return KEYCODE_BY_STRING[str.toLowerCase()]
+  if (typeof str !== "string") return undefined;
+  return KEYCODE_BY_STRING[str.toLowerCase()];
 }
 
 export function keycodeToString(code: number): string | undefined {
-  return STRING_BY_KEYCODE[code]
+  return STRING_BY_KEYCODE[code];
 }
 
 export function modifiersToStrings(mask: number): string[] {
-  const result: string[] = []
+  const result: string[] = [];
 
   for (const modifier of MODERN_MODIFIERS) {
     if ((mask & modifier.mask) !== 0) {
-      result.push(modifier.string)
+      result.push(modifier.string);
     }
   }
 
-  return result
+  return result;
 }
 
 export function carbonModifiersToStrings(mask: number): string[] {
-  const result: string[] = []
+  const result: string[] = [];
 
   for (const modifier of CARBON_MODIFIERS) {
     if ((mask & modifier.mask) !== 0) {
-      result.push(modifier.string)
+      result.push(modifier.string);
     }
   }
 
-  return result
+  return result;
 }

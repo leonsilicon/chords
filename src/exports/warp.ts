@@ -1,8 +1,8 @@
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
-import { writeFileSync } from 'fs'
-import { expand } from 'brace-expansion'
-import { exists } from '#/utils/file.ts'
+import { writeFileSync } from "fs";
+import { expand } from "brace-expansion";
+import { exists } from "#/utils/file.ts";
 
 type Chord = {
   js?: string;
@@ -49,7 +49,7 @@ export async function createCommand(chords: Chords) {
       "ctrl+shift+{0..9}",
       "opt+shift+{0..9}",
       "cmd+shift+{0..9}",
-    ].flatMap(pattern => expand(pattern))
+    ].flatMap((pattern) => expand(pattern)),
   );
 
   // write warp keybindings
@@ -61,7 +61,6 @@ export async function createCommand(chords: Chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
   }
 
-
   const home = process.env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
 
@@ -69,12 +68,7 @@ export async function createCommand(chords: Chords) {
     writeFileSync(keybindingsPath, "");
   }
 
-  upsertBlock(
-    keybindingsPath,
-    keybindingsYaml,
-    "# >>> chords:auto:start",
-    "# >>> chords:auto:end"
-  );
+  upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
 
   const commandToKey: Record<string, string> = {};
 

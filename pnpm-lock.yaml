@@ -7,10 +7,13 @@ settings:
 importers:
 
   .:
-    dependencies:
+    devDependencies:
       '@ban12/bplist-parser':
         specifier: ^0.0.1
         version: 0.0.1
+      '@types/node':
+        specifier: ^25.5.0
+        version: 25.5.0
       add:
         specifier: ^2.0.6
         version: 2.0.6
@@ -23,25 +26,21 @@ importers:
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
+      lefthook:
+        specifier: ^2.1.4
+        version: 2.1.4
       llrt-types:
         specifier: github:awslabs/llrt#path:/types
         version: https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90#path:/types
       outdent:
         specifier: ^0.8.0
         version: 0.8.0
-      typescript:
-        specifier: ^5
-        version: 5.9.3
-    devDependencies:
-      '@types/node':
-        specifier: ^25.5.0
-        version: 25.5.0
-      lefthook:
-        specifier: ^2.1.4
-        version: 2.1.4
       rimraf:
         specifier: ^6.1.3
         version: 6.1.3
+      typescript:
+        specifier: ^5
+        version: 5.9.3
 
 packages:
 

@@ -174,9 +174,9 @@ po = { name = "Previous Occurrence", command = "Previous Occurrence", shortcut =
 
 # Search
 sg = { name = "Search: Globally", command = "Search Everywhere", shortcut = "shift shift" }
-st = { name = "Search: Types", shortcut = "cmd+o"}
-sf = { name = "Search: Files", shortcut = "cmd+shift+o"}
-sy = { name = "Search: Symbols", shortcut = "cmd+option+o"}
+st = { name = "Search: Types", shortcut = "cmd+o" }
+sf = { name = "Search: Files", shortcut = "cmd+shift+o" }
+sy = { name = "Search: Symbols", shortcut = "cmd+option+o" }
 sa = { name = "Search: All", shortcut = "cmd+shift+a" }
 sc = { name = "Search: Content Text", shortcut = "cmd+shift+option+e" }
 

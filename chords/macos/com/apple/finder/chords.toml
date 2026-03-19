@@ -16,14 +16,11 @@ gs = { name = "Goto Shared", shortcut = "cmd+shift+s" }
 ga = { name = "Goto Applications", shortcut = "cmd+shift+a" }
 gu = { name = "Goto Utilities", shortcut = "cmd+shift+u" }
 gf = { name = "Goto Folder", shortcut = "cmd+shift+g" }
-gt = {
-  name = "Goto Trash",
-  shell = """
+gt = { name = "Goto Trash", shell = """
     osascript -e 'tell application "Finder"
       open trash
     end tell
-  """
-}
+  """ }
 
 # History
 hb = { name = "History: Back", shortcut = "cmd+[" }
@@ -70,10 +67,10 @@ ta = { name = "Tabs: All", shortcut = "cmd+shift+backslash" }
 tg = { name = "Toggle: Groups", shortcut = "cmd+ctrl+0" }
 tt = { name = "Toggle: Tabs", shortcut = "cmd+shift+t" }
 th = { name = "Toggle: Hidden", shortcut = "cmd+shift+." }
-ts = { name  = "Toggle Sidebar", shortcut = "cmd+ctrl+s" }
-tp = { name  = "Toggle Preview", shortcut = "cmd+shift+p" }
-tb = { name  = "Toggle Status Bar", shortcut = "cmd+/" }
-to = { name  = "Toggle Toolbar", shortcut = "cmd+opt+t" }
-"t/" = { name  = "Toggle Path Bar", shortcut = "cmd+opt+p" }
+ts = { name = "Toggle Sidebar", shortcut = "cmd+ctrl+s" }
+tp = { name = "Toggle Preview", shortcut = "cmd+shift+p" }
+tb = { name = "Toggle Status Bar", shortcut = "cmd+/" }
+to = { name = "Toggle Toolbar", shortcut = "cmd+opt+t" }
+"t/" = { name = "Toggle Path Bar", shortcut = "cmd+opt+p" }
 te = { name = "Trash: Empty", shortcut = "shift+cmd+delete" }
 tef = { name = "Trash: Empty Force", shortcut = "opt+shift+cmd+delete" }

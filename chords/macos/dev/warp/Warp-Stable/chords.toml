@@ -10,10 +10,14 @@ export default createCommand(import.meta.chords);
 
 [chords]
 # Warp Essentials
-lcp = { name = "Launch Configuration Palette", args = ['workspace:toggle_launch_config_palette'], shortcut = "ctrl+cmd+l" }
+lcp = { name = "Launch Configuration Palette", args = [
+  'workspace:toggle_launch_config_palette',
+], shortcut = "ctrl+cmd+l" }
 cs = { name = "Command Search", args = ['workspace:show_command_search'], shortcut = "ctrl+r" }
 wf = { name = "Workflows", args = ['input:toggle_workflows'], shortcut = "ctrl+shift+r" }
-gn = { name = "Generate", args = ['input:toggle_natural_language_command_search`", shortcut = "ctrl+'] }
+gn = { name = "Generate", args = [
+  'input:toggle_natural_language_command_search`", shortcut = "ctrl+',
+] }
 ft = { name = "Focus Terminal", args = ['terminal:focus_input'], shortcut = "cmd+l" }
 ws = { name = "Warpify Shell", args = ['terminal:trigger_subshell_bootstrap'], shortcut = "ctrl+i" }
 fs = { name = "File Search", shortcut = "cmd+o" }
@@ -24,18 +28,30 @@ fv = { name = "Find: Next Match", args = ['editor:previous_find_match'] }
 fx = { name = "Find: Next Match", args = ['editor:next_find_match'] }
 
 # Blocks
-co = { name = "Copy Command Output", args = ['terminal:copy_outputs'], shortcut = "alt+shift+cmd+c" }
+co = { name = "Copy Command Output", args = [
+  'terminal:copy_outputs',
+], shortcut = "alt+shift+cmd+c" }
 ba = { name = "Block: All Select", args = ['terminal:select_all_blocks'], shortcut = "cmd+a" }
 bs = { name = "Block: Share", args = ['terminal:open_share_modal'], shortcut = "shift+cmd+s" }
 bc = { name = "Blocks: Clear", args = ['terminal:clear_blocks'], shortcut = "cmd+k" }
-bm = { name = "Block: Menu", args = ['terminal:open_block_list_context_menu_via_keybinding'], shortcut = "cmd+m" }
+bm = { name = "Block: Menu", args = [
+  'terminal:open_block_list_context_menu_via_keybinding',
+], shortcut = "cmd+m" }
 bx = { name = "Block: Next", args = ['terminal:select_next_block'], shortcut = "cmd+down" }
 bv = { name = "Block: Previous", args = ['terminal:select_previous_block'], shortcut = "cmd+up" }
-rc = { name = "Reinput Selected Commands", args = ['terminal:reinput_commands'], shortcut = "cmd+i" }
+rc = { name = "Reinput Selected Commands", args = [
+  'terminal:reinput_commands',
+], shortcut = "cmd+i" }
 cc = { name = "Copy Command", args = ['terminal:copy_commands'], shortcut = "shift+cmd+c" }
-rr = { name = "Reinput Selected Commands as Root", args = ['terminal:reinput_commands_with_sudo'], shortcut = "shift+cmd+i" }
-bu = { name = "Block: Up Expand Selected Blocks Above", args = ['terminal:expand_block_selection_above'], shortcut = "shift+cmd+up" }
-bd = { name = "Block: Down Expand Selected Blocks Below", args = ['terminal:expand_block_selection_below'], shortcut = "shift+cmd+down" }
+rr = { name = "Reinput Selected Commands as Root", args = [
+  'terminal:reinput_commands_with_sudo',
+], shortcut = "shift+cmd+i" }
+bu = { name = "Block: Up Expand Selected Blocks Above", args = [
+  'terminal:expand_block_selection_above',
+], shortcut = "shift+cmd+up" }
+bd = { name = "Block: Down Expand Selected Blocks Below", args = [
+  'terminal:expand_block_selection_below',
+], shortcut = "shift+cmd+down" }
 
 # Bookmarks
 mb = { name = "Mark: Block", args = ['terminal:bookmark_selected_block'], shortcut = "cmd+b" }
@@ -52,13 +68,17 @@ sb = { name = "Scroll to Bottom", args = ['terminal:scroll_end'], shortcut = "sh
 
 # Terminal
 mr = { name = "Mouse Reporting", args = ['workspace:toggle_mouse_reporting'] }
-td = { name = "Duplicate Current Tab", args = ['workspace:duplicate_tab'], shortcut = "shift+cmd+d" }
+td = { name = "Duplicate Current Tab", args = [
+  'workspace:duplicate_tab',
+], shortcut = "shift+cmd+d" }
 tn = { name = "New Tab", args = ['workspace:new_tab'], shortcut = "cmd+t" }
 
 # Tabs
 tq = { name = "Tab: Quit", args = ['workspace:close_current_tab'], shortcut = "cmd+w" }
 to = { name = "Tab: Open Closed", args = ['workspace:reopen_closed_tab'], shortcut = "shift+cmd+t" }
-tqr = { name = "Tab: Quit to Right", args = ['workspace:close_tabs_right_active_tab'], shortcut = "shift+cmd+t" }
+tqr = { name = "Tab: Quit to Right", args = [
+  'workspace:close_tabs_right_active_tab',
+], shortcut = "shift+cmd+t" }
 tqo = { name = "Tab: Quit Others", args = ['workspace:close_other_tabs'], shortcut = "shift+cmd+t" }
 t1 = { name = "Switch to tab 1", args = ['workspace:switch_tab:0'], shortcut = "cmd+1" }
 t2 = { name = "Switch to tab 2", args = ['workspace:switch_tab:1'], shortcut = "cmd+2" }
@@ -69,9 +89,15 @@ t6 = { name = "Switch to tab 6", args = ['workspace:switch_tab:5'], shortcut = "
 t7 = { name = "Switch to tab 7", args = ['workspace:switch_tab:6'], shortcut = "cmd+7" }
 t8 = { name = "Switch to tab 8", args = ['workspace:switch_tab:7'], shortcut = "cmd+8" }
 tx = { name = "Switch to next tab", args = ['workspace:next_tab'], shortcut = "ctrl+tab" }
-tv = { name = "Switch to previous tab", args = ['workspace:previous_tab'], shortcut = "ctrl+shift+tab" }
-tl = { name = "Move current tab left", args = ['workspace:move_tab_left'], shortcut = "shift+cmd+[" }
-tr = { name = "Move current tab right", args = ['workspace:move_tab_right'], shortcut = "shift+cmd+]" }
+tv = { name = "Switch to previous tab", args = [
+  'workspace:previous_tab',
+], shortcut = "ctrl+shift+tab" }
+tl = { name = "Move current tab left", args = [
+  'workspace:move_tab_left',
+], shortcut = "shift+cmd+[" }
+tr = { name = "Move current tab right", args = [
+  'workspace:move_tab_right',
+], shortcut = "shift+cmd+]" }
 
 # Split
 sn = { name = "Split: North", args = ['pane_group:focus_up'], shortcut = "cmd+alt+up" }
@@ -84,7 +110,9 @@ sr = { name = "Split: Right", args = ['pane_group:add_right'], shortcut = "cmd+d
 sl = { name = "Split: Left", args = ['pane_group:add_left'] }
 sru = { name = "Split: Resize Up", args = ['pane_group:resize_up'], shortcut = "ctrl+cmd+up" }
 srd = { name = "Split: Resize Down", args = ['pane_group:resize_down'], shortcut = "ctrl+cmd+down" }
-srr = { name = "Split: Resize Right", args = ['pane_group:resize_right'], shortcut = "ctrl+cmd+right" }
+srr = { name = "Split: Resize Right", args = [
+  'pane_group:resize_right',
+], shortcut = "ctrl+cmd+right" }
 srl = { name = "Split: Resize Left", args = ['pane_group:resize_left'], shortcut = "ctrl+cmd+left" }
 
 # Zoom

@@ -1,4 +1,4 @@
-import { spawn } from 'child_process'
+import { spawn } from "child_process";
 
 // helper to run a command and collect stdout
 export function run(cmd: string, args: string[] = []): Promise<string> {

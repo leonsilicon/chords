@@ -1,12 +1,12 @@
-import { readFileSync, writeFileSync, statSync } from 'fs'
+import { readFileSync, writeFileSync, statSync } from "fs";
 
 export function upsertBlock(
   path: string,
   newContent: string,
   startMarker = "# START",
-  endMarker = "# END"
+  endMarker = "# END",
 ) {
-  let existing = readFileSync(path, 'utf8') ?? "";
+  let existing = readFileSync(path, "utf8") ?? "";
 
   const block = `${startMarker}\n${newContent}\n${endMarker}`;
 
@@ -17,10 +17,7 @@ export function upsertBlock(
 
   if (startIndex !== -1 && endIndex !== -1 && endIndex >= startIndex) {
     const endOfMarker = endIndex + endMarker.length;
-    updated =
-      existing.slice(0, startIndex) +
-      block +
-      existing.slice(endOfMarker);
+    updated = existing.slice(0, startIndex) + block + existing.slice(endOfMarker);
   } else {
     if (existing !== "" && !existing.endsWith("\n")) {
       existing += "\n";

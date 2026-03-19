@@ -6,7 +6,7 @@
     "module": "nodenext",
     "moduleDetection": "force",
     "allowJs": true,
-    "types": ["llrt-types", "./types/global.d.ts"],
+    "types": ["llrt-types"],
     "paths": {
       "#/*": ["./src/*"]
     },

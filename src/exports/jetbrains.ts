@@ -1,14 +1,14 @@
-import { writeFileSync, readFileSync, rmSync } from "fs"
-import { spawn } from 'child_process';
+import { writeFileSync, readFileSync, rmSync } from "fs";
+import { spawn } from "child_process";
 import { outdent } from "outdent";
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export function createAction(ideBinPath: string) {
   return async function action(commandId: string) {
-    const tmp = process.env.TMPDIR ?? '/tmp'
-    const id = Math.random()
-    const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`
-    const resultPath = `${tmp}/jetbrains_action_${id}.txt`
+    const tmp = process.env.TMPDIR ?? "/tmp";
+    const id = Math.random();
+    const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
+    const resultPath = `${tmp}/jetbrains_action_${id}.txt`;
 
     const script = outdent`
     import com.intellij.openapi.actionSystem.ActionManager
@@ -29,15 +29,15 @@ export function createAction(ideBinPath: string) {
       } catch (Throwable ignored) {
         resultFile.text = "0"
       }
-    }`
+    }`;
 
-    writeFileSync(scriptPath, script)
-    await spawn(ideBinPath, ['ideScript', scriptPath]);
-    const result = readFileSync(resultPath, 'utf8')
+    writeFileSync(scriptPath, script);
+    await spawn(ideBinPath, ["ideScript", scriptPath]);
+    const result = readFileSync(resultPath, "utf8");
 
-    rmSync(scriptPath)
-    rmSync(resultPath)
+    rmSync(scriptPath);
+    rmSync(resultPath);
 
-    return result == "1"
-  }
+    return result == "1";
+  };
 }
