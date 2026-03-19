@@ -45,7 +45,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
 
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
-  const keybindings = exists(keybindingsPath) ? yaml.load(readFileSync(keybindingsPath, 'utf8')) as Record<string, string> : {};
+  const keybindings = exists(keybindingsPath) ? yaml.load(readFileSync(keybindingsPath, 'utf8')) || {} : {};
   for (const cmd of sortedCommands) {
     const keybind = syntheticKeybinds[cmd];
     keybindings[cmd] = keybind;

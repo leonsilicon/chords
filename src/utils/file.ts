@@ -34,7 +34,8 @@ export function exists(path: string) {
     statSync(path);
     return true;
   } catch (err: any) {
-    if (err.code === "ENOENT") return false;
-    throw err; // real error, don’t ignore
+    return false
+    // if (err.code === "ENOENT") return false;
+    // throw err; // real error, don’t ignore
   }
 }

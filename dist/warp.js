@@ -234,9 +234,7 @@ function exists(path) {
     statSync(path);
     return true;
   } catch (err) {
-    if (err.code === "ENOENT")
-      return false;
-    throw err;
+    return false;
   }
 }
 
@@ -2955,7 +2953,7 @@ async function createCommand(chords) {
   ].flatMap((pattern) => expand(pattern)));
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
-  const keybindings = exists(keybindingsPath) ? jsYaml.load(readFileSync2(keybindingsPath, "utf8")) : {};
+  const keybindings = exists(keybindingsPath) ? jsYaml.load(readFileSync2(keybindingsPath, "utf8")) || {} : {};
   for (const cmd of sortedCommands) {
     const keybind = syntheticKeybinds[cmd];
     keybindings[cmd] = keybind;
