@@ -1,9 +1,36 @@
 // @bun
+// src/utils/exec.ts
+import { spawn } from "child_process";
+function run(cmd, args = []) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(cmd, args);
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (data) => {
+      stdout += data.toString();
+    });
+    child.stderr.on("data", (data) => {
+      stderr += data.toString();
+    });
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve(stdout.trim());
+      } else {
+        reject(new Error(stderr || `Process exited with code ${code}`));
+      }
+    });
+  });
+}
+
 // src/exports/vscode.ts
-import { execSync } from "child_process";
 import fs from "fs";
-function createCommand() {
-  const uid = execSync("id -u", { stdio: "pipe" }).toString();
+async function createCommand() {
+  let uid;
+  try {
+    uid = await run("id", ["-u"]);
+  } catch {
+    return () => false;
+  }
   if (!uid) {
     return () => false;
   }
@@ -21,10 +48,12 @@ function createCommand() {
     });
     fs.writeFileSync(requestPath, payload);
     tap("cmd+shift+f17");
-    fs.unlinkSync(responsePath);
+    if (fs.existsSync(responsePath)) {
+      fs.unlinkSync(responsePath);
+    }
     return true;
   };
 }
 export {
-  createCommand
+  createCommand as default
 };

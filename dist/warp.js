@@ -286,21 +286,19 @@ function createCommand(chords) {
     "opt+shift+{0..9}",
     "cmd+shift+{0..9}"
   ]));
-  {
-    const sortedCommands = Object.keys(syntheticKeybinds).sort();
-    let keybindingsYaml = "";
-    for (const cmd of sortedCommands) {
-      const keybind = syntheticKeybinds[cmd];
-      keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
+  const sortedCommands = Object.keys(syntheticKeybinds).sort();
+  let keybindingsYaml = "";
+  for (const cmd of sortedCommands) {
+    const keybind = syntheticKeybinds[cmd];
+    keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
 `;
-    }
-    const home = process.env.HOME || "~";
-    const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-    if (fs2.existsSync(keybindingsPath)) {
-      fs2.writeFileSync(keybindingsPath, "");
-    }
-    upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   }
+  const home = process.env.HOME || "~";
+  const keybindingsPath = `${home}/.warp/keybindings.yaml`;
+  if (fs2.existsSync(keybindingsPath)) {
+    fs2.writeFileSync(keybindingsPath, "");
+  }
+  upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   const commandToKey = {};
   for (const [cmd, key] of Object.entries(syntheticKeybinds)) {
     commandToKey[cmd] = normalizeKeybind(key);

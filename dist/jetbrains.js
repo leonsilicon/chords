@@ -2,7 +2,7 @@
 // src/exports/jetbrains.ts
 import * as fs from "fs";
 import * as process from "process";
-import * as childProcess from "child_process";
+import { spawn } from "child_process";
 
 // node_modules/outdent/lib-module/index.js
 function noop() {
@@ -138,7 +138,7 @@ if (typeof module_lib_module !== "undefined") {
 
 // src/exports/jetbrains.ts
 function createAction(ideBinPath) {
-  return function action(commandId) {
+  return async function action(commandId) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
     const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`;
@@ -164,7 +164,7 @@ function createAction(ideBinPath) {
       }
     }`;
     fs.writeFileSync(scriptPath, script);
-    childProcess.execFileSync(ideBinPath, ["ideScript", scriptPath]);
+    await spawn(ideBinPath, ["ideScript", scriptPath]);
     const result = fs.readFileSync(resultPath, "utf8");
     fs.unlinkSync(scriptPath);
     fs.unlinkSync(resultPath);
