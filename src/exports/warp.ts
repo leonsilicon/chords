@@ -1,4 +1,3 @@
-import { env } from 'process'
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
 import { writeFileSync } from 'fs'
@@ -35,7 +34,7 @@ function quote(str: string): string {
   return `"${String(str).replace(/"/g, '\\"')}"`;
 }
 
-export function createCommand(chords: Chords) {
+export async function createCommand(chords: Chords) {
   const commands = extractCommands(chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(
@@ -62,6 +61,8 @@ export function createCommand(chords: Chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind!)}\n`;
   }
 
+
+  const { env } = await import('process');
   const home = env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
 

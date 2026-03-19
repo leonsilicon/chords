@@ -1,6 +1,5 @@
 // @bun
-// src/exports/warp.ts
-import { env } from "process";
+var __require = import.meta.require;
 
 // src/utils/file.ts
 import { readFileSync, writeFileSync, statSync } from "fs";
@@ -283,7 +282,7 @@ function normalizeKeybind(k) {
 function quote(str) {
   return `"${String(str).replace(/"/g, "\\\"")}"`;
 }
-function createCommand(chords) {
+async function createCommand(chords) {
   const commands = extractCommands(chords);
   const syntheticKeybinds = generateSyntheticKeybinds(commands, [
     "opt+{0..9}",
@@ -303,6 +302,7 @@ function createCommand(chords) {
     keybindingsYaml += `${quote(cmd)}: ${normalizeKeybind(keybind)}
 `;
   }
+  const { env } = await import("process");
   const home = env.HOME || "~";
   const keybindingsPath = `${home}/.warp/keybindings.yaml`;
   if (exists(keybindingsPath)) {

@@ -1,4 +1,6 @@
 // @bun
+var __require = import.meta.require;
+
 // src/exports/jetbrains.ts
 import { writeFileSync, readFileSync, rmSync } from "fs";
 import { env } from "process";

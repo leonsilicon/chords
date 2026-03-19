@@ -1,4 +1,6 @@
 // @bun
+var __require = import.meta.require;
+
 // node_modules/@ban12/bplist-parser/dist/bplist-parser.mjs
 function _define_property(obj, key, value) {
   if (key in obj) {

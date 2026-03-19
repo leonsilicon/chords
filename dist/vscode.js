@@ -1,4 +1,6 @@
 // @bun
+var __require = import.meta.require;
+
 // src/utils/exec.ts
 import { spawn } from "child_process";
 function run(cmd, args = []) {
