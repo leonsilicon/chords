@@ -2,7 +2,8 @@
 name = "WebStorm"
 extends = "com.jetbrains.intellij"
 
-[config.lua]
+[config.js]
 init = '''
-action = require('jetbrains_helpers').create_action("/Applications/WebStorm.app/Contents/MacOS/webstorm")
+import { createAction } from 'dist/jetbrains.js';
+export const action = createAction("/Applications/WebStorm.app/Contents/MacOS/webstorm")
 '''

@@ -1,7 +1,7 @@
 [config]
 name = "Paste (Setapp)"
 
-[config.lua]
+[config.js]
 init = '''
 local plist = require("plist")
 local mac_keycode = require('mac_keycode')
@@ -17,5 +17,5 @@ end
 '''
 
 [chords]
-"/v" = { name = "Paste", lua = "shortcut('kPSTPreferencesActivationShortcut')" }
-"/vs" = { name = "Paste Stack", lua = "shortcut('paste-stack-shortcut')" }
+"/v" = { name = "Paste", js = "shortcut('kPSTPreferencesActivationShortcut')" }
+"/vs" = { name = "Paste Stack", js = "shortcut('paste-stack-shortcut')" }

@@ -1,13 +1,14 @@
 [config]
 name = "PixelSnap 2 (Setapp)"
 
-[config.lua]
+[config.js]
 init = '''
-local shortcut = require('maketheweb_helpers').make_shortcut(
-  "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist",
+import { makeShortcut } from 'dist/maketheweb.js';
+const shortcut = makeShortcut(
+  "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist"
 )
 '''
 
 [chords]
-"/xc" = { name = "PixelSnap: Clear All", lua = "shortcut('LAVAclearAll')" }
-"/x" = { name = "PixelSnap", lua = "shortcut('LAVAglobalHotkey')" }
+"/xc" = { name = "PixelSnap: Clear All", js = "shortcut('LAVAclearAll')" }
+"/x" = { name = "PixelSnap", js = "shortcut('LAVAglobalHotkey')" }

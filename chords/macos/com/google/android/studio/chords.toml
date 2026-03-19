@@ -2,7 +2,8 @@
 name = "Android Studio"
 extends = "com.jetbrains.intellij"
 
-[config.lua]
+[config.js]
 init = '''
-action = require('jetbrains_helpers').create_action("/Applications/Android Studio.app/Contents/MacOS/studio")
+import { createAction } from "dist/jetbrains.js";
+export const action = createAction("/Applications/Android Studio.app/Contents/MacOS/studio")
 '''

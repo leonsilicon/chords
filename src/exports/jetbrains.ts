@@ -1,0 +1,43 @@
+import * as os from "qjs:os"
+import * as std from "qjs:std";
+import { outdent } from "outdent";
+
+// This function makes it possible to programmatically execute IntelliJ commands
+export function createAction(ideBinPath: string) {
+  return function action(commandId: string) {
+    const tmp = std.getenv("TMPDIR") ?? '/tmp'
+    const id = Math.random()
+    const scriptPath = `${tmp}/jetbrains_action_${id}.groovy`
+    const resultPath = `${tmp}/jetbrains_action_${id}.txt`
+
+    const script = outdent`
+    import com.intellij.openapi.actionSystem.ActionManager
+
+    def actionManager = ActionManager.getInstance()
+    def resultFile = new File(${JSON.stringify(resultPath)})
+
+    IDE.application.invokeAndWait {
+      try {
+        def action = actionManager.getAction(${JSON.stringify(commandId)})
+        if (action == null) {
+          resultFile.text = "0"
+          return
+        }
+
+        def result = actionManager.tryToExecute(action, null, null, null, false)
+        resultFile.text = result.rejected ? "0" : "1"
+      } catch (Throwable ignored) {
+        resultFile.text = "0"
+      }
+    }`
+
+    std.writeFile(scriptPath, script)
+    os.exec([ideBinPath, 'ideScript', scriptPath]);
+    const result = std.loadFile(resultPath)
+
+    os.remove(scriptPath)
+    os.remove(resultPath)
+
+    return result == "1"
+  }
+}

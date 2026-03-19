@@ -1,25 +1,26 @@
 [config]
 name = "IntelliJ IDEA"
 
-[config.lua]
+[config.js]
 init = '''
-action = require('jetbrains_helpers').create_action("/Applications/IntelliJ IDEA.app/Contents/MacOS/idea")
+import { createAction } from "dist/jetbrains.js";
+export const action = createAction("/Applications/IntelliJ IDEA.app/Contents/MacOS/idea")
 '''
 
 [chords]
 # Editor
-ea = { name = "Editor: Actions", lua = "action('QuickActions')" }
-es = { name = "Editor: Solutions", lua = "action('QuickFixes')" }
+ea = { name = "Editor: Actions", js = "action('QuickActions')" }
+es = { name = "Editor: Solutions", js = "action('QuickFixes')" }
 ef = { name = "Editor: Focus", shortcut = "esc" }
-ep = { name = "Editor: Pin", lua = "action('PinActiveEditorTab')" }
-eu = { name = "Editor: Unpin", lua = "action('PinActiveTabToggle')" }
-eq = { name = "Editor: Quit", lua = "action('CloseEditor')" }
-eqa = { name = "Editor: Quit All", lua = "action('CloseAllEditors')" }
-eqo = { name = "Editor: Quit Others", lua = "action('CloseAllEditorsButActive')" }
-eql = { name = "Editor: Quit to the Left", lua = "action('CloseEditorsToTheLeft')" }
-eqr = { name = "Editor: Quit to the Right", lua = "action('CloseEditorsToTheRight')" }
-equ = { name = "Editor: Quit Unmodified", lua = "action('CloseUnmodifiedEditors')" }
-eqp = { name = "Editor: Quit Pinless", lua = "action('CloseUnpinnedEditors')" }
+ep = { name = "Editor: Pin", js = "action('PinActiveEditorTab')" }
+eu = { name = "Editor: Unpin", js = "action('PinActiveTabToggle')" }
+eq = { name = "Editor: Quit", js = "action('CloseEditor')" }
+eqa = { name = "Editor: Quit All", js = "action('CloseAllEditors')" }
+eqo = { name = "Editor: Quit Others", js = "action('CloseAllEditorsButActive')" }
+eql = { name = "Editor: Quit to the Left", js = "action('CloseEditorsToTheLeft')" }
+eqr = { name = "Editor: Quit to the Right", js = "action('CloseEditorsToTheRight')" }
+equ = { name = "Editor: Quit Unmodified", js = "action('CloseUnmodifiedEditors')" }
+eqp = { name = "Editor: Quit Pinless", js = "action('CloseUnpinnedEditors')" }
 
 # Tabs
 ta = { name = "Tab: All", command = "action('TabList')" }
@@ -27,17 +28,17 @@ tv = { name = "Tab: Previous", command = "action('PreviousTab')" }
 tx = { name = "Tab: Next", command = "action('NextTab')" }
 tb = { name = "Tab: Back", command = "action('GoToLastTab')" }
 to = { name = "Tab: Open Recently Closed", command = "action('ReopenClosedTab')" }
-t1 = { name = "Tab 1", lua = "action('GoToTab1')" }
-t2 = { name = "Tab 2", lua = "action('GoToTab2')" }
-t3 = { name = "Tab 3", lua = "action('GoToTab3')" }
-t4 = { name = "Tab 4", lua = "action('GoToTab4')" }
-t5 = { name = "Tab 5", lua = "action('GoToTab5')" }
-t6 = { name = "Tab 6", lua = "action('GoToTab6')" }
-t7 = { name = "Tab 7", lua = "action('GoToTab7')" }
-t8 = { name = "Tab 8", lua = "action('GoToTab8')" }
-t9 = { name = "Tab 9", lua = "action('GoToTab9')" }
-td = { name = "Tab: Move Down", lua = "action('MoveTabDown')" }
-tr = { name = "Tab: Move Right", lua = "action('MoveTabRight')" }
+t1 = { name = "Tab 1", js = "action('GoToTab1')" }
+t2 = { name = "Tab 2", js = "action('GoToTab2')" }
+t3 = { name = "Tab 3", js = "action('GoToTab3')" }
+t4 = { name = "Tab 4", js = "action('GoToTab4')" }
+t5 = { name = "Tab 5", js = "action('GoToTab5')" }
+t6 = { name = "Tab 6", js = "action('GoToTab6')" }
+t7 = { name = "Tab 7", js = "action('GoToTab7')" }
+t8 = { name = "Tab 8", js = "action('GoToTab8')" }
+t9 = { name = "Tab 9", js = "action('GoToTab9')" }
+td = { name = "Tab: Move Down", js = "action('MoveTabDown')" }
+tr = { name = "Tab: Move Right", js = "action('MoveTabRight')" }
 
 # Find
 fi = { name = "Find...", command = "Find...", shortcut = "cmd+f" }
@@ -52,26 +53,26 @@ fa = { name = "Find Action", command = "Find Action...", shortcut = "cmd+shift+a
 fp = { name = "File: Path", shortcut = "cmd+shift+c" }
 fb = { name = "File: Back", command = "Recent Files", shortcut = "cmd+e" }
 fn = { name = "File: New", command = "New in This Directory", shortcut = "ctrl+option+n" }
-fnn = { name = "File: New Name", lua = "action('RenameFile')" }
+fnn = { name = "File: New Name", js = "action('RenameFile')" }
 fns = { name = "File: New Scratch", shortcut = "cmd+shift+n" }
-fh = { name = "File: Here", lua = "action('NewFile')" }
-fd = { name = "File: Directory", lua = "action('NewDir')" }
+fh = { name = "File: Here", js = "action('NewFile')" }
+fd = { name = "File: Directory", js = "action('NewDir')" }
 ft = { name = "File: Trash", shortcut = "cmd+delete" }
 fvs = { name = "File: View Structure", command = "File Structure", shortcut = "cmd+f12" }
-fs = { name = "File: Show", lua = "action('SelectInProjectView')" }
+fs = { name = "File: Show", js = "action('SelectInProjectView')" }
 
 bp = { name = "Build Project", command = "Build Project", shortcut = "cmd+f9" }
 br = { name = "Build: Rebuild", command = "Rebuild", shortcut = "cmd+shift+f9" }
 
 # Splits
-# sa = { name = "Split: Auto", lua = "command('workbench.action.splitEditor')", shortcut = "cmd+backslash" }
-sr = { name = "Split: Right", lua = "action('SplitHorizontally')" }
-sd = { name = "Split: Down", lua = "action('SplitVertically')" }
-so = { name = "Split: Orientation", lua = "action('ChangeSplitOrientation')" }
+# sa = { name = "Split: Auto", js = "command('workbench.action.splitEditor')", shortcut = "cmd+backslash" }
+sr = { name = "Split: Right", js = "action('SplitHorizontally')" }
+sd = { name = "Split: Down", js = "action('SplitVertically')" }
+so = { name = "Split: Orientation", js = "action('ChangeSplitOrientation')" }
 sx = { name = "Split: Next", shortcut = "opt+right" }
 sv = { name = "Split: Previous", shortcut = "opt+shift+right" }
-sq = { name = "Split: Quit", lua = "action('Unsplit')" }
-sqa = { name = "Split: Quit All", lua = "action('UnsplitAll')" }
+sq = { name = "Split: Quit", js = "action('Unsplit')" }
+sqa = { name = "Split: Quit All", js = "action('UnsplitAll')" }
 
 # Basic editing
 pap = { name = "Paste as Plain Text", command = "Paste as Plain Text", shortcut = "cmd+option+shift+v" }
@@ -98,24 +99,24 @@ fsd = { name = "Font Size: Decrease", command = "Decrease Font Size in All Edito
 ff = { name = "Folding: Fold", command = "Collapse", shortcut = "cmd+NumpadSubtract" }
 ffs = { name = "Folding: Fold Selection", command = "Fold Selection", shortcut = "cmd+." }
 ffa = { name = "Folding: Fold All", command = "Expand All", shortcut = "cmd+shift+NumpadAdd" }
-ffc = { name = "Folding: Fold Comments", lua = "command('CollapseDocComments')" }
+ffc = { name = "Folding: Fold Comments", js = "command('CollapseDocComments')" }
 ffr = { name = "Folding: Fold Recursively", command = "Collapse Recursively", shortcut = "cmd+option+NumpadSubtract" }
 fu = { name = "Folding: Unfold", command = "Expand", shortcut = "cmd+NumpadAdd" }
 fua = { name = "Folding: Unfold All", command = "Collapse All", shortcut = "cmd+shift+NumpadSubtract" }
-fuc = { name = "Folding: Unfold Comments", lua = "command('ExpandDocComments')" }
+fuc = { name = "Folding: Unfold Comments", js = "command('ExpandDocComments')" }
 fur = { name = "Folding: Unfold Recursively", command = "Expand Recursively", shortcut = "cmd+option+NumpadAdd" }
-fl = { name = "Folding: Level", lua = "action('ExpandToLevel')" }
-f1 = { name = "Folding: Level 1", lua = "action('ExpandToLevel1')" }
-f2 = { name = "Folding: Level 2", lua = "action('ExpandToLevel2')" }
-f3 = { name = "Folding: Level 3", lua = "action('ExpandToLevel3')" }
-f4 = { name = "Folding: Level 4", lua = "action('ExpandToLevel4')" }
-f5 = { name = "Folding: Level 5", lua = "action('ExpandToLevel5')" }
-fal = { name = "Folding: All Level", lua = "action('ExpandAllToLevel')" }
-fa1 = { name = "Folding: All Level 1", lua = "action('ExpandAllToLevel1')" }
-fa2 = { name = "Folding: All Level 2", lua = "action('ExpandAllToLevel2')" }
-fa3 = { name = "Folding: All Level 3", lua = "action('ExpandAllToLevel3')" }
-fa4 = { name = "Folding: All Level 4", lua = "action('ExpandAllToLevel4')" }
-fa5 = { name = "Folding: All Level 5", lua = "action('ExpandAllToLevel5')" }
+fl = { name = "Folding: Level", js = "action('ExpandToLevel')" }
+f1 = { name = "Folding: Level 1", js = "action('ExpandToLevel1')" }
+f2 = { name = "Folding: Level 2", js = "action('ExpandToLevel2')" }
+f3 = { name = "Folding: Level 3", js = "action('ExpandToLevel3')" }
+f4 = { name = "Folding: Level 4", js = "action('ExpandToLevel4')" }
+f5 = { name = "Folding: Level 5", js = "action('ExpandToLevel5')" }
+fal = { name = "Folding: All Level", js = "action('ExpandAllToLevel')" }
+fa1 = { name = "Folding: All Level 1", js = "action('ExpandAllToLevel1')" }
+fa2 = { name = "Folding: All Level 2", js = "action('ExpandAllToLevel2')" }
+fa3 = { name = "Folding: All Level 3", js = "action('ExpandAllToLevel3')" }
+fa4 = { name = "Folding: All Level 4", js = "action('ExpandAllToLevel4')" }
+fa5 = { name = "Folding: All Level 5", js = "action('ExpandAllToLevel5')" }
 
 # Multiple carets and selection ranges
 # = { name = "Add/Remove Caret", command = "Add/Remove Caret", shortcut = "option+shift+click" }
@@ -181,13 +182,13 @@ sc = { name = "Search: Content Text", shortcut = "cmd+shift+option+e" }
 
 # Goto
 gl = { name = "Go to Line/Column...", command = "Go to Line/Column...", shortcut = "cmd+l" }
-gk = { name = "Goto Class", lua = "action('GotoClass')" }
+gk = { name = "Goto Class", js = "action('GotoClass')" }
 gpx = { name = "Goto Problem: Next", command = "Next Highlighted Error", shortcut = "f2" }
 gpv = { name = "Goto Problem: Previous", command = "Previous Highlighted Error", shortcut = "shift+f2" }
 gd = { name = "Goto Declaration or Usages", command = "Go to Declaration or Usages", shortcut = "cmd+b" }
 gy = { name = "Goto Type Declaration", command = "Go to Type Declaration", shortcut = "cmd+shift+b" }
 gsm = { name = "Goto Super Method", command = "Go to Super Method", shortcut = "cmd+u" }
-gm = { name = "Goto Menu", lua = "action('GoToMenu')" }
+gm = { name = "Goto Menu", js = "action('GoToMenu')" }
 gi = { name = "Goto Implementation(s)", command = "Go to Implementation(s)", shortcut = "cmd+option+b" }
 gs = { name = "Goto Symbol", command = "Go to Symbol...", shortcut = "cmd+option+o" }
 gt = { name = "Goto Test", command = "Go to Test", shortcut = "cmd+shift+t" }
@@ -318,6 +319,6 @@ pc = { name = "Panel: Commit", command = "Show Commit window", shortcut = "cmd+0
 pt = { name = "Panel: Terminal", command = "Show Terminal window", shortcut = "opt+f12" }
 
 # Zoom
-zo = { name = "Zoom Out", lua = "action('ZoomOutIdeAction')" }
-zi = { name = "Zoom In", lua = "action('ZoomInIdeAction')" }
-zm = { name = "Zen Mode", lua = "action('ToggleZenMode')" }
+zo = { name = "Zoom Out", js = "action('ZoomOutIdeAction')" }
+zi = { name = "Zoom In", js = "action('ZoomInIdeAction')" }
+zm = { name = "Zen Mode", js = "action('ToggleZenMode')" }
