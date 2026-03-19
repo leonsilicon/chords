@@ -17,5 +17,5 @@ end
 '''
 
 [chords]
-"/v" = { name = "Paste", js = "shortcut('kPSTPreferencesActivationShortcut')" }
-"/vs" = { name = "Paste Stack", js = "shortcut('paste-stack-shortcut')" }
+"/v" = { name = "Paste", args = ['kPSTPreferencesActivationShortcut'] }
+"/vs" = { name = "Paste Stack", args = ['paste-stack-shortcut'] }

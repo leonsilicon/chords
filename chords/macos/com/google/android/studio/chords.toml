@@ -3,7 +3,7 @@ name = "Android Studio"
 extends = "com.jetbrains.intellij"
 
 [config.js]
-init = '''
+module = '''
 import { createAction } from "dist/jetbrains.js";
-export const action = createAction("/Applications/Android Studio.app/Contents/MacOS/studio")
+export default createAction("/Applications/Android Studio.app/Contents/MacOS/studio")
 '''

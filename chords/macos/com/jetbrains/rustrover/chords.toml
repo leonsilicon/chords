@@ -3,7 +3,7 @@ name = "RustRover"
 extends = "com.jetbrains.intellij"
 
 [config.js]
-init = '''
+module = '''
 import { createAction } from 'dist/jetbrains.js';
-export const action = createAction("/Applications/RustRover.app/Contents/MacOS/rustrover")
+export default createAction("/Applications/RustRover.app/Contents/MacOS/rustrover")
 '''

@@ -3,7 +3,7 @@ name = "WebStorm"
 extends = "com.jetbrains.intellij"
 
 [config.js]
-init = '''
+module = '''
 import { createAction } from 'dist/jetbrains.js';
-export const action = createAction("/Applications/WebStorm.app/Contents/MacOS/webstorm")
+export default createAction("/Applications/WebStorm.app/Contents/MacOS/webstorm")
 '''
