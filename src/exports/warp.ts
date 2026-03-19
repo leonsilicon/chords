@@ -2,6 +2,7 @@ import process from 'process'
 import { upsertBlock } from "#/utils/file.ts";
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
 import fs from 'fs'
+import { expand } from 'brace-expansion'
 
 type Chord = {
   js?: string;
@@ -9,8 +10,6 @@ type Chord = {
 };
 
 type Chords = Record<string, Chord>;
-
-declare function expandAll(patterns: string[]): string[];
 
 function extractCommands(chords: Chords): string[] {
   const result: string[] = [];
@@ -40,7 +39,7 @@ export function createCommand(chords: Chords) {
 
   const syntheticKeybinds = generateSyntheticKeybinds(
     commands,
-    expandAll([
+    [
       "opt+{0..9}",
       "opt+cmd+{0..9}",
       "opt+cmd+ctrl+{0..9}",
@@ -50,7 +49,7 @@ export function createCommand(chords: Chords) {
       "ctrl+shift+{0..9}",
       "opt+shift+{0..9}",
       "cmd+shift+{0..9}",
-    ])
+    ].flatMap(pattern => expand(pattern))
   );
 
   // write warp keybindings
@@ -92,7 +91,3 @@ export function createCommand(chords: Chords) {
     return true;
   };
 }
-
-export default {
-  createCommand,
-};

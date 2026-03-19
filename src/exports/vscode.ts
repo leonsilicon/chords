@@ -1,7 +1,7 @@
 import { run } from "#/utils/exec.ts";
 import fs from "fs";
 
-export default async function createCommand() {
+export async function createCommand() {
   let uid: string;
 
   try {

@@ -275,7 +275,7 @@ function quote(str) {
 }
 function createCommand(chords) {
   const commands = extractCommands(chords);
-  const syntheticKeybinds = generateSyntheticKeybinds(commands, expandAll([
+  const syntheticKeybinds = generateSyntheticKeybinds(commands, [
     "opt+{0..9}",
     "opt+cmd+{0..9}",
     "opt+cmd+ctrl+{0..9}",
@@ -285,7 +285,7 @@ function createCommand(chords) {
     "ctrl+shift+{0..9}",
     "opt+shift+{0..9}",
     "cmd+shift+{0..9}"
-  ]));
+  ].flatMap((pattern) => expand(pattern)));
   const sortedCommands = Object.keys(syntheticKeybinds).sort();
   let keybindingsYaml = "";
   for (const cmd of sortedCommands) {
@@ -312,10 +312,6 @@ function createCommand(chords) {
     return true;
   };
 }
-var warp_default = {
-  createCommand
-};
 export {
-  warp_default as default,
   createCommand
 };

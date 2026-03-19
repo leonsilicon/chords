@@ -55,5 +55,5 @@ async function createCommand() {
   };
 }
 export {
-  createCommand as default
+  createCommand
 };
