@@ -1,6 +1,6 @@
 // @bun
 // src/exports/jetbrains.ts
-import { writeFileSync, readFileSync, rmSync } from "fs";
+import fs from "fs";
 
 // node_modules/.pnpm/outdent@0.8.0/node_modules/outdent/lib-module/index.js
 function noop() {
@@ -187,11 +187,11 @@ function createAction(ideBinPath) {
         resultFile.text = "0"
       }
     }`;
-    writeFileSync(scriptPath, script);
+    fs.writeFileSync(scriptPath, script);
     await run(ideBinPath, ["ideScript", scriptPath]);
-    const result = readFileSync(resultPath, "utf8");
-    rmSync(scriptPath);
-    rmSync(resultPath);
+    const result = fs.readFileSync(resultPath, "utf8");
+    fs.rmSync(scriptPath);
+    fs.rmSync(resultPath);
     return result == "1";
   };
 }

@@ -1,5 +1,5 @@
 import { run } from "#/utils/exec.ts";
-import { writeFileSync, rmSync, statSync } from "fs";
+import fs from "fs";
 import { exists } from "#/utils/file.ts";
 import path from 'path'
 
@@ -23,13 +23,10 @@ export async function createCommand() {
       args: [],
     });
 
-    writeFileSync(requestPath, payload);
+    fs.writeFileSync(requestPath, payload);
 
     tap("cmd+shift+f17");
-
-    if (statSync(responsePath)) {
-      rmSync(responsePath);
-    }
+    fs.rmSync(responsePath, { force: true });
 
     return true;
   }

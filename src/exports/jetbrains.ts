@@ -1,4 +1,4 @@
-import { writeFileSync, readFileSync, rmSync } from "fs";
+import fs from "fs";
 import { outdent } from "outdent";
 import path from 'path'
 import { run } from '#/utils/exec.ts'
@@ -32,12 +32,12 @@ export function createAction(ideBinPath: string) {
       }
     }`;
 
-    writeFileSync(scriptPath, script);
+    fs.writeFileSync(scriptPath, script);
     await run(ideBinPath, ["ideScript", scriptPath]);
-    const result = readFileSync(resultPath, "utf8");
+    const result = fs.readFileSync(resultPath, "utf8");
 
-    rmSync(scriptPath);
-    rmSync(resultPath);
+    fs.rmSync(scriptPath);
+    fs.rmSync(resultPath);
 
     return result == "1";
   };

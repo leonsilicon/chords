@@ -48,7 +48,7 @@ function generateSyntheticKeybinds(commands, keybinds) {
 }
 
 // src/exports/warp.ts
-import { readFileSync as readFileSync2, writeFileSync as writeFileSync2 } from "fs";
+import fs2 from "fs";
 
 // node_modules/.pnpm/balanced-match@4.0.4/node_modules/balanced-match/dist/esm/index.js
 var balanced = (a, b, str) => {
@@ -263,10 +263,10 @@ function expand_(str, max, isTop) {
 }
 
 // src/utils/file.ts
-import { readFileSync, writeFileSync, statSync } from "fs";
+import fs from "fs";
 function exists(path) {
   try {
-    statSync(path);
+    fs.statSync(path);
     return true;
   } catch (err) {
     return false;
@@ -2990,7 +2990,7 @@ async function createCommand(chords) {
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
   let keybindings = {};
   if (exists(keybindingsPath)) {
-    const yml = jsYaml.load(readFileSync2(keybindingsPath, "utf8"));
+    const yml = jsYaml.load(fs2.readFileSync(keybindingsPath, "utf8"));
     if (typeof yml === "object" && yml !== null) {
       keybindings = yml;
     }
@@ -2999,7 +2999,7 @@ async function createCommand(chords) {
     const keybind = normalizeKeybind(syntheticKeybinds[cmd]);
     keybindings[cmd] = keybind;
   }
-  writeFileSync2(keybindingsPath, `---
+  fs2.writeFileSync(keybindingsPath, `---
 ` + jsYaml.dump(keybindings));
   return function command(cmd) {
     const keybind = keybindings[cmd];

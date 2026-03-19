@@ -2,7 +2,7 @@
 name = "Paste (Setapp)"
 
 [config.js]
-init = '''
+module = '''
 local plist = require("plist")
 local mac_keycode = require('mac_keycode')
 local json = require('lunajson')

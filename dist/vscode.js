@@ -23,13 +23,13 @@ function run(cmd, args = []) {
 }
 
 // src/exports/vscode.ts
-import { writeFileSync as writeFileSync2, rmSync, statSync as statSync2 } from "fs";
+import fs2 from "fs";
 
 // src/utils/file.ts
-import { readFileSync, writeFileSync, statSync } from "fs";
+import fs from "fs";
 function exists(path) {
   try {
-    statSync(path);
+    fs.statSync(path);
     return true;
   } catch (err) {
     return false;
@@ -52,11 +52,9 @@ async function createCommand() {
       commandId: cmd,
       args: []
     });
-    writeFileSync2(requestPath, payload);
+    fs2.writeFileSync(requestPath, payload);
     tap("cmd+shift+f17");
-    if (statSync2(responsePath)) {
-      rmSync(responsePath);
-    }
+    fs2.rmSync(responsePath, { force: true });
     return true;
   };
 }

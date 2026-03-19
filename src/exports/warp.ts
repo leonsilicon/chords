@@ -1,5 +1,5 @@
 import { generateSyntheticKeybinds } from "#/utils/keybinds.ts";
-import { readFileSync, writeFileSync } from "fs";
+import fs from "fs";
 import { expand } from "brace-expansion";
 import { exists } from "#/utils/file.ts";
 import yaml from 'js-yaml';
@@ -47,7 +47,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
   const keybindingsPath = path.join(os.homedir(), ".warp", "keybindings.yaml");
   let keybindings: Record<string, string> = {};
   if (exists(keybindingsPath)) {
-    const yml = yaml.load(readFileSync(keybindingsPath, 'utf8'));
+    const yml = yaml.load(fs.readFileSync(keybindingsPath, 'utf8'));
     if (typeof yml === 'object' && yml !== null) {
       keybindings = yml as Record<string, string>;
     }
@@ -57,7 +57,7 @@ export async function createCommand(chords: ImportMeta['chords']) {
     const keybind = normalizeKeybind(syntheticKeybinds[cmd]!);
     keybindings[cmd] = keybind;
   }
-  writeFileSync(keybindingsPath, '---\n' + yaml.dump(keybindings));
+  fs.writeFileSync(keybindingsPath, '---\n' + yaml.dump(keybindings));
 
   return function command(cmd: string): boolean {
     const keybind = keybindings[cmd];
