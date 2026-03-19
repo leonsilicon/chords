@@ -492,8 +492,39 @@ function carbonModifiersToStrings(mask) {
   return result;
 }
 
+// node_modules/.pnpm/untildify@6.0.0/node_modules/untildify/index.js
+import os from "os";
+var homeDirectory;
+var currentUser;
+function untildify(pathWithTilde) {
+  if (typeof pathWithTilde !== "string") {
+    throw new TypeError(`Expected a string, got ${typeof pathWithTilde}`);
+  }
+  if (homeDirectory === undefined) {
+    homeDirectory = os.homedir();
+  }
+  if (homeDirectory && /^~(?=$|\/|\\)/.test(pathWithTilde)) {
+    return pathWithTilde.replace(/^~/, homeDirectory);
+  }
+  const userMatch = pathWithTilde.match(/^~([^/\\]+)(.*)/);
+  if (userMatch) {
+    if (currentUser === undefined) {
+      currentUser = os.userInfo().username;
+    }
+    if (currentUser) {
+      const username = userMatch[1];
+      const rest = userMatch[2];
+      if (username === currentUser) {
+        return homeDirectory + rest;
+      }
+    }
+  }
+  return pathWithTilde;
+}
+
 // src/exports/maketheweb.ts
-function makeShortcut(filepath) {
+function makeShortcut(tildepath) {
+  const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
   return function shortcut(property) {
     const data = parseBuffer(plist.buffer);

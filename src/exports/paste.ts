@@ -1,8 +1,10 @@
 import { parseBuffer } from "@ban12/bplist-parser";
 import fs from "fs";
 import { modifiersToStrings, keycodeToString } from "#/utils/mac-keycode.ts";
+import untildify from "untildify";
 
-export function makeShortcut(filepath: string) {
+export function makeShortcut(tildepath: string) {
+  const filepath = untildify(tildepath);
   const plist = fs.readFileSync(filepath);
   if (!plist) {
     return () => false;

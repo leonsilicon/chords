@@ -22,7 +22,6 @@ function normalizeKeybind(k: string): string {
   return k.replace(/\+/g, "-");
 }
 
-
 export async function createCommand(chords: ImportMeta['chords']) {
   const commands = extractCommands(chords);
 

@@ -20,6 +20,9 @@ importers:
       onetime:
         specifier: ^8.0.0
         version: 8.0.0
+      untildify:
+        specifier: ^6.0.0
+        version: 6.0.0
     devDependencies:
       '@ban12/bplist-parser':
         specifier: ^0.0.1
@@ -203,6 +206,10 @@ packages:
   undici-types@7.18.2:
     resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
 
+  untildify@6.0.0:
+    resolution: {integrity: sha512-sA2YTBvW2F463GvSbiZtso+dpuQV+B7xX9saX30SGrR5Fyx4AUcvA/zN+ShAkABKUKVyDaHECsJrHv5ToTuHsQ==}
+    engines: {node: '>=20'}
+
 snapshots:
 
   '@ban12/bplist-parser@0.0.1': {}
@@ -319,3 +326,5 @@ snapshots:
   typescript@5.9.3: {}
 
   undici-types@7.18.2: {}
+
+  untildify@6.0.0: {}
