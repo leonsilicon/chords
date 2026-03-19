@@ -1,22 +1,13 @@
 import { run } from "#/utils/exec.ts";
 import { writeFileSync, rmSync, statSync } from "fs";
 import { exists } from "#/utils/file.ts";
-import onetime from 'onetime'
 import path from 'path'
 
-const getUid = onetime(async () => {
-  console.log('Running id -u...')
-    const uid = await run("id", ["-u"]);
-  console.log('UID:', uid);
-    return uid
-})
-
 // TODO: make this work for Cursor
-export function createCommand() {
+export async function createCommand() {
+  const uid = await run("id", ["-u"]);
+
   return async function command(cmd: string) {
-    console.log('cmd:', cmd);
-    const uid = await getUid()
-    console.log('resolved UID:', uid);
     const tmp = process.env.TMPDIR ?? "/tmp";
     const dir = path.join(tmp, `vscode-command-server-${uid}`);
 

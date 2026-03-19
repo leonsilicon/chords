@@ -35,7 +35,6 @@ export function createAction(ideBinPath: string) {
     writeFileSync(scriptPath, script);
     await run(ideBinPath, ["ideScript", scriptPath]);
     const result = readFileSync(resultPath, "utf8");
-    console.log('JetBrains script result:', result);
 
     rmSync(scriptPath);
     rmSync(resultPath);
