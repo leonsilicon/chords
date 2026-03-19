@@ -1,5 +1,6 @@
 // src/exports/warp.ts
 import * as std2 from "qjs:std";
+import * as os from "qjs:os";
 
 // src/utils/file.ts
 import * as std from "qjs:std";
@@ -271,21 +272,6 @@ function normalizeKeybind(k) {
 function quote(str) {
   return `"${String(str).replace(/"/g, "\\\"")}"`;
 }
-function fileExists(path) {
-  const f = std2.open(path, "r");
-  if (!f)
-    return false;
-  f.close();
-  return true;
-}
-function writeFile2(path, contents) {
-  const f = std2.open(path, "w");
-  if (!f) {
-    throw new Error(`failed to open file for writing: ${path}`);
-  }
-  f.puts(contents);
-  f.close();
-}
 function createCommand(chords) {
   const commands = extractCommands(chords);
   const syntheticKeybinds = generateSyntheticKeybinds(commands, expandAll([
@@ -309,8 +295,9 @@ function createCommand(chords) {
     }
     const home = std2.getenv("HOME") || "~";
     const keybindingsPath = `${home}/.warp/keybindings.yaml`;
-    if (!fileExists(keybindingsPath)) {
-      writeFile2(keybindingsPath, "");
+    let [stat2, err] = os.stat(keybindingsPath);
+    if (err) {
+      std2.writeFile(keybindingsPath, "");
     }
     upsertBlock(keybindingsPath, keybindingsYaml, "# >>> chords:auto:start", "# >>> chords:auto:end");
   }
