@@ -4,11 +4,11 @@ type Modifier = {
 };
 
 const CARBON_MODIFIERS: Modifier[] = [
-  { string: "cmd", mask: 0x100000 },
-  { string: "shift", mask: 0x20000 },
-  { string: "alt", mask: 0x80000 },
-  { string: "ctrl", mask: 0x40000 },
-  { string: "caps_lock", mask: 0x10000 },
+  { string: "cmd", mask: 1 << 8 },
+  { string: "shift", mask: 1 << 9 },
+  { string: "alt", mask: 1 << 11 },
+  { string: "ctrl", mask: 1 << 12 },
+  { string: "caps_lock", mask: 1 << 10 },
 ];
 
 const MODERN_MODIFIERS: Modifier[] = [

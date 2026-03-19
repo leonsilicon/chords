@@ -297,11 +297,11 @@ import fs from "fs";
 
 // src/utils/mac-keycode.ts
 var CARBON_MODIFIERS = [
-  { string: "cmd", mask: 1048576 },
-  { string: "shift", mask: 131072 },
-  { string: "alt", mask: 524288 },
-  { string: "ctrl", mask: 262144 },
-  { string: "caps_lock", mask: 65536 }
+  { string: "cmd", mask: 1 << 8 },
+  { string: "shift", mask: 1 << 9 },
+  { string: "alt", mask: 1 << 11 },
+  { string: "ctrl", mask: 1 << 12 },
+  { string: "caps_lock", mask: 1 << 10 }
 ];
 var MODERN_MODIFIERS = [
   { string: "caps_lock", mask: 1 << 16 },
