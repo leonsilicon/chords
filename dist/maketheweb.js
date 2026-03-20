@@ -5155,9 +5155,13 @@ function getPlistShortcutUtils({
       if (code === null) {
         throw new Error(`Key "${key}" not found in key mapping`);
       }
+      const keymap = getKeyMapByCode(code);
+      if (!keymap?.code) {
+        throw new Error(`Key "${key}" with code "${code}" not found in key mapping`);
+      }
       const object = {
         [modifierMaskKey]: mask,
-        [keycodeKey]: getKeyMapByCode(code)
+        [keycodeKey]: keymap.code
       };
       if (fastIsEqual(root[property], object)) {
         continue;

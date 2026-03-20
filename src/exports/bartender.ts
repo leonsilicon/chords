@@ -37,13 +37,15 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     modifierMaskKey: 'carbonModifiers',
     keycodeKey: 'carbonKeyCode',
   })
-  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    // The 0th entry is the type ('item | 'shortcut')
-    property: chord.args![2] ?? chord.args![1]!,
-    // _Bartender_ stores shortcuts as strings
-    propertyType: 'string',
-    shortcut,
-  })))
+  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => {
+    const property = chord.args?.[2] ? `KeyboardShortcuts_${chord.args[2]}` : nullthrows(chord.args?.[1])
+    return {
+      property,
+      // _Bartender_ stores shortcuts as strings
+      propertyType: 'string',
+      shortcut,
+    }
+  }))
 
   // TODO: For each per-item shortcut, we also need to add it to per-item-hotkeys
   {

@@ -5123,9 +5123,13 @@ function getPlistShortcutUtils({
       if (code === null) {
         throw new Error(`Key "${key}" not found in key mapping`);
       }
+      const keymap = getKeyMapByCode(code);
+      if (!keymap?.code) {
+        throw new Error(`Key "${key}" with code "${code}" not found in key mapping`);
+      }
       const object = {
         [modifierMaskKey]: mask,
-        [keycodeKey]: getKeyMapByCode(code)
+        [keycodeKey]: keymap.code
       };
       if (fastIsEqual(root[property], object)) {
         continue;
@@ -5257,11 +5261,14 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     modifierMaskKey: "carbonModifiers",
     keycodeKey: "carbonKeyCode"
   });
-  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    property: chord.args[2] ?? chord.args[1],
-    propertyType: "string",
-    shortcut
-  })));
+  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => {
+    const property = chord.args?.[2] ? `KeyboardShortcuts_${chord.args[2]}` : nullthrows(chord.args?.[1]);
+    return {
+      property,
+      propertyType: "string",
+      shortcut
+    };
+  }));
   {
     const plist2 = readPlist();
     const root = plist2[0];
