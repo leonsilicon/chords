@@ -1422,6 +1422,8 @@ function exists(path) {
 
 // src/exports/bartender.ts
 var import_utils_noop = __toESM(require_lib(), 1);
+import { Buffer as Buffer3 } from "buffer";
+import fs3 from "fs";
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
@@ -1442,9 +1444,34 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     propertyType: "string",
     shortcut
   })));
+  {
+    const plist2 = readPlist();
+    const root = plist2[0];
+    const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
+    const perItemHotkeyList = JSON.parse(rawValue);
+    for (const { chord } of globalHotkeys) {
+      const appBundleIdentifier = chord.args?.[1];
+      const keyName = chord.args?.[2];
+      const appName = chord.args?.[3];
+      if (!appBundleIdentifier || !keyName || !appName) {
+        continue;
+      }
+      if (perItemHotkeyList.some((item2) => item2.keyName === keyName)) {
+        continue;
+      }
+      const item = {
+        appName,
+        appBundleIdentifier,
+        keyName
+      };
+      perItemHotkeyList.push(item);
+    }
+    root["per-item-hotkeys"] = new Uint8Array(Buffer3.from(JSON.stringify(perItemHotkeyList), "utf8"));
+    fs3.writeFileSync(plistPath, bplist(plist2));
+  }
   const plistHandler = buildHandler();
   const plist = readPlist();
-  function itemHandler(itemId) {
+  function itemHandler(itemId, keyName, appName) {
     const rawValue = plist[0]?.["per-item-hotkeys"];
     const value = JSON.parse(plistValueToString(rawValue));
     const item = value.find((item2) => item2.appBundleIdentifier === itemId);
@@ -1457,8 +1484,14 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   function shortcutHandler(property) {
     return plistHandler(property);
   }
-  function handler(type, itemIdOrProperty) {
-    return type === "item" ? itemHandler(itemIdOrProperty) : shortcutHandler(itemIdOrProperty);
+  function handler(...args) {
+    if (args[0] === "shortcut") {
+      const [type, property] = args;
+      return shortcutHandler(property);
+    } else {
+      const [type, appBundleIdentifier, keyName, appName] = args;
+      return itemHandler(appBundleIdentifier, keyName, appName);
+    }
   }
   return handler;
 };
