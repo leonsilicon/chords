@@ -5542,8 +5542,8 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist2 = parse(fs.readFileSync(plistPath).buffer);
-    return plist2;
+    const plist = parse(fs.readFileSync(plistPath).buffer);
+    return plist;
   }
   function writeShortcuts(writes) {
     let plistNeedsUpdates = false;
@@ -5582,9 +5582,9 @@ function getPlistShortcutUtils({
     return plistNeedsUpdates;
   }
   function buildHandler() {
-    const plist2 = readPlist();
+    const plist = readPlist();
     return function handler(property) {
-      const rawValue = plist2?.[property];
+      const rawValue = plist?.[property];
       if (!rawValue) {
         return false;
       }
@@ -5714,8 +5714,8 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     };
   }));
   {
-    const root = readPlist();
-    const rawValue = plistValueToString(root["per-item-hotkeys"]);
+    const plist = readPlist();
+    const rawValue = plistValueToString(plist["per-item-hotkeys"]);
     const result = import_json_parse_safe2.default(rawValue);
     let perItemHotkeyList = [];
     if ("error" in result) {
@@ -5740,7 +5740,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
       };
       perItemHotkeyList.push(item);
     }
-    root["per-item-hotkeys"] = new Uint8Array(Buffer2.from(JSON.stringify(perItemHotkeyList), "utf8"));
+    plist["per-item-hotkeys"] = new Uint8Array(Buffer2.from(JSON.stringify(perItemHotkeyList), "utf8"));
     fs3.writeFileSync(plistPath, serialize(plist));
   }
   const plistHandler = buildHandler();
