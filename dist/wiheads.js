@@ -32,6 +32,630 @@ var __toESM = (mod, isNodeMode, target) => {
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
 var __require = /* @__PURE__ */ createRequire(import.meta.url);
 
+// node_modules/.pnpm/stream-buffers@2.2.0/node_modules/stream-buffers/lib/constants.js
+var require_constants = __commonJS((exports, module) => {
+  module.exports = {
+    DEFAULT_INITIAL_SIZE: 8 * 1024,
+    DEFAULT_INCREMENT_AMOUNT: 8 * 1024,
+    DEFAULT_FREQUENCY: 1,
+    DEFAULT_CHUNK_SIZE: 1024
+  };
+});
+
+// node_modules/.pnpm/stream-buffers@2.2.0/node_modules/stream-buffers/lib/readable_streambuffer.js
+var require_readable_streambuffer = __commonJS((exports, module) => {
+  var stream = __require("stream");
+  var constants = require_constants();
+  var util = __require("util");
+  var ReadableStreamBuffer = module.exports = function(opts) {
+    var that = this;
+    stream.Stream.call(this);
+    opts = opts || {};
+    var frequency = opts.hasOwnProperty("frequency") ? opts.frequency : constants.DEFAULT_FREQUENCY;
+    var chunkSize = opts.chunkSize || constants.DEFAULT_CHUNK_SIZE;
+    var initialSize = opts.initialSize || constants.DEFAULT_INITIAL_SIZE;
+    var incrementAmount = opts.incrementAmount || constants.DEFAULT_INCREMENT_AMOUNT;
+    var size = 0;
+    var buffer = new Buffer(initialSize);
+    var encoding = null;
+    this.readable = true;
+    this.writable = false;
+    var sendData = function() {
+      var amount = Math.min(chunkSize, size);
+      if (amount > 0) {
+        var chunk = null;
+        if (encoding) {
+          chunk = buffer.toString(encoding, 0, amount);
+        } else {
+          chunk = new Buffer(amount);
+          buffer.copy(chunk, 0, 0, amount);
+        }
+        that.emit("data", chunk);
+        if (amount < buffer.length)
+          buffer.copy(buffer, 0, amount, size);
+        size -= amount;
+      }
+      if (size === 0 && !that.readable) {
+        that.emit("end");
+        that.emit("close");
+        if (sendData && sendData.interval) {
+          clearInterval(sendData.interval);
+          sendData.interval = null;
+        }
+      }
+    };
+    this.size = function() {
+      return size;
+    };
+    this.maxSize = function() {
+      return buffer.length;
+    };
+    var increaseBufferIfNecessary = function(incomingDataSize) {
+      if (buffer.length - size < incomingDataSize) {
+        var factor = Math.ceil((incomingDataSize - (buffer.length - size)) / incrementAmount);
+        var newBuffer = new Buffer(buffer.length + incrementAmount * factor);
+        buffer.copy(newBuffer, 0, 0, size);
+        buffer = newBuffer;
+      }
+    };
+    this.put = function(data, encoding2) {
+      if (!that.readable)
+        return;
+      var wasEmpty = size === 0;
+      if (Buffer.isBuffer(data)) {
+        increaseBufferIfNecessary(data.length);
+        data.copy(buffer, size, 0);
+        size += data.length;
+      } else {
+        data = data + "";
+        var dataSizeInBytes = Buffer.byteLength(data);
+        increaseBufferIfNecessary(dataSizeInBytes);
+        buffer.write(data, size, encoding2 || "utf8");
+        size += dataSizeInBytes;
+      }
+      if (wasEmpty && size > 0) {
+        this.emit("readable");
+      }
+      if (!this.isPaused && !frequency) {
+        while (size > 0) {
+          sendData();
+        }
+      }
+    };
+    this.pause = function() {
+      this.isPaused = true;
+      if (sendData && sendData.interval) {
+        clearInterval(sendData.interval);
+        delete sendData.interval;
+      }
+    };
+    this.resume = function() {
+      this.isPaused = false;
+      if (sendData && !sendData.interval && frequency > 0) {
+        sendData.interval = setInterval(sendData, frequency);
+      }
+    };
+    this.destroy = function() {
+      that.emit("end");
+      if (sendData.interval)
+        clearInterval(sendData.interval);
+      sendData = null;
+      that.readable = false;
+      that.emit("close");
+    };
+    this.destroySoon = function() {
+      that.readable = false;
+      if (!sendData.interval) {
+        that.emit("end");
+        that.emit("close");
+      }
+    };
+    this.setEncoding = function(_encoding) {
+      encoding = _encoding;
+    };
+    this.resume();
+  };
+  util.inherits(ReadableStreamBuffer, stream.Stream);
+});
+
+// node_modules/.pnpm/stream-buffers@2.2.0/node_modules/stream-buffers/lib/writable_streambuffer.js
+var require_writable_streambuffer = __commonJS((exports, module) => {
+  var util = __require("util");
+  var stream = __require("stream");
+  var constants = require_constants();
+  var WritableStreamBuffer = module.exports = function(opts) {
+    var that = this;
+    stream.Stream.call(this);
+    opts = opts || {};
+    var initialSize = opts.initialSize || constants.DEFAULT_INITIAL_SIZE;
+    var incrementAmount = opts.incrementAmount || constants.DEFAULT_INCREMENT_AMOUNT;
+    var buffer = new Buffer(initialSize);
+    var size = 0;
+    this.writable = true;
+    this.readable = false;
+    this.size = function() {
+      return size;
+    };
+    this.maxSize = function() {
+      return buffer.length;
+    };
+    this.getContents = function(length) {
+      if (!size)
+        return false;
+      var data = new Buffer(Math.min(length || size, size));
+      buffer.copy(data, 0, 0, data.length);
+      if (data.length < size)
+        buffer.copy(buffer, 0, data.length);
+      size -= data.length;
+      return data;
+    };
+    this.getContentsAsString = function(encoding, length) {
+      if (!size)
+        return false;
+      var data = buffer.toString(encoding || "utf8", 0, Math.min(length || size, size));
+      var dataLength = Buffer.byteLength(data);
+      if (dataLength < size)
+        buffer.copy(buffer, 0, dataLength);
+      size -= dataLength;
+      return data;
+    };
+    var increaseBufferIfNecessary = function(incomingDataSize) {
+      if (buffer.length - size < incomingDataSize) {
+        var factor = Math.ceil((incomingDataSize - (buffer.length - size)) / incrementAmount);
+        var newBuffer = new Buffer(buffer.length + incrementAmount * factor);
+        buffer.copy(newBuffer, 0, 0, size);
+        buffer = newBuffer;
+      }
+    };
+    this.write = function(data, encoding, callback) {
+      if (!that.writable)
+        return;
+      if (Buffer.isBuffer(data)) {
+        increaseBufferIfNecessary(data.length);
+        data.copy(buffer, size, 0);
+        size += data.length;
+      } else {
+        data = data + "";
+        increaseBufferIfNecessary(Buffer.byteLength(data));
+        buffer.write(data, size, encoding || "utf8");
+        size += Buffer.byteLength(data);
+      }
+      if (typeof callback === "function") {
+        callback();
+      }
+    };
+    this.end = function() {
+      var args = Array.prototype.slice.apply(arguments);
+      if (args.length)
+        that.write.apply(that, args);
+      that.emit("finish");
+      that.destroy();
+    };
+    this.destroySoon = this.destroy = function() {
+      that.writable = false;
+      that.emit("close");
+    };
+  };
+  util.inherits(WritableStreamBuffer, stream.Stream);
+});
+
+// node_modules/.pnpm/stream-buffers@2.2.0/node_modules/stream-buffers/lib/streambuffer.js
+var require_streambuffer = __commonJS((exports, module) => {
+  module.exports = require_constants();
+  module.exports.ReadableStreamBuffer = require_readable_streambuffer();
+  module.exports.WritableStreamBuffer = require_writable_streambuffer();
+});
+
+// node_modules/.pnpm/bplist-creator@0.1.1/node_modules/bplist-creator/bplistCreator.js
+var require_bplistCreator = __commonJS((exports, module) => {
+  var streamBuffers = require_streambuffer();
+  var debug = false;
+  function Real(value) {
+    this.value = value;
+  }
+  module.exports = function(dicts) {
+    var buffer = new streamBuffers.WritableStreamBuffer;
+    buffer.write(Buffer.from("bplist00"));
+    if (debug) {
+      console.log("create", __require("util").inspect(dicts, false, 10));
+    }
+    if (dicts instanceof Array && dicts.length === 1) {
+      dicts = dicts[0];
+    }
+    var entries = toEntries(dicts);
+    if (debug) {
+      console.log("entries", entries);
+    }
+    var idSizeInBytes = computeIdSizeInBytes(entries.length);
+    var offsets = [];
+    var offsetSizeInBytes;
+    var offsetTableOffset;
+    updateEntryIds();
+    entries.forEach(function(entry, entryIdx) {
+      offsets[entryIdx] = buffer.size();
+      if (!entry) {
+        buffer.write(0);
+      } else {
+        write(entry);
+      }
+    });
+    writeOffsetTable();
+    writeTrailer();
+    return buffer.getContents();
+    function updateEntryIds() {
+      var strings = {};
+      var entryId = 0;
+      entries.forEach(function(entry) {
+        if (entry.id) {
+          return;
+        }
+        if (entry.type === "string") {
+          if (!entry.bplistOverride && strings.hasOwnProperty(entry.value)) {
+            entry.type = "stringref";
+            entry.id = strings[entry.value];
+          } else {
+            strings[entry.value] = entry.id = entryId++;
+          }
+        } else {
+          entry.id = entryId++;
+        }
+      });
+      entries = entries.filter(function(entry) {
+        return entry.type !== "stringref";
+      });
+    }
+    function writeTrailer() {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer");
+      }
+      buffer.write(Buffer.from([0, 0, 0, 0, 0, 0]));
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer(offsetSizeInBytes):", offsetSizeInBytes);
+      }
+      writeByte(offsetSizeInBytes);
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer(offsetSizeInBytes):", idSizeInBytes);
+      }
+      writeByte(idSizeInBytes);
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer(number of objects):", entries.length);
+      }
+      writeLong(entries.length);
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer(top object)");
+      }
+      writeLong(0);
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeTrailer(offset table offset):", offsetTableOffset);
+      }
+      writeLong(offsetTableOffset);
+    }
+    function writeOffsetTable() {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeOffsetTable");
+      }
+      offsetTableOffset = buffer.size();
+      offsetSizeInBytes = computeOffsetSizeInBytes(offsetTableOffset);
+      offsets.forEach(function(offset) {
+        writeBytes(offset, offsetSizeInBytes);
+      });
+    }
+    function write(entry) {
+      switch (entry.type) {
+        case "dict":
+          writeDict(entry);
+          break;
+        case "number":
+        case "double":
+          writeNumber(entry);
+          break;
+        case "UID":
+          writeUID(entry);
+          break;
+        case "array":
+          writeArray(entry);
+          break;
+        case "boolean":
+          writeBoolean(entry);
+          break;
+        case "string":
+        case "string-utf16":
+          writeString(entry);
+          break;
+        case "date":
+          writeDate(entry);
+          break;
+        case "data":
+          writeData(entry);
+          break;
+        default:
+          throw new Error("unhandled entry type: " + entry.type);
+      }
+    }
+    function writeDate(entry) {
+      writeByte(51);
+      var date = Date.parse(entry.value) / 1000 - 978307200;
+      writeDouble(date);
+    }
+    function writeDict(entry) {
+      if (debug) {
+        var keysStr = entry.entryKeys.map(function(k) {
+          return k.id;
+        });
+        var valsStr = entry.entryValues.map(function(k) {
+          return k.id;
+        });
+        console.log("0x" + buffer.size().toString(16), "writeDict", "(id: " + entry.id + ")", "(keys: " + keysStr + ")", "(values: " + valsStr + ")");
+      }
+      writeIntHeader(13, entry.entryKeys.length);
+      entry.entryKeys.forEach(function(entry2) {
+        writeID(entry2.id);
+      });
+      entry.entryValues.forEach(function(entry2) {
+        writeID(entry2.id);
+      });
+    }
+    function writeNumber(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeNumber", entry.value, " (type: " + entry.type + ")", "(id: " + entry.id + ")");
+      }
+      if (typeof entry.value === "bigint") {
+        var width = 16;
+        var hex = entry.value.toString(width);
+        var buf = Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
+        writeByte(20);
+        buffer.write(buf);
+      } else if (entry.type !== "double" && parseFloat(entry.value).toFixed() == entry.value) {
+        if (entry.value < 0) {
+          writeByte(19);
+          writeBytes(entry.value, 8, true);
+        } else if (entry.value <= 255) {
+          writeByte(16);
+          writeBytes(entry.value, 1);
+        } else if (entry.value <= 65535) {
+          writeByte(17);
+          writeBytes(entry.value, 2);
+        } else if (entry.value <= 4294967295) {
+          writeByte(18);
+          writeBytes(entry.value, 4);
+        } else {
+          writeByte(19);
+          writeBytes(entry.value, 8);
+        }
+      } else {
+        writeByte(35);
+        writeDouble(entry.value);
+      }
+    }
+    function writeUID(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeUID", entry.value, " (type: " + entry.type + ")", "(id: " + entry.id + ")");
+      }
+      writeIntHeader(8, 0);
+      writeID(entry.value);
+    }
+    function writeArray(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeArray (length: " + entry.entries.length + ")", "(id: " + entry.id + ")");
+      }
+      writeIntHeader(10, entry.entries.length);
+      entry.entries.forEach(function(e) {
+        writeID(e.id);
+      });
+    }
+    function writeBoolean(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeBoolean", entry.value, "(id: " + entry.id + ")");
+      }
+      writeByte(entry.value ? 9 : 8);
+    }
+    function writeString(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeString", entry.value, "(id: " + entry.id + ")");
+      }
+      if (entry.type === "string-utf16" || mustBeUtf16(entry.value)) {
+        var utf16 = Buffer.from(entry.value, "ucs2");
+        writeIntHeader(6, utf16.length / 2);
+        for (var i = 0;i < utf16.length; i += 2) {
+          var t = utf16[i + 0];
+          utf16[i + 0] = utf16[i + 1];
+          utf16[i + 1] = t;
+        }
+        buffer.write(utf16);
+      } else {
+        var utf8 = Buffer.from(entry.value, "ascii");
+        writeIntHeader(5, utf8.length);
+        buffer.write(utf8);
+      }
+    }
+    function writeData(entry) {
+      if (debug) {
+        console.log("0x" + buffer.size().toString(16), "writeData", entry.value, "(id: " + entry.id + ")");
+      }
+      writeIntHeader(4, entry.value.length);
+      buffer.write(entry.value);
+    }
+    function writeLong(l) {
+      writeBytes(l, 8);
+    }
+    function writeByte(b) {
+      buffer.write(Buffer.from([b]));
+    }
+    function writeDouble(v) {
+      var buf = Buffer.alloc(8);
+      buf.writeDoubleBE(v, 0);
+      buffer.write(buf);
+    }
+    function writeIntHeader(kind, value) {
+      if (value < 15) {
+        writeByte((kind << 4) + value);
+      } else if (value < 256) {
+        writeByte((kind << 4) + 15);
+        writeByte(16);
+        writeBytes(value, 1);
+      } else if (value < 65536) {
+        writeByte((kind << 4) + 15);
+        writeByte(17);
+        writeBytes(value, 2);
+      } else {
+        writeByte((kind << 4) + 15);
+        writeByte(18);
+        writeBytes(value, 4);
+      }
+    }
+    function writeID(id) {
+      writeBytes(id, idSizeInBytes);
+    }
+    function writeBytes(value, bytes, is_signedint) {
+      var buf = Buffer.alloc(bytes);
+      var z = 0;
+      while (bytes > 4) {
+        buf[z++] = is_signedint ? 255 : 0;
+        bytes--;
+      }
+      for (var i = bytes - 1;i >= 0; i--) {
+        buf[z++] = value >> 8 * i;
+      }
+      buffer.write(buf);
+    }
+    function mustBeUtf16(string) {
+      return Buffer.byteLength(string, "utf8") != string.length;
+    }
+  };
+  function toEntries(dicts) {
+    if (dicts.bplistOverride) {
+      return [dicts];
+    }
+    if (dicts instanceof Array) {
+      return toEntriesArray(dicts);
+    } else if (dicts instanceof Buffer) {
+      return [
+        {
+          type: "data",
+          value: dicts
+        }
+      ];
+    } else if (dicts instanceof Real) {
+      return [
+        {
+          type: "double",
+          value: dicts.value
+        }
+      ];
+    } else if (typeof dicts === "object") {
+      if (dicts instanceof Date) {
+        return [
+          {
+            type: "date",
+            value: dicts
+          }
+        ];
+      } else if (Object.keys(dicts).length == 1 && typeof dicts.UID === "number") {
+        return [
+          {
+            type: "UID",
+            value: dicts.UID
+          }
+        ];
+      } else {
+        return toEntriesObject(dicts);
+      }
+    } else if (typeof dicts === "string") {
+      return [
+        {
+          type: "string",
+          value: dicts
+        }
+      ];
+    } else if (typeof dicts === "number") {
+      return [
+        {
+          type: "number",
+          value: dicts
+        }
+      ];
+    } else if (typeof dicts === "boolean") {
+      return [
+        {
+          type: "boolean",
+          value: dicts
+        }
+      ];
+    } else if (typeof dicts === "bigint") {
+      return [
+        {
+          type: "number",
+          value: dicts
+        }
+      ];
+    } else {
+      throw new Error("unhandled entry: " + dicts);
+    }
+  }
+  function toEntriesArray(arr) {
+    if (debug) {
+      console.log("toEntriesArray");
+    }
+    var results = [
+      {
+        type: "array",
+        entries: []
+      }
+    ];
+    arr.forEach(function(v) {
+      var entry = toEntries(v);
+      results[0].entries.push(entry[0]);
+      results = results.concat(entry);
+    });
+    return results;
+  }
+  function toEntriesObject(dict) {
+    if (debug) {
+      console.log("toEntriesObject");
+    }
+    var results = [
+      {
+        type: "dict",
+        entryKeys: [],
+        entryValues: []
+      }
+    ];
+    Object.keys(dict).forEach(function(key) {
+      var entryKey = toEntries(key);
+      results[0].entryKeys.push(entryKey[0]);
+      results = results.concat(entryKey[0]);
+    });
+    Object.keys(dict).forEach(function(key) {
+      var entryValue = toEntries(dict[key]);
+      results[0].entryValues.push(entryValue[0]);
+      results = results.concat(entryValue);
+    });
+    return results;
+  }
+  function computeOffsetSizeInBytes(maxOffset) {
+    if (maxOffset < 256) {
+      return 1;
+    }
+    if (maxOffset < 65536) {
+      return 2;
+    }
+    if (maxOffset < 4294967296) {
+      return 4;
+    }
+    return 8;
+  }
+  function computeIdSizeInBytes(numberOfIds) {
+    if (numberOfIds < 256) {
+      return 1;
+    }
+    if (numberOfIds < 65536) {
+      return 2;
+    }
+    return 4;
+  }
+  module.exports.Real = Real;
+});
+
 // node_modules/.pnpm/big-integer@1.6.52/node_modules/big-integer/BigInteger.js
 var require_BigInteger = __commonJS((exports, module) => {
   var bigInt = function(undefined2) {
@@ -1381,87 +2005,36 @@ var require_BigInteger = __commonJS((exports, module) => {
   }
 });
 
-// node_modules/.pnpm/bplist-parser@0.3.2/node_modules/bplist-parser/bplistParser.js
+// node_modules/.pnpm/bplist-universal@1.1.0/node_modules/bplist-universal/dist/bplistParser.js
 var require_bplistParser = __commonJS((exports) => {
-  var fs2 = __require("fs");
-  var bigInt = require_BigInteger();
-  var debug = false;
-  exports.maxObjectSize = 100 * 1000 * 1000;
-  exports.maxObjectCount = 32768;
+  var __importDefault = exports && exports.__importDefault || function(mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
+  Object.defineProperty(exports, "__esModule", { value: true });
+  exports.parseBuffer = undefined;
+  var big_integer_1 = __importDefault(require_BigInteger());
+  var defaultMaxObjectSize = 100 * 1000 * 1000;
+  var defaultMaxObjectCount = 32768;
   var EPOCH = 978307200000;
-  var UID = exports.UID = function(id) {
-    this.UID = id;
-  };
-  exports.parseFile = function(fileNameOrBuffer, callback) {
-    return new Promise(function(resolve, reject) {
-      function tryParseBuffer(buffer) {
-        let err = null;
-        let result;
-        try {
-          result = parseBuffer(buffer);
-          resolve(result);
-        } catch (ex) {
-          err = ex;
-          reject(err);
-        } finally {
-          if (callback)
-            callback(err, result);
-        }
-      }
-      if (Buffer.isBuffer(fileNameOrBuffer)) {
-        return tryParseBuffer(fileNameOrBuffer);
-      }
-      fs2.readFile(fileNameOrBuffer, function(err, data) {
-        if (err) {
-          reject(err);
-          return callback(err);
-        }
-        tryParseBuffer(data);
-      });
-    });
-  };
-  exports.parseFileSync = function(fileNameOrBuffer) {
-    if (!Buffer.isBuffer(fileNameOrBuffer)) {
-      fileNameOrBuffer = fs2.readFileSync(fileNameOrBuffer);
-    }
-    return parseBuffer(fileNameOrBuffer);
-  };
-  var parseBuffer = exports.parseBuffer = function(buffer) {
-    const header = buffer.slice(0, "bplist".length).toString("utf8");
+  var parseBuffer = function(buffer, opts) {
+    const { maxObjectSize = defaultMaxObjectSize, maxObjectCount = defaultMaxObjectCount } = opts || {};
+    const header = buffer.subarray(0, "bplist".length).toString("utf8");
     if (header !== "bplist") {
       throw new Error("Invalid binary plist. Expected 'bplist' at offset 0.");
     }
-    const trailer = buffer.slice(buffer.length - 32, buffer.length);
+    const trailer = buffer.subarray(buffer.length - 32, buffer.length);
     const offsetSize = trailer.readUInt8(6);
-    if (debug) {
-      console.log("offsetSize: " + offsetSize);
-    }
     const objectRefSize = trailer.readUInt8(7);
-    if (debug) {
-      console.log("objectRefSize: " + objectRefSize);
-    }
     const numObjects = readUInt64BE(trailer, 8);
-    if (debug) {
-      console.log("numObjects: " + numObjects);
-    }
     const topObject = readUInt64BE(trailer, 16);
-    if (debug) {
-      console.log("topObject: " + topObject);
-    }
     const offsetTableOffset = readUInt64BE(trailer, 24);
-    if (debug) {
-      console.log("offsetTableOffset: " + offsetTableOffset);
-    }
-    if (numObjects > exports.maxObjectCount) {
+    if (numObjects > maxObjectCount) {
       throw new Error("maxObjectCount exceeded");
     }
     const offsetTable = [];
     for (let i = 0;i < numObjects; i++) {
-      const offsetBytes = buffer.slice(offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
+      const offsetBytes = buffer.subarray(offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
       offsetTable[i] = readUInt(offsetBytes, 0);
-      if (debug) {
-        console.log("Offset for Object #" + i + " is " + offsetTable[i] + " [" + offsetTable[i].toString(16) + "]");
-      }
     }
     function parseObject(tableOffset) {
       const offset = offsetTable[tableOffset];
@@ -1484,7 +2057,7 @@ var require_bplistParser = __commonJS((exports) => {
         case 5:
           return parsePlistString();
         case 6:
-          return parsePlistString(true);
+          return parsePlistString(1);
         case 10:
           return parseArray();
         case 13:
@@ -1522,11 +2095,11 @@ var require_bplistParser = __commonJS((exports) => {
       }
       function parseInteger() {
         const length = Math.pow(2, objInfo);
-        if (length < exports.maxObjectSize) {
-          const data = buffer.slice(offset + 1, offset + 1 + length);
+        if (length < maxObjectSize) {
+          const data = buffer.subarray(offset + 1, offset + 1 + length);
           if (length === 16) {
             const str = bufferToHexString(data);
-            return bigInt(str, 16);
+            return (0, big_integer_1.default)(str, 16);
           }
           return data.reduce((acc, curr) => {
             acc <<= 8;
@@ -1534,34 +2107,36 @@ var require_bplistParser = __commonJS((exports) => {
             return acc;
           });
         }
-        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+        throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
       }
       function parseUID() {
         const length = objInfo + 1;
-        if (length < exports.maxObjectSize) {
-          return new UID(readUInt(buffer.slice(offset + 1, offset + 1 + length)));
+        if (length < maxObjectSize) {
+          const uint = readUInt(buffer.subarray(offset + 1, offset + 1 + length));
+          return { UID: uint };
         }
-        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+        throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
       }
       function parseReal() {
         const length = Math.pow(2, objInfo);
-        if (length < exports.maxObjectSize) {
-          const realBuffer = buffer.slice(offset + 1, offset + 1 + length);
+        if (length < maxObjectSize) {
+          const realBuffer = buffer.subarray(offset + 1, offset + 1 + length);
           if (length === 4) {
             return realBuffer.readFloatBE(0);
           }
           if (length === 8) {
             return realBuffer.readDoubleBE(0);
           }
+          throw new Error("Unhandled real length " + length);
         } else {
-          throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+          throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
         }
       }
       function parseDate() {
         if (objInfo != 3) {
           console.error("Unknown date type :" + objInfo + ". Parsing anyway...");
         }
-        const dateBuffer = buffer.slice(offset + 1, offset + 9);
+        const dateBuffer = buffer.subarray(offset + 1, offset + 9);
         return new Date(EPOCH + 1000 * dateBuffer.readDoubleBE(0));
       }
       function parseData() {
@@ -1577,18 +2152,17 @@ var require_bplistParser = __commonJS((exports) => {
           const intLength = Math.pow(2, intInfo);
           dataoffset = 2 + intLength;
           if (intLength < 3) {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           } else {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           }
         }
-        if (length < exports.maxObjectSize) {
-          return buffer.slice(offset + dataoffset, offset + dataoffset + length);
+        if (length < maxObjectSize) {
+          return buffer.subarray(offset + dataoffset, offset + dataoffset + length);
         }
-        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+        throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
       }
-      function parsePlistString(isUtf16) {
-        isUtf16 = isUtf16 || 0;
+      function parsePlistString(isUtf16 = 0) {
         let enc = "utf8";
         let length = objInfo;
         let stroffset = 1;
@@ -1602,21 +2176,21 @@ var require_bplistParser = __commonJS((exports) => {
           const intLength = Math.pow(2, intInfo);
           stroffset = 2 + intLength;
           if (intLength < 3) {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           } else {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           }
         }
         length *= isUtf16 + 1;
-        if (length < exports.maxObjectSize) {
-          let plistString = Buffer.from(buffer.slice(offset + stroffset, offset + stroffset + length));
+        if (length < maxObjectSize) {
+          let plistString = Buffer.from(buffer.subarray(offset + stroffset, offset + stroffset + length));
           if (isUtf16) {
             plistString = swapBytes(plistString);
             enc = "ucs2";
           }
           return plistString.toString(enc);
         }
-        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+        throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
       }
       function parseArray() {
         let length = objInfo;
@@ -1631,17 +2205,17 @@ var require_bplistParser = __commonJS((exports) => {
           const intLength = Math.pow(2, intInfo);
           arrayoffset = 2 + intLength;
           if (intLength < 3) {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           } else {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           }
         }
-        if (length * objectRefSize > exports.maxObjectSize) {
+        if (length * objectRefSize > maxObjectSize) {
           throw new Error("Too little heap space available!");
         }
         const array = [];
         for (let i = 0;i < length; i++) {
-          const objRef = readUInt(buffer.slice(offset + arrayoffset + i * objectRefSize, offset + arrayoffset + (i + 1) * objectRefSize));
+          const objRef = readUInt(buffer.subarray(offset + arrayoffset + i * objectRefSize, offset + arrayoffset + (i + 1) * objectRefSize));
           array[i] = parseObject(objRef);
         }
         return array;
@@ -1659,26 +2233,20 @@ var require_bplistParser = __commonJS((exports) => {
           const intLength = Math.pow(2, intInfo);
           dictoffset = 2 + intLength;
           if (intLength < 3) {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           } else {
-            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+            length = readUInt(buffer.subarray(offset + 2, offset + 2 + intLength));
           }
         }
-        if (length * 2 * objectRefSize > exports.maxObjectSize) {
+        if (length * 2 * objectRefSize > maxObjectSize) {
           throw new Error("Too little heap space available!");
-        }
-        if (debug) {
-          console.log("Parsing dictionary #" + tableOffset);
         }
         const dict = {};
         for (let i = 0;i < length; i++) {
-          const keyRef = readUInt(buffer.slice(offset + dictoffset + i * objectRefSize, offset + dictoffset + (i + 1) * objectRefSize));
-          const valRef = readUInt(buffer.slice(offset + dictoffset + length * objectRefSize + i * objectRefSize, offset + dictoffset + length * objectRefSize + (i + 1) * objectRefSize));
+          const keyRef = readUInt(buffer.subarray(offset + dictoffset + i * objectRefSize, offset + dictoffset + (i + 1) * objectRefSize));
+          const valRef = readUInt(buffer.subarray(offset + dictoffset + length * objectRefSize + i * objectRefSize, offset + dictoffset + length * objectRefSize + (i + 1) * objectRefSize));
           const key = parseObject(keyRef);
           const val = parseObject(valRef);
-          if (debug) {
-            console.log("  DICT #" + tableOffset + ": Mapped " + key + " to " + val);
-          }
           dict[key] = val;
         }
         return dict;
@@ -1686,7 +2254,9 @@ var require_bplistParser = __commonJS((exports) => {
     }
     return [parseObject(topObject)];
   };
-  function readUInt(buffer, start) {
+  exports.parseBuffer = parseBuffer;
+  exports.default = exports.parseBuffer;
+  function readUInt(buffer, start = 0) {
     start = start || 0;
     let l = 0;
     for (let i = start;i < buffer.length; i++) {
@@ -1696,8 +2266,8 @@ var require_bplistParser = __commonJS((exports) => {
     return l;
   }
   function readUInt64BE(buffer, start) {
-    const data = buffer.slice(start, start + 8);
-    return data.readUInt32BE(4, 8);
+    const data = buffer.subarray(start, start + 8);
+    return data.readUInt32BE(4);
   }
   function swapBytes(buffer) {
     const len = buffer.length;
@@ -5832,396 +6402,21 @@ function keystringsToCarbonModifierMask(keystrings) {
 // src/utils/plist.ts
 import { tap } from "chordsapp";
 
-// node_modules/.pnpm/bplist-creator-pure@0.2.2/node_modules/bplist-creator-pure/index.js
-class WritableStreamBuffer {
-  constructor() {
-    this._chunks = [];
-    this._size = 0;
-  }
-  write(chunk, encoding) {
-    let buf;
-    if (typeof chunk === "number") {
-      buf = Buffer.from([chunk & 255]);
-    } else if (Buffer.isBuffer(chunk)) {
-      buf = Buffer.from(chunk);
-    } else if (chunk instanceof Uint8Array) {
-      buf = Buffer.from(chunk);
-    } else if (typeof chunk === "string") {
-      buf = Buffer.from(chunk, encoding);
-    } else {
-      throw new TypeError("Unsupported chunk type passed to write()");
-    }
-    this._chunks.push(buf);
-    this._size += buf.length;
-    return true;
-  }
-  size() {
-    return this._size;
-  }
-  getContents() {
-    return Buffer.concat(this._chunks, this._size);
-  }
-}
-function Real(value) {
-  this.value = value;
-}
-function bplist(dicts) {
-  var buffer = new WritableStreamBuffer;
-  buffer.write(Buffer.from("bplist00"));
-  if (dicts instanceof Array && dicts.length === 1) {
-    dicts = dicts[0];
-  }
-  var entries = toEntries(dicts);
-  var idSizeInBytes = computeIdSizeInBytes(entries.length);
-  var offsets = [];
-  var offsetSizeInBytes;
-  var offsetTableOffset;
-  updateEntryIds();
-  entries.forEach(function(entry, entryIdx) {
-    offsets[entryIdx] = buffer.size();
-    if (!entry) {
-      buffer.write(0);
-    } else {
-      write(entry);
-    }
-  });
-  writeOffsetTable();
-  writeTrailer();
-  return buffer.getContents();
-  function updateEntryIds() {
-    var strings = {};
-    var entryId = 0;
-    entries.forEach(function(entry) {
-      if (entry.id) {
-        return;
-      }
-      if (entry.type === "string") {
-        if (!entry.bplistOverride && strings.hasOwnProperty(entry.value)) {
-          entry.type = "stringref";
-          entry.id = strings[entry.value];
-        } else {
-          strings[entry.value] = entry.id = entryId++;
-        }
-      } else {
-        entry.id = entryId++;
-      }
-    });
-    entries = entries.filter(function(entry) {
-      return entry.type !== "stringref";
-    });
-  }
-  function writeTrailer() {
-    buffer.write(Buffer.from([0, 0, 0, 0, 0, 0]));
-    writeByte(offsetSizeInBytes);
-    writeByte(idSizeInBytes);
-    writeLong(entries.length);
-    writeLong(0);
-    writeLong(offsetTableOffset);
-  }
-  function writeOffsetTable() {
-    offsetTableOffset = buffer.size();
-    offsetSizeInBytes = computeOffsetSizeInBytes(offsetTableOffset);
-    offsets.forEach(function(offset) {
-      writeBytes(offset, offsetSizeInBytes);
-    });
-  }
-  function write(entry) {
-    switch (entry.type) {
-      case "dict":
-        writeDict(entry);
-        break;
-      case "number":
-      case "double":
-        writeNumber(entry);
-        break;
-      case "UID":
-        writeUID(entry);
-        break;
-      case "array":
-        writeArray(entry);
-        break;
-      case "boolean":
-        writeBoolean(entry);
-        break;
-      case "string":
-      case "string-utf16":
-        writeString(entry);
-        break;
-      case "date":
-        writeDate(entry);
-        break;
-      case "data":
-        writeData(entry);
-        break;
-      default:
-        throw new Error("unhandled entry type: " + entry.type);
-    }
-  }
-  function writeDate(entry) {
-    writeByte(51);
-    var date = Date.parse(entry.value) / 1000 - 978307200;
-    writeDouble(date);
-  }
-  function writeDict(entry) {
-    writeIntHeader(13, entry.entryKeys.length);
-    entry.entryKeys.forEach(function(entry2) {
-      writeID(entry2.id);
-    });
-    entry.entryValues.forEach(function(entry2) {
-      writeID(entry2.id);
-    });
-  }
-  function writeNumber(entry) {
-    if (typeof entry.value === "bigint") {
-      var width = 16;
-      var hex = entry.value.toString(width);
-      var buf = Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
-      writeByte(20);
-      buffer.write(buf);
-    } else if (entry.type !== "double" && parseFloat(entry.value).toFixed() == entry.value) {
-      if (entry.value < 0) {
-        writeByte(19);
-        writeBytes(entry.value, 8, true);
-      } else if (entry.value <= 255) {
-        writeByte(16);
-        writeBytes(entry.value, 1);
-      } else if (entry.value <= 65535) {
-        writeByte(17);
-        writeBytes(entry.value, 2);
-      } else if (entry.value <= 4294967295) {
-        writeByte(18);
-        writeBytes(entry.value, 4);
-      } else {
-        writeByte(19);
-        writeBytes(entry.value, 8);
-      }
-    } else {
-      writeByte(35);
-      writeDouble(entry.value);
-    }
-  }
-  function writeUID(entry) {
-    writeIntHeader(8, 0);
-    writeID(entry.value);
-  }
-  function writeArray(entry) {
-    writeIntHeader(10, entry.entries.length);
-    entry.entries.forEach(function(e) {
-      writeID(e.id);
-    });
-  }
-  function writeBoolean(entry) {
-    writeByte(entry.value ? 9 : 8);
-  }
-  function writeString(entry) {
-    if (entry.type === "string-utf16" || mustBeUtf16(entry.value)) {
-      var utf16 = Buffer.from(entry.value, "ucs2");
-      writeIntHeader(6, utf16.length / 2);
-      for (var i = 0;i < utf16.length; i += 2) {
-        var t = utf16[i + 0];
-        utf16[i + 0] = utf16[i + 1];
-        utf16[i + 1] = t;
-      }
-      buffer.write(utf16);
-    } else {
-      var utf8 = Buffer.from(entry.value, "ascii");
-      writeIntHeader(5, utf8.length);
-      buffer.write(utf8);
-    }
-  }
-  function writeData(entry) {
-    writeIntHeader(4, entry.value.length);
-    buffer.write(entry.value);
-  }
-  function writeLong(l) {
-    writeBytes(l, 8);
-  }
-  function writeByte(b) {
-    buffer.write(Buffer.from([b]));
-  }
-  function writeDouble(v) {
-    var buf = Buffer.alloc(8);
-    buf.writeDoubleBE(v, 0);
-    buffer.write(buf);
-  }
-  function writeIntHeader(kind, value) {
-    if (value < 15) {
-      writeByte((kind << 4) + value);
-    } else if (value < 256) {
-      writeByte((kind << 4) + 15);
-      writeByte(16);
-      writeBytes(value, 1);
-    } else if (value < 65536) {
-      writeByte((kind << 4) + 15);
-      writeByte(17);
-      writeBytes(value, 2);
-    } else {
-      writeByte((kind << 4) + 15);
-      writeByte(18);
-      writeBytes(value, 4);
-    }
-  }
-  function writeID(id) {
-    writeBytes(id, idSizeInBytes);
-  }
-  function writeBytes(value, bytes, is_signedint) {
-    var buf = Buffer.alloc(bytes);
-    var z = 0;
-    while (bytes > 4) {
-      buf[z++] = is_signedint ? 255 : 0;
-      bytes--;
-    }
-    for (var i = bytes - 1;i >= 0; i--) {
-      buf[z++] = value >> 8 * i;
-    }
-    buffer.write(buf);
-  }
-  function mustBeUtf16(string) {
-    return Buffer.byteLength(string, "utf8") != string.length;
-  }
-}
-function toEntries(dicts) {
-  if (dicts.bplistOverride) {
-    return [dicts];
-  }
-  if (Array.isArray(dicts)) {
-    return toEntriesArray(dicts);
-  } else if (dicts instanceof Uint8Array || dicts instanceof ArrayBuffer || ArrayBuffer.isView(dicts)) {
-    return [
-      {
-        type: "data",
-        value: dicts instanceof Uint8Array ? dicts : new Uint8Array(dicts.buffer ?? dicts, dicts.byteOffset ?? 0, dicts.byteLength)
-      }
-    ];
-  } else if (dicts instanceof Real) {
-    return [
-      {
-        type: "double",
-        value: dicts.value
-      }
-    ];
-  } else if (typeof dicts === "object") {
-    if (dicts instanceof Date) {
-      return [
-        {
-          type: "date",
-          value: dicts
-        }
-      ];
-    } else if (Object.keys(dicts).length == 1 && typeof dicts.UID === "number") {
-      return [
-        {
-          type: "UID",
-          value: dicts.UID
-        }
-      ];
-    } else if (dicts !== null && (Object.getPrototypeOf(dicts) === Object.prototype || Object.getPrototypeOf(dicts) === null)) {
-      return toEntriesObject(dicts);
-    } else {
-      throw new Error(`unknown data type: ${Object.prototype.toString.call(dicts)}`);
-    }
-  } else if (typeof dicts === "string") {
-    return [
-      {
-        type: "string",
-        value: dicts
-      }
-    ];
-  } else if (typeof dicts === "number") {
-    return [
-      {
-        type: "number",
-        value: dicts
-      }
-    ];
-  } else if (typeof dicts === "boolean") {
-    return [
-      {
-        type: "boolean",
-        value: dicts
-      }
-    ];
-  } else if (typeof dicts === "bigint") {
-    return [
-      {
-        type: "number",
-        value: dicts
-      }
-    ];
-  } else {
-    throw new Error("unhandled entry: " + dicts);
-  }
-}
-function toEntriesArray(arr) {
-  var results = [
-    {
-      type: "array",
-      entries: []
-    }
-  ];
-  arr.forEach(function(v) {
-    var entry = toEntries(v);
-    results[0].entries.push(entry[0]);
-    results = results.concat(entry);
-  });
-  return results;
-}
-function toEntriesObject(dict) {
-  var results = [
-    {
-      type: "dict",
-      entryKeys: [],
-      entryValues: []
-    }
-  ];
-  Object.keys(dict).forEach(function(key) {
-    var entryKey = toEntries(key);
-    results[0].entryKeys.push(entryKey[0]);
-    results = results.concat(entryKey[0]);
-  });
-  Object.keys(dict).forEach(function(key) {
-    var entryValue = toEntries(dict[key]);
-    results[0].entryValues.push(entryValue[0]);
-    results = results.concat(entryValue);
-  });
-  return results;
-}
-function computeOffsetSizeInBytes(maxOffset) {
-  if (maxOffset < 256) {
-    return 1;
-  }
-  if (maxOffset < 65536) {
-    return 2;
-  }
-  if (maxOffset < 4294967296) {
-    return 4;
-  }
-  return 8;
-}
-function computeIdSizeInBytes(numberOfIds) {
-  if (numberOfIds < 256) {
-    return 1;
-  }
-  if (numberOfIds < 65536) {
-    return 2;
-  }
-  return 4;
-}
-
-// node_modules/.pnpm/simple-plist-es@2.1.0/node_modules/simple-plist-es/dist/writeBinaryFileSync.js
+// node_modules/.pnpm/simple-plist-es@2.1.2/node_modules/simple-plist-es/dist/writeBinaryFileSync.js
+var import_bplist_creator = __toESM(require_bplistCreator(), 1);
 import fs from "fs";
 function writeBinaryFileSync(aFile, anObject, options) {
-  return fs.writeFileSync(aFile, bplist(anObject), options);
+  return fs.writeFileSync(aFile, import_bplist_creator.default(anObject), options);
 }
 
-// node_modules/.pnpm/simple-plist-es@2.1.0/node_modules/simple-plist-es/dist/parseBinary.js
-var import_bplist_parser = __toESM(require_bplistParser(), 1);
+// node_modules/.pnpm/simple-plist-es@2.1.2/node_modules/simple-plist-es/dist/parseBinary.js
+var import_bplist_universal = __toESM(require_bplistParser(), 1);
 function parseBinary(aStringOrBuffer) {
   const firstByte = aStringOrBuffer[0];
   let results;
   try {
     if (firstByte === 98) {
-      [results] = import_bplist_parser.default.parseBuffer(aStringOrBuffer);
+      [results] = import_bplist_universal.parseBuffer(aStringOrBuffer);
     } else {
       throw new Error("Unable to determine format for plist aStringOrBuffer");
     }

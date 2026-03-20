@@ -63,8 +63,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0
       simple-plist-es:
-        specifier: ^2.1.0
-        version: 2.1.0
+        specifier: ^2.1.2
+        version: 2.1.2
       type-fest:
         specifier: ^5.5.0
         version: 5.5.0
@@ -86,15 +86,15 @@ importers:
         version: 2.1.4
       llrt-types:
         specifier: github:awslabs/llrt#path:/types
-        version: https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90#path:/types
+        version: https://codeload.github.com/awslabs/llrt/tar.gz/36bd4a837d3fd85b5e3246906f23b1873c067503#path:/types
       rimraf:
         specifier: ^6.1.3
         version: 6.1.3
       ts2esm:
-        specifier: '*'
+        specifier: ^2.2.7
         version: 2.2.7(@types/node@25.5.0)
       typescript:
-        specifier: ^5
+        specifier: ^5.9.3
         version: 5.9.3
 
 packages:
@@ -295,12 +295,11 @@ packages:
     resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
     engines: {node: '>=0.6'}
 
-  bplist-creator-pure@0.2.2:
-    resolution: {integrity: sha512-1uEauem9nELLCle3C0UqxQtsgQhM/wmAuTlQHkgyK+1Iwo+xSDgMX/dl2ltYyMyYNYJNS1G+RuA7UmCSO50b+g==}
+  bplist-creator@0.1.1:
+    resolution: {integrity: sha512-Ese7052fdWrxp/vqSJkydgx/1MdBnNOCV2XVfbmdGWD2H6EYza+Q4pyYSuVSnCUD22hfI/BFI4jHaC3NLXLlJQ==}
 
-  bplist-parser@0.3.2:
-    resolution: {integrity: sha512-apC2+fspHGI3mMKj+dGevkGo/tCqVB8jMb6i+OX+E29p0Iposz07fABkRIfVUPNd5A5VbuOz1bZbnmkKLYF+wQ==}
-    engines: {node: '>= 5.10.0'}
+  bplist-universal@1.1.0:
+    resolution: {integrity: sha512-u9UfkFVlFI+PkuSX7BET3DDLx89/cH06lTG8TQs3CPzL9ZoaddYETqC6kSrJX4T21DXlSuH7F5+QvOuS4ayxDA==}
 
   brace-expansion@2.0.2:
     resolution: {integrity: sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==}
@@ -460,8 +459,8 @@ packages:
     resolution: {integrity: sha512-JNfJ5gAn0KADvJ1I6/xMcx70+/6TL6U9gqGkKvPw5RNMfatC7jIg0Evl97HN846xmfz959BV70l8r3QsBJk30w==}
     hasBin: true
 
-  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90#path:/types:
-    resolution: {path: /types, tarball: https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90}
+  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/36bd4a837d3fd85b5e3246906f23b1873c067503#path:/types:
+    resolution: {path: /types, tarball: https://codeload.github.com/awslabs/llrt/tar.gz/36bd4a837d3fd85b5e3246906f23b1873c067503}
     version: 0.0.1
 
   lru-cache@11.2.7:
@@ -533,8 +532,12 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-plist-es@2.1.0:
-    resolution: {integrity: sha512-Qyd7vSpEaZrWnIZmsR3ngRL2DWv8GE2Z/WS0EpO+f5KuhA13bp/0oqS9WBZFv2qIiJoVinP0Zf6RAK42QPL0zg==}
+  simple-plist-es@2.1.2:
+    resolution: {integrity: sha512-7S63b3+JBJhLu1YLV1NTltun0nIXawXguQKOfubnKdzCL2TdTXJWXMUE6TAvdxjTTtryyzJqmSvm8Jyhyj9oow==}
+
+  stream-buffers@2.2.0:
+    resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
+    engines: {node: '>= 0.10.0'}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -769,9 +772,11 @@ snapshots:
 
   big-integer@1.6.52: {}
 
-  bplist-creator-pure@0.2.2: {}
+  bplist-creator@0.1.1:
+    dependencies:
+      stream-buffers: 2.2.0
 
-  bplist-parser@0.3.2:
+  bplist-universal@1.1.0:
     dependencies:
       big-integer: 1.6.52
 
@@ -896,7 +901,7 @@ snapshots:
       lefthook-windows-arm64: 2.1.4
       lefthook-windows-x64: 2.1.4
 
-  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90#path:/types: {}
+  llrt-types@https://codeload.github.com/awslabs/llrt/tar.gz/36bd4a837d3fd85b5e3246906f23b1873c067503#path:/types: {}
 
   lru-cache@11.2.7: {}
 
@@ -950,11 +955,13 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-plist-es@2.1.0:
+  simple-plist-es@2.1.2:
     dependencies:
-      bplist-creator-pure: 0.2.2
-      bplist-parser: 0.3.2
+      bplist-creator: 0.1.1
+      bplist-universal: 1.1.0
       plist: 3.1.0
+
+  stream-buffers@2.2.0: {}
 
   string-width@4.2.3:
     dependencies:
