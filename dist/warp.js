@@ -2961,6 +2961,7 @@ var jsYaml = {
 // src/exports/warp.ts
 import os from "os";
 import path from "path";
+import { tap } from "chordsapp";
 function extractCommands(chords) {
   const result = [];
   for (const chord of Object.values(chords ?? {})) {

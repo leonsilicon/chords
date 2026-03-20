@@ -5,6 +5,7 @@ import { exists } from "#/utils/file.ts";
 import yaml from "js-yaml";
 import os from "os";
 import path from "path";
+import { tap } from 'chordsapp';
 
 function extractCommands(chords: ImportMeta["chords"]): string[] {
   const result: string[] = [];

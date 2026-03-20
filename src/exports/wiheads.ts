@@ -1,30 +1,30 @@
-import { parseBuffer } from "bplist-parser-pure";
-import fs from "fs";
-import { modifiersToStrings } from "#/utils/mac-keycode.ts";
-import { keyname } from "os-keycode";
 import untildify from "untildify";
-import { Buffer } from "buffer";
+import { getPlistShortcutUtils } from "../utils/plist.ts";
+import { ensureGlobalHotkeys } from "../utils/global.ts";
+import nullthrows from 'nullthrows-es'
+import { includeKeys } from 'filter-obj'
 
-export default function buildWiheadsHandler(tildepath: string) {
-  const filepath = untildify(tildepath);
-  const plist = fs.readFileSync(filepath);
-  return function shortcut(property: string) {
-    const data = parseBuffer(plist.buffer);
-    const rawValue = data[0]?.[property];
-    if (!rawValue) {
-      return false;
+export default function buildWiheadsHandler(meta: ImportMeta, tildepath: string) {
+  const globalHotkeys = ensureGlobalHotkeys(
+    includeKeys(meta.chords, (sequence) => sequence.startsWith('/')),
+    {
+      bundleId: meta.bundleId,
+      getHotkeyId: (chord) => nullthrows(chord.args?.[0])
     }
+  );
 
-    const valueString =
-      rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const { buildHandler, writeShortcuts } = getPlistShortcutUtils({
+    plistPath: untildify(tildepath),
+    modifierMaskKey: 'internalModifiers',
+    keycodeKey: 'keyCode',
+    modifierType: 'modern'
+  })
+  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
+    property: nullthrows(chord.args?.[0]),
+    // _Paste_ stores shortcuts as bytes
+    propertyType: 'bytes',
+    shortcut,
+  })))
 
-    const value = JSON.parse(valueString);
-    const keys = modifiersToStrings(value.internalModifiers);
-    const keyInfo = keyname(value.keyCode);
-    if (!keyInfo || !("key" in keyInfo)) {
-      return false;
-    }
-    keys.push(keyInfo.key);
-    tap(keys.join("+"));
-  };
+  return buildHandler()
 }

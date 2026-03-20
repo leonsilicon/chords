@@ -1,11 +1,5 @@
-declare global {
-  function tap(key: string): void;
-  function press(key: string): void;
-  function release(key: string): void;
+type BundleIdData = {
 
-  interface ImportMeta {
-    chords: Record<string, Chord>;
-  }
 }
 
 type Chord = {
@@ -14,5 +8,13 @@ type Chord = {
   shell?: string;
   args?: string[];
 };
+
+declare global {
+  interface ImportMeta {
+    chords: Record<string, Chord>;
+    bundleId: string
+  }
+}
+
 
 export {};

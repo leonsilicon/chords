@@ -1,10 +1,8 @@
-import { parseBuffer } from "bplist-parser-pure";
-import fs from "fs";
-import { keyname } from "os-keycode";
-import { carbonModifiersToStrings } from "#/utils/mac-keycode.ts";
 import untildify from "untildify";
-import { Buffer } from "buffer";
-import { plistValueToString } from "../utils/plist.ts";
+import { getPlistShortcutUtils, plistValueToString } from "#/utils/plist.ts";
+import { ensureGlobalHotkeys } from "../utils/global.ts";
+import { includeKeys } from "filter-obj";
+import nullthrows from 'nullthrows-es'
 
 interface PerItemHotkey {
   appName: string
@@ -12,48 +10,51 @@ interface PerItemHotkey {
   keyName: string
 }
 
-export default function buildBartenderHandler(tildepath: string) {
-  const filepath = untildify(tildepath);
-  const plist = parseBuffer(fs.readFileSync(filepath).buffer);
+export default function buildBartenderHandler(meta: ImportMeta, tildepath: string) {
+  const globalHotkeys = ensureGlobalHotkeys(
+    includeKeys(meta.chords, (sequence) => sequence.startsWith('/') || sequence.startsWith('-')),
+    {
+      bundleId: meta.bundleId,
+      getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+    }
+  );
 
-  function itemHandler(bundleId: string): boolean {
+  const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
+    plistPath: untildify(tildepath),
+    modifierType: 'carbon',
+    modifierMaskKey: 'carbonModifiers',
+    keycodeKey: 'carbonKeyCode',
+  })
+  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
+    property: nullthrows(chord.args?.[0]),
+    // _Bartender_ stores shortcuts as strings
+    propertyType: 'string',
+    shortcut,
+  })))
+  const plistHandler = buildHandler();
+
+  const plist = readPlist();
+  function itemHandler(itemId: string): boolean {
     const rawValue = plist[0]?.['per-item-hotkeys']
     const value = JSON.parse(plistValueToString(rawValue)) as PerItemHotkey[];
-    const item = value.find(item => item.appBundleIdentifier === bundleId);
+    const item = value.find(item => item.appBundleIdentifier === itemId);
     if (item === undefined) {
       return false;
     }
 
     const property = `KeyboardShortcuts_${item.keyName}`;
-    return shortcutHandler(property);
+    return plistHandler(property);
   }
 
   function shortcutHandler(property: string): boolean {
-    const rawValue = plist[0]?.[property];
-    if (!rawValue) {
-      return false;
-    }
-
-    const value = JSON.parse(plistValueToString(rawValue));
-    const keys = carbonModifiersToStrings(value.carbonModifiers);
-    const keyInfo = keyname(value.carbonKeyCode);
-    if (!keyInfo || !("key" in keyInfo)) {
-      return false;
-    }
-    keys.push(keyInfo.key);
-    tap(keys.join("+"));
-    return true;
+    return plistHandler(property);
   }
 
-  function handler(type: 'item', bundleId: string): boolean;
-  function handler(type: 'global', property: string): boolean;
-  function handler(type: 'item' | 'global', bundleIdOrProperty: string): boolean {
-    return type === 'item' ? itemHandler(bundleIdOrProperty) : shortcutHandler(bundleIdOrProperty);
+  function handler(type: 'item', itemId: string): boolean;
+  function handler(type: 'shortcut', property: string): boolean;
+  function handler(type: 'shortcut' | 'item', itemIdOrProperty: string): boolean {
+    return type === 'item' ? itemHandler(itemIdOrProperty) : shortcutHandler(itemIdOrProperty);
   };
 
   return handler;
-}
-
-export function makeItemShortcut(tildepath: string) {
-  const filepath = untildify(tildepath);
 }

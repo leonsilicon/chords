@@ -8,30 +8,48 @@ importers:
 
   .:
     dependencies:
-      '@ban12/bplist-parser':
-        specifier: ^0.0.1
-        version: 0.0.1
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
+      bplist-creator-pure:
+        specifier: ^0.2.0
+        version: 0.2.0
       bplist-parser-pure:
         specifier: ^0.0.1
         version: 0.0.1
+      fast-is-equal:
+        specifier: ^1.2.6
+        version: 1.2.6
+      filter-obj:
+        specifier: ^6.1.0
+        version: 6.1.0
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
+      just-filter-object:
+        specifier: ^3.2.0
+        version: 3.2.0
       just-zip-it:
         specifier: ^3.2.0
         version: 3.2.0
       keycode:
         specifier: ^2.2.1
         version: 2.2.1
+      map-obj:
+        specifier: ^6.0.0
+        version: 6.0.0
+      nullthrows-es:
+        specifier: ^1.0.1
+        version: 1.0.1
       onetime:
         specifier: ^8.0.0
         version: 8.0.0
       os-keycode:
         specifier: ^1.0.0
         version: 1.0.0
+      simple-plist:
+        specifier: ^1.3.1
+        version: 1.3.1
       untildify:
         specifier: ^6.0.0
         version: 6.0.0
@@ -66,14 +84,15 @@ importers:
 
 packages:
 
-  '@ban12/bplist-parser@0.0.1':
-    resolution: {integrity: sha512-SvzG2KEF9nYB3dnWJbOYcIGYDcTTBBQax6WoRtU+hq+SaULCqkM9vlMnCX7mp1kL1c1hr1+GSnJPx8FhJ+VWYg==}
-
   '@types/js-yaml@4.0.9':
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/node@25.5.0':
     resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
+
+  '@xmldom/xmldom@0.8.11':
+    resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
+    engines: {node: '>=10.0.0'}
 
   add@2.0.6:
     resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
@@ -89,12 +108,36 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
+  base64-js@1.5.1:
+    resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
+
+  big-integer@1.6.52:
+    resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
+    engines: {node: '>=0.6'}
+
+  bplist-creator-pure@0.2.0:
+    resolution: {integrity: sha512-d73iwu3TOxrrt+iQGD9jTXE/2b3gaSvbYKyA188BWeCn73s7xDUnaysdLp8UtbTqb9bd0a2s09Cq+sBZoB2ypQ==}
+
+  bplist-creator@0.1.0:
+    resolution: {integrity: sha512-sXaHZicyEEmY86WyueLTQesbeoH/mquvarJaQNbjuOQO+7gbFcDEWqKmcWA4cOTLzFlfgvkiVxolk1k5bBIpmg==}
+
   bplist-parser-pure@0.0.1:
     resolution: {integrity: sha512-Mw1dqhw9c0w4SzA8AlgwfBiaf7mXSCaluNNMHBikqvF+HGM/iN1lDZpVSyRckjdEthJ2VkrrTNTlifR75HGUFQ==}
+
+  bplist-parser@0.3.1:
+    resolution: {integrity: sha512-PyJxiNtA5T2PlLIeBot4lbp7rj4OadzjnMZD/G5zuBNt8ei/yCU7+wW0h2bag9vr8c+/WuRWmSxbqAl9hL1rBA==}
+    engines: {node: '>= 5.10.0'}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
     engines: {node: 18 || 20 || >=22}
+
+  fast-is-equal@1.2.6:
+    resolution: {integrity: sha512-DUrwmvQx+fsMbe+Q3BSn+T2sjzDqGPks1aV7zf3Jx6ceNCKDu/hYVA4Q35z/WS4GbD+TImzsPBcTFZYnYWST5g==}
+
+  filter-obj@6.1.0:
+    resolution: {integrity: sha512-xdMtCAODmPloU9qtmPcdBV9Kd27NtMse+4ayThxqIHUES5Z2S6bGpap5PpdmNM56ub7y3i1eyr+vJJIIgWGKmA==}
+    engines: {node: '>=18'}
 
   glob@13.0.6:
     resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
@@ -103,6 +146,9 @@ packages:
   js-yaml@4.1.1:
     resolution: {integrity: sha512-qQKT4zQxXl8lLwBtHMWwaTcGfFOZviOJet3Oy/xmGk2gZH677CJM9EvtfdSkgWcATZhj/55JZ0rmy3myCT5lsA==}
     hasBin: true
+
+  just-filter-object@3.2.0:
+    resolution: {integrity: sha512-OeorYJxmp2zhy/0LxjS1UjbJ7XMY8M4gVa1RRKxnIVheCYmng2E2hE0lEbDGv4aRh/HI7FgNUXtOMnmNxpoXRQ==}
 
   just-zip-it@3.2.0:
     resolution: {integrity: sha512-ZJxc8mLz8XkaoOegJ237Xuo3ZQB5zUN/8BTXqalBJbh/uj+ahfJbOJKadJPmXDBbxHzh+MQYH43VxV5TlQvlfw==}
@@ -172,6 +218,10 @@ packages:
     resolution: {integrity: sha512-aY/R+aEsRelme17KGQa/1ZSIpLpNYYrhcrepKTZgE+W3WM16YMCaPwOHLHsmopZHELU0Ojin1lPVxKR0MihncA==}
     engines: {node: 20 || >=22}
 
+  map-obj@6.0.0:
+    resolution: {integrity: sha512-PwDvwt/tK70+luLw5k9ySLtzLAzwf7tZTY9GBj63Y010nHRPjwHcQTpTd5JwQqITC2ty7prtxBo71iwyYY0TAg==}
+    engines: {node: '>=20'}
+
   mimic-function@5.0.1:
     resolution: {integrity: sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==}
     engines: {node: '>=18'}
@@ -183,6 +233,10 @@ packages:
   minipass@7.1.3:
     resolution: {integrity: sha512-tEBHqDnIoM/1rXME1zgka9g6Q2lcoCkxHLuc7ODJ5BxbP5d4c2Z5cGgtXAku59200Cx7diuHTOYfSBD8n6mm8A==}
     engines: {node: '>=16 || 14 >=14.17'}
+
+  nullthrows-es@1.0.1:
+    resolution: {integrity: sha512-x2XtZ5seoayCy0cl4Y91rhRSRwWIlMRiCLTAnWwaDWN+MaHkyObPOzv1s6qg2UR40YAqFicpmwa7k0R8CFehiw==}
+    engines: {node: '>=16'}
 
   onetime@8.0.0:
     resolution: {integrity: sha512-ODz2CnF+9043eG3exS38Efor4ekggmKvIydHaXWr1n9mXA5Afn8BdSsvVpa5AhBWricxhdBMfyeG3Yo3SB+VWA==}
@@ -201,10 +255,21 @@ packages:
     resolution: {integrity: sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg==}
     engines: {node: 18 || 20 || >=22}
 
+  plist@3.1.0:
+    resolution: {integrity: sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==}
+    engines: {node: '>=10.4.0'}
+
   rimraf@6.1.3:
     resolution: {integrity: sha512-LKg+Cr2ZF61fkcaK1UdkH2yEBBKnYjTyWzTJT6KNPcSPaiT7HSdhtMXQuN5wkTX0Xu72KQ1l8S42rlmexS2hSA==}
     engines: {node: 20 || >=22}
     hasBin: true
+
+  simple-plist@1.3.1:
+    resolution: {integrity: sha512-iMSw5i0XseMnrhtIzRb7XpQEXepa9xhWxGUojHBL43SIpQuDQkh3Wpy67ZbDzZVr6EKxvwVChnVpdl8hEVLDiw==}
+
+  stream-buffers@2.2.0:
+    resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
+    engines: {node: '>= 0.10.0'}
 
   typescript@5.9.3:
     resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
@@ -218,15 +283,19 @@ packages:
     resolution: {integrity: sha512-sA2YTBvW2F463GvSbiZtso+dpuQV+B7xX9saX30SGrR5Fyx4AUcvA/zN+ShAkABKUKVyDaHECsJrHv5ToTuHsQ==}
     engines: {node: '>=20'}
 
-snapshots:
+  xmlbuilder@15.1.1:
+    resolution: {integrity: sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg==}
+    engines: {node: '>=8.0'}
 
-  '@ban12/bplist-parser@0.0.1': {}
+snapshots:
 
   '@types/js-yaml@4.0.9': {}
 
   '@types/node@25.5.0':
     dependencies:
       undici-types: 7.18.2
+
+  '@xmldom/xmldom@0.8.11': {}
 
   add@2.0.6: {}
 
@@ -236,11 +305,29 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
+  base64-js@1.5.1: {}
+
+  big-integer@1.6.52: {}
+
+  bplist-creator-pure@0.2.0: {}
+
+  bplist-creator@0.1.0:
+    dependencies:
+      stream-buffers: 2.2.0
+
   bplist-parser-pure@0.0.1: {}
+
+  bplist-parser@0.3.1:
+    dependencies:
+      big-integer: 1.6.52
 
   brace-expansion@5.0.4:
     dependencies:
       balanced-match: 4.0.4
+
+  fast-is-equal@1.2.6: {}
+
+  filter-obj@6.1.0: {}
 
   glob@13.0.6:
     dependencies:
@@ -251,6 +338,8 @@ snapshots:
   js-yaml@4.1.1:
     dependencies:
       argparse: 2.0.1
+
+  just-filter-object@3.2.0: {}
 
   just-zip-it@3.2.0: {}
 
@@ -303,6 +392,8 @@ snapshots:
 
   lru-cache@11.2.7: {}
 
+  map-obj@6.0.0: {}
+
   mimic-function@5.0.1: {}
 
   minimatch@10.2.4:
@@ -310,6 +401,8 @@ snapshots:
       brace-expansion: 5.0.4
 
   minipass@7.1.3: {}
+
+  nullthrows-es@1.0.1: {}
 
   onetime@8.0.0:
     dependencies:
@@ -326,13 +419,29 @@ snapshots:
       lru-cache: 11.2.7
       minipass: 7.1.3
 
+  plist@3.1.0:
+    dependencies:
+      '@xmldom/xmldom': 0.8.11
+      base64-js: 1.5.1
+      xmlbuilder: 15.1.1
+
   rimraf@6.1.3:
     dependencies:
       glob: 13.0.6
       package-json-from-dist: 1.0.1
+
+  simple-plist@1.3.1:
+    dependencies:
+      bplist-creator: 0.1.0
+      bplist-parser: 0.3.1
+      plist: 3.1.0
+
+  stream-buffers@2.2.0: {}
 
   typescript@5.9.3: {}
 
   undici-types@7.18.2: {}
 
   untildify@6.0.0: {}
+
+  xmlbuilder@15.1.1: {}

@@ -22,7 +22,7 @@ const MODERN_MODIFIERS: Modifier[] = [
   { string: "fn", mask: 1 << 23 },
 ];
 
-export function modifiersToStrings(mask: number): string[] {
+export function modifiersToKeystrings(mask: number): string[] {
   const result: string[] = [];
 
   for (const modifier of MODERN_MODIFIERS) {
@@ -34,7 +34,7 @@ export function modifiersToStrings(mask: number): string[] {
   return result;
 }
 
-export function carbonModifiersToStrings(mask: number): string[] {
+export function carbonModifiersToKeystrings(mask: number): string[] {
   const result: string[] = [];
 
   for (const modifier of CARBON_MODIFIERS) {
@@ -44,4 +44,25 @@ export function carbonModifiersToStrings(mask: number): string[] {
   }
 
   return result;
+}
+
+function keystringsToMask(keystrings: string[], modifiers: Modifier[]): number {
+  let mask = 0;
+
+  for (const keystring of keystrings) {
+    const modifier = modifiers.find((m) => m.string === keystring);
+    if (modifier) {
+      mask |= modifier.mask;
+    }
+  }
+
+  return mask;
+}
+
+export function keystringsToModifierMask(keystrings: string[]): number {
+  return keystringsToMask(keystrings, MODERN_MODIFIERS);
+}
+
+export function keystringsToCarbonModifierMask(keystrings: string[]): number {
+  return keystringsToMask(keystrings, CARBON_MODIFIERS);
 }

@@ -1,30 +1,30 @@
-import { parseBuffer } from "bplist-parser-pure";
-import fs from "fs";
-import { keyname } from "os-keycode";
-import { carbonModifiersToStrings } from "#/utils/mac-keycode.ts";
 import untildify from "untildify";
-import { Buffer } from "buffer";
+import { ensureGlobalHotkeys } from "../utils/global.ts";
+import nullthrows from 'nullthrows-es'
+import { getPlistShortcutUtils } from "../utils/plist.ts";
+import { includeKeys } from "filter-obj";
 
-export default function buildMakethewebHandler(tildepath: string) {
-  const filepath = untildify(tildepath);
-  const plist = fs.readFileSync(filepath);
-  return function shortcut(property: string) {
-    const data = parseBuffer(plist.buffer);
-    const rawValue = data[0]?.[property];
-    if (!rawValue) {
-      return false;
+export default function buildMakethewebHandler(meta: ImportMeta, tildepath: string) {
+  const globalHotkeys = ensureGlobalHotkeys(
+    includeKeys(meta.chords, (sequence) => sequence.startsWith('/')),
+    {
+      bundleId: meta.bundleId,
+      getHotkeyId: (chord) => nullthrows(chord.args?.[0])
     }
+  );
 
-    const valueString =
-      rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const { buildHandler, writeShortcuts } = getPlistShortcutUtils({
+    plistPath: untildify(tildepath),
+    modifierType: 'carbon',
+    modifierMaskKey: 'carbonModifiers',
+    keycodeKey: 'carbonKey',
+  })
+  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
+    property: nullthrows(chord.args?.[0]),
+    // _PixelSnap_ and _CleanShot X_ stores shortcuts as bytes
+    propertyType: 'bytes',
+    shortcut,
+  })))
 
-    const value = JSON.parse(valueString);
-    const keys = carbonModifiersToStrings(value.carbonModifiers);
-    const keyInfo = keyname(value.carbonKey);
-    if (!keyInfo || !("key" in keyInfo)) {
-      return false;
-    }
-    keys.push(keyInfo.key);
-    tap(keys.join("+"));
-  };
+  return buildHandler()
 }

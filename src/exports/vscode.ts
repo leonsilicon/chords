@@ -2,6 +2,7 @@ import { run } from "#/utils/exec.ts";
 import fs from "fs";
 import { exists } from "#/utils/file.ts";
 import path from "path";
+import { tap } from 'chordsapp';
 
 // TODO: make this work for Cursor
 export default async function buildVscodeHandler() {

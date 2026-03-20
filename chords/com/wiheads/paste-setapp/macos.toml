@@ -5,6 +5,7 @@ name = "Paste (Setapp)"
 module = '''
 import buildHandler from 'dist/wiheads.js';
 export default buildHandler(
+  import.meta,
   "~/Library/Preferences/com.wiheads.paste-setapp.plist"
 );
 '''

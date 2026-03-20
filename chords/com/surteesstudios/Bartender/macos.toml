@@ -3,14 +3,26 @@ name = "Bartender"
 
 [config.js]
 module = '''
-import { makeShortcut } from 'dist/bartender.js';
-export default makeShortcut(
+import buildHandler from 'dist/bartender.js';
+export default buildHandler(
+  import.meta,
   "~/Library/Preferences/com.surteesstudios.Bartender.plist"
 )
 '''
 
 [chords]
-'-t' = { name = "Bartender: Toggle Hidden Items", args = ['shortcut', "KeyboardShortcuts_showHiddenItems"] }
-'-s' = { name = "Bartender: Search", args = ['shortcut', "KeyboardShortcuts_quickSearch"] }
-'-h' = { name = "Bartender: Hide Left Application Menu", args = ['shortcut', "KeyboardShortcuts_hideLeftApplicationMenu"] }
-'-a' = { name = "Bartender: Show All Items", args = ['shortcut', "KeyboardShortcuts_showAllItems"] }
+'/-t' = { name = "Bartender: Toggle Hidden Items", args = ['shortcut', "KeyboardShortcuts_showHiddenItems"] }
+'/-s' = { name = "Bartender: Search", args = ['shortcut', "KeyboardShortcuts_quickSearch"] }
+'/-h' = { name = "Bartender: Hide Left Application Menu", args = ['shortcut', "KeyboardShortcuts_hideLeftApplicationMenu"] }
+'/-a' = { name = "Bartender: Show All Items", args = ['shortcut', "KeyboardShortcuts_showAllItems"] }
+
+'-b' = { name = "Bar: Battery", args = ['item', 'com.apple.controlcenter-Battery'] }
+'-s' = { name = "Bar: Spotlight", args = ['item', 'com.apple.Spotlight-Item-0'] }
+'-c' = { name = "Bar: Clock", args = ['item', 'com.apple.controlcenter-Clock'] }
+'-cc' = { name = "Bar: Control Center", args = ['item', 'com.apple.controlcenter-BentoBox-0'] }
+'-i' = { name = "Bar: Input", args = ['item', 'com.apple.TextInputMenuAgent-Item-0'] }
+'-w' = { name = "Bar: Wi-Fi", args = ['item', 'com.apple.controlcenter-WiFi'] }
+'-u' = { name = "Bar: User", args = ['item', 'com.apple.controlcenter-UserSwitcher'] }
+'-f' = { name = "Bar: Focus", args = ['item', 'com.apple.controlcenter-FocusModes'] }
+
+'-j' = { name = "Bar: JoyTap", args = ['item', 'com.joytap.app-setapp-Item-0'] }

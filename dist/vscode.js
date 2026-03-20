@@ -38,6 +38,7 @@ function exists(path) {
 
 // src/exports/vscode.ts
 import path from "path";
+import { tap } from "chordsapp";
 async function buildVscodeHandler() {
   const uid = await run("id", ["-u"]);
   return async function command(cmd) {
