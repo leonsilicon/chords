@@ -11,10 +11,10 @@ import { tap } from "chordsapp";
 import * as binaryPlist from "./plist-binary.ts";
 import { fastIsEqual } from "fast-is-equal";
 import parseJson from "json-parse-safe";
+import decodeUtf8 from "decode-utf8";
 
 export function plistValueToString(rawValue: unknown): string {
-  const valueString =
-    rawValue instanceof ArrayBuffer ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const valueString = rawValue instanceof ArrayBuffer ? decodeUtf8(rawValue) : String(rawValue);
 
   return valueString;
 }

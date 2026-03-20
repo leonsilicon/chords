@@ -47,6 +47,48 @@ var require_json_parse_safe = __commonJS((exports, module) => {
   }
 });
 
+// node_modules/.pnpm/decode-utf8@1.0.1/node_modules/decode-utf8/index.js
+var require_decode_utf8 = __commonJS((exports, module) => {
+  function toUint8Array(input) {
+    if (input instanceof Uint8Array)
+      return input;
+    if (input instanceof ArrayBuffer)
+      return new Uint8Array(input);
+    throw new TypeError('Expected "input" to be an ArrayBuffer or Uint8Array');
+  }
+  module.exports = function decodeUtf8(input) {
+    const data = toUint8Array(input);
+    const size = data.length;
+    let result = "";
+    for (let index = 0;index < size; index++) {
+      let byte1 = data[index];
+      if (byte1 < 128) {
+        result += String.fromCodePoint(byte1);
+        continue;
+      }
+      if ((byte1 & 224) === 192) {
+        let byte2 = data[++index] & 63;
+        result += String.fromCodePoint((byte1 & 31) << 6 | byte2);
+        continue;
+      }
+      if ((byte1 & 240) === 224) {
+        let byte2 = data[++index] & 63;
+        let byte3 = data[++index] & 63;
+        result += String.fromCodePoint((byte1 & 15) << 12 | byte2 << 6 | byte3);
+        continue;
+      }
+      if ((byte1 & 248) === 240) {
+        let byte2 = data[++index] & 63;
+        let byte3 = data[++index] & 63;
+        let byte4 = data[++index] & 63;
+        result += String.fromCodePoint((byte1 & 7) << 18 | byte2 << 12 | byte3 << 6 | byte4);
+        continue;
+      }
+    }
+    return result;
+  };
+});
+
 // node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
 var require_main = __commonJS((exports, module) => {
   function noop() {}
@@ -5531,8 +5573,9 @@ function deepEqual(valA, valB, visited) {
 
 // src/utils/plist.ts
 var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
+var import_decode_utf8 = __toESM(require_decode_utf8(), 1);
 function plistValueToString(rawValue) {
-  const valueString = rawValue instanceof ArrayBuffer ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const valueString = rawValue instanceof ArrayBuffer ? import_decode_utf8.default(rawValue) : String(rawValue);
   return valueString;
 }
 function getPlistShortcutUtils({
@@ -5688,8 +5731,49 @@ function exists(path) {
 // src/exports/bartender.ts
 var import_utils_noop = __toESM(require_lib(), 1);
 var import_json_parse_safe2 = __toESM(require_json_parse_safe(), 1);
-import { Buffer as Buffer2 } from "buffer";
 import fs3 from "fs";
+
+// node_modules/.pnpm/encode-utf8@2.0.0/node_modules/encode-utf8/index.js
+function encodeUtf8(input) {
+  const result = [];
+  const size = input.length;
+  for (let index = 0;index < size; index++) {
+    let point = input.charCodeAt(index);
+    if (point >= 55296 && point <= 56319 && size > index + 1) {
+      const second = input.charCodeAt(index + 1);
+      if (second >= 56320 && second <= 57343) {
+        point = (point - 55296) * 1024 + second - 56320 + 65536;
+        index += 1;
+      }
+    }
+    if (point < 128) {
+      result.push(point);
+      continue;
+    }
+    if (point < 2048) {
+      result.push(point >> 6 | 192);
+      result.push(point & 63 | 128);
+      continue;
+    }
+    if (point < 55296 || point >= 57344 && point < 65536) {
+      result.push(point >> 12 | 224);
+      result.push(point >> 6 & 63 | 128);
+      result.push(point & 63 | 128);
+      continue;
+    }
+    if (point >= 65536 && point <= 1114111) {
+      result.push(point >> 18 | 240);
+      result.push(point >> 12 & 63 | 128);
+      result.push(point >> 6 & 63 | 128);
+      result.push(point & 63 | 128);
+      continue;
+    }
+    result.push(239, 191, 189);
+  }
+  return new Uint8Array(result).buffer;
+}
+
+// src/exports/bartender.ts
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
@@ -5740,7 +5824,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
       };
       perItemHotkeyList.push(item);
     }
-    plist["per-item-hotkeys"] = Buffer2.from(JSON.stringify(perItemHotkeyList), "utf8");
+    plist["per-item-hotkeys"] = encodeUtf8(JSON.stringify(perItemHotkeyList));
     fs3.writeFileSync(plistPath, serialize(plist));
   }
   const plistHandler = buildHandler();
