@@ -1432,7 +1432,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   }
   const globalHotkeys = ensureGlobalHotkeys(includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
     bundleId: meta.bundleId,
-    getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+    getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
   });
   const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
     plistPath,

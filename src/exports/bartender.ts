@@ -26,7 +26,8 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     includeKeys(meta.chords, (sequence) => sequence.startsWith('/') || sequence.startsWith('-')),
     {
       bundleId: meta.bundleId,
-      getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+      // index 2 is the item id, index 1 is the property
+      getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
     }
   );
 
