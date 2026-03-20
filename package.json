@@ -23,11 +23,10 @@
     "js-yaml": "^4.1.1",
     "just-filter-object": "^3.2.0",
     "just-zip-it": "^3.2.0",
-    "keycode": "^2.2.1",
     "map-obj": "^6.0.0",
     "nullthrows-es": "^1.0.1",
     "onetime": "^8.0.0",
-    "os-keycode": "^1.0.0",
+    "keycode-ts2": "^0.1.0",
     "outdent": "^0.8.0",
     "type-fest": "^5.5.0",
     "untildify": "^6.0.0"

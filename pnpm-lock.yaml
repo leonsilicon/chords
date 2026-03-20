@@ -38,9 +38,9 @@ importers:
       just-zip-it:
         specifier: ^3.2.0
         version: 3.2.0
-      keycode:
-        specifier: ^2.2.1
-        version: 2.2.1
+      keycode-ts2:
+        specifier: ^0.1.0
+        version: 0.1.0
       map-obj:
         specifier: ^6.0.0
         version: 6.0.0
@@ -50,9 +50,6 @@ importers:
       onetime:
         specifier: ^8.0.0
         version: 8.0.0
-      os-keycode:
-        specifier: ^1.0.0
-        version: 1.0.0
       outdent:
         specifier: ^0.8.0
         version: 0.8.0
@@ -137,8 +134,8 @@ packages:
   just-zip-it@3.2.0:
     resolution: {integrity: sha512-ZJxc8mLz8XkaoOegJ237Xuo3ZQB5zUN/8BTXqalBJbh/uj+ahfJbOJKadJPmXDBbxHzh+MQYH43VxV5TlQvlfw==}
 
-  keycode@2.2.1:
-    resolution: {integrity: sha512-Rdgz9Hl9Iv4QKi8b0OlCRQEzp4AgVxyCtz5S/+VIHezDmrDhkp2N2TqBWOLz0/gbeREXOOiI9/4b8BY9uw2vFg==}
+  keycode-ts2@0.1.0:
+    resolution: {integrity: sha512-GVpkNchsaKxraSqYNReQJaAp3RdlrKc/Nw/fhMl+DKisTehAiCCYjxlTlohjdPNkb4kvmAjSQEpIVoHgpwVyXg==}
 
   lefthook-darwin-arm64@2.1.4:
     resolution: {integrity: sha512-BUAAE9+rUrjr39a+wH/1zHmGrDdwUQ2Yq/z6BQbM/yUb9qtXBRcQ5eOXxApqWW177VhGBpX31aqIlfAZ5Q7wzw==}
@@ -226,9 +223,6 @@ packages:
     resolution: {integrity: sha512-ODz2CnF+9043eG3exS38Efor4ekggmKvIydHaXWr1n9mXA5Afn8BdSsvVpa5AhBWricxhdBMfyeG3Yo3SB+VWA==}
     engines: {node: '>=22'}
 
-  os-keycode@1.0.0:
-    resolution: {integrity: sha512-a4BRXYTtu2Hxs6CO2/mNQOg7ClTcp7gcK3bVR6T5A0D8CBJsiuKKseQLwcl2WjkSoMakRll8VGtKVYw1OPl51g==}
-
   outdent@0.8.0:
     resolution: {integrity: sha512-KiOAIsdpUTcAXuykya5fnVVT+/5uS0Q1mrkRHcF89tpieSmY33O/tmc54CqwA+bfhbtEfZUNLHaPUiB9X3jt1A==}
 
@@ -306,7 +300,7 @@ snapshots:
 
   just-zip-it@3.2.0: {}
 
-  keycode@2.2.1: {}
+  keycode-ts2@0.1.0: {}
 
   lefthook-darwin-arm64@2.1.4:
     optional: true
@@ -370,8 +364,6 @@ snapshots:
   onetime@8.0.0:
     dependencies:
       mimic-function: 5.0.1
-
-  os-keycode@1.0.0: {}
 
   outdent@0.8.0: {}
 

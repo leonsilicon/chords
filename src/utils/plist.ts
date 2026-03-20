@@ -2,9 +2,8 @@ import { parseBuffer } from "bplist-parser-pure";
 import { Buffer } from "buffer";
 import fs from 'fs'
 import { carbonModifiersToKeystrings, modifiersToKeystrings, keystringsToCarbonModifierMask, keystringsToModifierMask } from "./mac-keycode.ts";
-import { keyname } from "os-keycode";
+import { getKeyMap, getKeyMapByCode, KeyMappingCode } from "keycode-ts2";
 import { tap } from "chordsapp";
-import { keycode } from 'os-keycode'
 import bplist from "bplist-creator-pure";
 import { fastIsEqual } from 'fast-is-equal'
 
@@ -51,10 +50,15 @@ export function getPlistShortcutUtils({
       const modifiers = parts.slice(0, -1);
       const mask = modifierType === 'carbon' ? keystringsToCarbonModifierMask(modifiers) : keystringsToModifierMask(modifiers);
 
+      const code = key in KeyMappingCode ? KeyMappingCode[key as keyof typeof KeyMappingCode] : null;
+      if (code === null) {
+        throw new Error(`Key "${key}" not found in key mapping`);
+      }
+
       const object = {
         [modifierMaskKey]: mask,
         // TODO: make more robust (we need to roll our own lib)
-        [keycodeKey]: keycode(key.toLowerCase())
+        [keycodeKey]: getKeyMapByCode(code)
       }
       if (fastIsEqual(root[property], object)) {
         continue;
@@ -89,11 +93,15 @@ export function getPlistShortcutUtils({
 
       const value = JSON.parse(plistValueToString(rawValue));
       const keys = modifierType === 'carbon' ? carbonModifiersToKeystrings(value[modifierMaskKey]) : modifiersToKeystrings(value[modifierMaskKey]);
-      const keyInfo = keyname(value[keycodeKey]);
-      if (!keyInfo || !("key" in keyInfo)) {
-        return false;
+      const keymap = getKeyMap({
+        kind: 'mac',
+        code: value[keycodeKey]
+      })
+      if (!keymap?.code) {
+        return false
       }
-      keys.push(keyInfo.key);
+
+      keys.push(keymap.code);
       tap(keys.join("+"));
       return true;
     }
