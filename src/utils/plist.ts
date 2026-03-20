@@ -67,6 +67,7 @@ export function getPlistShortcutUtils({
           : new Uint8Array(Buffer.from(stringValue, 'utf8'));
 
         root[property] = value;
+        plistNeedsUpdates = true;
     }
 
     if (plistNeedsUpdates) {

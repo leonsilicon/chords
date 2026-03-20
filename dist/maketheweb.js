@@ -1351,6 +1351,7 @@ function getPlistShortcutUtils({
       const stringValue = JSON.stringify(object);
       const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer2.from(stringValue, "utf8"));
       root[property] = value;
+      plistNeedsUpdates = true;
     }
     if (plistNeedsUpdates) {
       fs.writeFileSync(plistPath, bplist(plist));
