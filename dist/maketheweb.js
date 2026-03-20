@@ -105,25 +105,10 @@ function nullthrows(value, message) {
   throw new TypeError(message !== null && message !== undefined ? message : `Expected value not to be null or undefined but got ${value}`);
 }
 
-// node_modules/.pnpm/bplist-parser-pure@0.0.1/node_modules/bplist-parser-pure/dist/bplist-parser.mjs
-function _define_property(obj, key, value) {
-  if (key in obj) {
-    Object.defineProperty(obj, key, { value, enumerable: true, configurable: true, writable: true });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
-}
+// node_modules/.pnpm/bplist-parser-pure@0.0.2/node_modules/bplist-parser-pure/dist/bplist-parser.mjs
 var maxObjectSize = 100 * 1000 * 1000;
 var maxObjectCount = 32768;
 var EPOCH = 978307200000;
-
-class UID {
-  constructor(UID2) {
-    _define_property(this, "UID", undefined);
-    this.UID = UID2;
-  }
-}
 var parseBuffer = function(_buffer) {
   const buffer = new Uint8Array(_buffer);
   const view = new DataView(_buffer);
@@ -235,7 +220,7 @@ var parseBuffer = function(_buffer) {
     function parseUID() {
       const length = objInfo + 1;
       if (length < maxObjectSize) {
-        return new UID(readUInt(buffer.slice(offset + 1, offset + 1 + length)));
+        return readUInt(buffer.slice(offset + 1, offset + 1 + length));
       }
       throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
     }
@@ -597,7 +582,7 @@ var $keycode = keycode;
 // src/utils/plist.ts
 import { tap } from "chordsapp";
 
-// node_modules/.pnpm/bplist-creator-pure@0.2.0/node_modules/bplist-creator-pure/index.js
+// node_modules/.pnpm/bplist-creator-pure@0.2.1/node_modules/bplist-creator-pure/index.js
 class WritableStreamBuffer {
   constructor() {
     this._chunks = [];
@@ -852,13 +837,13 @@ function toEntries(dicts) {
   if (dicts.bplistOverride) {
     return [dicts];
   }
-  if (dicts instanceof Array) {
+  if (Array.isArray(dicts)) {
     return toEntriesArray(dicts);
-  } else if (dicts instanceof Buffer) {
+  } else if (dicts instanceof Uint8Array || dicts instanceof ArrayBuffer || ArrayBuffer.isView(dicts)) {
     return [
       {
         type: "data",
-        value: dicts
+        value: dicts instanceof Uint8Array ? dicts : new Uint8Array(dicts.buffer ?? dicts, dicts.byteOffset ?? 0, dicts.byteLength)
       }
     ];
   } else if (dicts instanceof Real) {
@@ -883,8 +868,10 @@ function toEntries(dicts) {
           value: dicts.UID
         }
       ];
-    } else {
+    } else if (dicts !== null && (Object.getPrototypeOf(dicts) === Object.prototype || Object.getPrototypeOf(dicts) === null)) {
       return toEntriesObject(dicts);
+    } else {
+      throw new Error(`unknown data type: ${Object.prototype.toString.call(dicts)}`);
     }
   } else if (typeof dicts === "string") {
     return [

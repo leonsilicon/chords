@@ -15,11 +15,11 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       bplist-creator-pure:
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: ^0.2.1
+        version: 0.2.1
       bplist-parser-pure:
-        specifier: ^0.0.1
-        version: 0.0.1
+        specifier: ^0.0.2
+        version: 0.0.2
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
@@ -106,11 +106,11 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  bplist-creator-pure@0.2.0:
-    resolution: {integrity: sha512-d73iwu3TOxrrt+iQGD9jTXE/2b3gaSvbYKyA188BWeCn73s7xDUnaysdLp8UtbTqb9bd0a2s09Cq+sBZoB2ypQ==}
+  bplist-creator-pure@0.2.1:
+    resolution: {integrity: sha512-qPiFXC2387TWqnU1kH+D8hdd9S7SALLgvnl8I2dM1CTPxwuKqFREpVrI0IurLUSCX/+STryboYty0VJ71LBElg==}
 
-  bplist-parser-pure@0.0.1:
-    resolution: {integrity: sha512-Mw1dqhw9c0w4SzA8AlgwfBiaf7mXSCaluNNMHBikqvF+HGM/iN1lDZpVSyRckjdEthJ2VkrrTNTlifR75HGUFQ==}
+  bplist-parser-pure@0.0.2:
+    resolution: {integrity: sha512-HsP2A3Jd1FJubab4tP/bF0O2UVehZXYyhjTB3N4jUMLep5RbnBF1sxQ8DfzeVpdzO3bxLnd772dz7+to/CMU1Q==}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
@@ -280,9 +280,9 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  bplist-creator-pure@0.2.0: {}
+  bplist-creator-pure@0.2.1: {}
 
-  bplist-parser-pure@0.0.1: {}
+  bplist-parser-pure@0.0.2: {}
 
   brace-expansion@5.0.4:
     dependencies:

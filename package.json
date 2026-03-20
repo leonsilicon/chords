@@ -15,8 +15,8 @@
   "dependencies": {
     "@stdlib/utils-noop": "^0.2.3",
     "array-uniq": "^3.0.0",
-    "bplist-creator-pure": "^0.2.0",
-    "bplist-parser-pure": "^0.0.1",
+    "bplist-creator-pure": "^0.2.1",
+    "bplist-parser-pure": "^0.0.2",
     "brace-expansion": "^5.0.4",
     "fast-is-equal": "^1.2.6",
     "filter-obj": "^6.1.0",
