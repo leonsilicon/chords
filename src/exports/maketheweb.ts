@@ -1,7 +1,7 @@
 import untildify from "untildify";
-import { ensureGlobalHotkeys } from "../utils/global.ts";
+import { ensureGlobalHotkeys } from "#/utils/global.ts";
 import nullthrows from 'nullthrows-es'
-import { getPlistShortcutUtils } from "../utils/plist.ts";
+import { getPlistShortcutUtils } from "#/utils/plist.ts";
 import { includeKeys } from "filter-obj";
 import type { BuildHandler } from "../types/handler.ts";
 

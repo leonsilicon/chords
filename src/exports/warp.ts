@@ -20,10 +20,6 @@ function extractCommands(chords: ImportMeta["chords"]): string[] {
   return result;
 }
 
-function normalizeKeybind(k: string): string {
-  return k.replace(/\+/g, "-");
-}
-
 export default (function buildWarpHandler(meta) {
   const commands = extractCommands(meta.chords);
 
@@ -55,7 +51,8 @@ export default (function buildWarpHandler(meta) {
   }
 
   for (const cmd of sortedCommands) {
-    const keybind = normalizeKeybind(syntheticKeybinds[cmd]!);
+    // Warp uses - instead of + as their keybind separator
+    const keybind = syntheticKeybinds[cmd]!.replaceAll('+', '-');
     keybindings[cmd] = keybind;
   }
   fs.writeFileSync(keybindingsPath, "---\n" + yaml.dump(keybindings));

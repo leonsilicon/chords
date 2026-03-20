@@ -46,7 +46,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 - `ff` = Folding: Fold
 - `fu` = Folding: Unfold
   `p` = `P`anel (Tool Window in IntelliJ, View in VSCode)
-  `pg` = `P`age
+  `pg` = `P`a`g`e
   `s` = `S`plit (Split in Intellij, Editor Group in VSCode, Pane in Warp)\
   `t` = `T`ab/`T`erminal\
   `g` = `G`oto/`G`it

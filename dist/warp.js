@@ -2971,9 +2971,6 @@ function extractCommands(chords) {
   }
   return result;
 }
-function normalizeKeybind(k) {
-  return k.replace(/\+/g, "-");
-}
 var buildWarpHandler = function buildWarpHandler(meta) {
   const commands = extractCommands(meta.chords);
   const syntheticKeybinds = generateSyntheticKeybinds(commands, [
@@ -2997,7 +2994,7 @@ var buildWarpHandler = function buildWarpHandler(meta) {
     }
   }
   for (const cmd of sortedCommands) {
-    const keybind = normalizeKeybind(syntheticKeybinds[cmd]);
+    const keybind = syntheticKeybinds[cmd].replaceAll("+", "-");
     keybindings[cmd] = keybind;
   }
   fs2.writeFileSync(keybindingsPath, `---
