@@ -30,6 +30,7 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = import.meta.require;
 
 // src/utils/exec.ts
 import { spawn } from "child_process";

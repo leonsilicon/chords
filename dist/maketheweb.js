@@ -30,6 +30,1685 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = import.meta.require;
+
+// node_modules/.pnpm/big-integer@1.6.52/node_modules/big-integer/BigInteger.js
+var require_BigInteger = __commonJS((exports, module) => {
+  var bigInt = function(undefined2) {
+    var BASE = 1e7, LOG_BASE = 7, MAX_INT = 9007199254740992, MAX_INT_ARR = smallToArray(MAX_INT), DEFAULT_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
+    var supportsNativeBigInt = typeof BigInt === "function";
+    function Integer(v, radix, alphabet, caseSensitive) {
+      if (typeof v === "undefined")
+        return Integer[0];
+      if (typeof radix !== "undefined")
+        return +radix === 10 && !alphabet ? parseValue(v) : parseBase(v, radix, alphabet, caseSensitive);
+      return parseValue(v);
+    }
+    function BigInteger(value, sign) {
+      this.value = value;
+      this.sign = sign;
+      this.isSmall = false;
+    }
+    BigInteger.prototype = Object.create(Integer.prototype);
+    function SmallInteger(value) {
+      this.value = value;
+      this.sign = value < 0;
+      this.isSmall = true;
+    }
+    SmallInteger.prototype = Object.create(Integer.prototype);
+    function NativeBigInt(value) {
+      this.value = value;
+    }
+    NativeBigInt.prototype = Object.create(Integer.prototype);
+    function isPrecise(n) {
+      return -MAX_INT < n && n < MAX_INT;
+    }
+    function smallToArray(n) {
+      if (n < 1e7)
+        return [n];
+      if (n < 100000000000000)
+        return [n % 1e7, Math.floor(n / 1e7)];
+      return [n % 1e7, Math.floor(n / 1e7) % 1e7, Math.floor(n / 100000000000000)];
+    }
+    function arrayToSmall(arr) {
+      trim(arr);
+      var length = arr.length;
+      if (length < 4 && compareAbs(arr, MAX_INT_ARR) < 0) {
+        switch (length) {
+          case 0:
+            return 0;
+          case 1:
+            return arr[0];
+          case 2:
+            return arr[0] + arr[1] * BASE;
+          default:
+            return arr[0] + (arr[1] + arr[2] * BASE) * BASE;
+        }
+      }
+      return arr;
+    }
+    function trim(v) {
+      var i2 = v.length;
+      while (v[--i2] === 0)
+        ;
+      v.length = i2 + 1;
+    }
+    function createArray(length) {
+      var x = new Array(length);
+      var i2 = -1;
+      while (++i2 < length) {
+        x[i2] = 0;
+      }
+      return x;
+    }
+    function truncate(n) {
+      if (n > 0)
+        return Math.floor(n);
+      return Math.ceil(n);
+    }
+    function add(a, b) {
+      var l_a = a.length, l_b = b.length, r = new Array(l_a), carry = 0, base = BASE, sum, i2;
+      for (i2 = 0;i2 < l_b; i2++) {
+        sum = a[i2] + b[i2] + carry;
+        carry = sum >= base ? 1 : 0;
+        r[i2] = sum - carry * base;
+      }
+      while (i2 < l_a) {
+        sum = a[i2] + carry;
+        carry = sum === base ? 1 : 0;
+        r[i2++] = sum - carry * base;
+      }
+      if (carry > 0)
+        r.push(carry);
+      return r;
+    }
+    function addAny(a, b) {
+      if (a.length >= b.length)
+        return add(a, b);
+      return add(b, a);
+    }
+    function addSmall(a, carry) {
+      var l = a.length, r = new Array(l), base = BASE, sum, i2;
+      for (i2 = 0;i2 < l; i2++) {
+        sum = a[i2] - base + carry;
+        carry = Math.floor(sum / base);
+        r[i2] = sum - carry * base;
+        carry += 1;
+      }
+      while (carry > 0) {
+        r[i2++] = carry % base;
+        carry = Math.floor(carry / base);
+      }
+      return r;
+    }
+    BigInteger.prototype.add = function(v) {
+      var n = parseValue(v);
+      if (this.sign !== n.sign) {
+        return this.subtract(n.negate());
+      }
+      var a = this.value, b = n.value;
+      if (n.isSmall) {
+        return new BigInteger(addSmall(a, Math.abs(b)), this.sign);
+      }
+      return new BigInteger(addAny(a, b), this.sign);
+    };
+    BigInteger.prototype.plus = BigInteger.prototype.add;
+    SmallInteger.prototype.add = function(v) {
+      var n = parseValue(v);
+      var a = this.value;
+      if (a < 0 !== n.sign) {
+        return this.subtract(n.negate());
+      }
+      var b = n.value;
+      if (n.isSmall) {
+        if (isPrecise(a + b))
+          return new SmallInteger(a + b);
+        b = smallToArray(Math.abs(b));
+      }
+      return new BigInteger(addSmall(b, Math.abs(a)), a < 0);
+    };
+    SmallInteger.prototype.plus = SmallInteger.prototype.add;
+    NativeBigInt.prototype.add = function(v) {
+      return new NativeBigInt(this.value + parseValue(v).value);
+    };
+    NativeBigInt.prototype.plus = NativeBigInt.prototype.add;
+    function subtract(a, b) {
+      var a_l = a.length, b_l = b.length, r = new Array(a_l), borrow = 0, base = BASE, i2, difference;
+      for (i2 = 0;i2 < b_l; i2++) {
+        difference = a[i2] - borrow - b[i2];
+        if (difference < 0) {
+          difference += base;
+          borrow = 1;
+        } else
+          borrow = 0;
+        r[i2] = difference;
+      }
+      for (i2 = b_l;i2 < a_l; i2++) {
+        difference = a[i2] - borrow;
+        if (difference < 0)
+          difference += base;
+        else {
+          r[i2++] = difference;
+          break;
+        }
+        r[i2] = difference;
+      }
+      for (;i2 < a_l; i2++) {
+        r[i2] = a[i2];
+      }
+      trim(r);
+      return r;
+    }
+    function subtractAny(a, b, sign) {
+      var value;
+      if (compareAbs(a, b) >= 0) {
+        value = subtract(a, b);
+      } else {
+        value = subtract(b, a);
+        sign = !sign;
+      }
+      value = arrayToSmall(value);
+      if (typeof value === "number") {
+        if (sign)
+          value = -value;
+        return new SmallInteger(value);
+      }
+      return new BigInteger(value, sign);
+    }
+    function subtractSmall(a, b, sign) {
+      var l = a.length, r = new Array(l), carry = -b, base = BASE, i2, difference;
+      for (i2 = 0;i2 < l; i2++) {
+        difference = a[i2] + carry;
+        carry = Math.floor(difference / base);
+        difference %= base;
+        r[i2] = difference < 0 ? difference + base : difference;
+      }
+      r = arrayToSmall(r);
+      if (typeof r === "number") {
+        if (sign)
+          r = -r;
+        return new SmallInteger(r);
+      }
+      return new BigInteger(r, sign);
+    }
+    BigInteger.prototype.subtract = function(v) {
+      var n = parseValue(v);
+      if (this.sign !== n.sign) {
+        return this.add(n.negate());
+      }
+      var a = this.value, b = n.value;
+      if (n.isSmall)
+        return subtractSmall(a, Math.abs(b), this.sign);
+      return subtractAny(a, b, this.sign);
+    };
+    BigInteger.prototype.minus = BigInteger.prototype.subtract;
+    SmallInteger.prototype.subtract = function(v) {
+      var n = parseValue(v);
+      var a = this.value;
+      if (a < 0 !== n.sign) {
+        return this.add(n.negate());
+      }
+      var b = n.value;
+      if (n.isSmall) {
+        return new SmallInteger(a - b);
+      }
+      return subtractSmall(b, Math.abs(a), a >= 0);
+    };
+    SmallInteger.prototype.minus = SmallInteger.prototype.subtract;
+    NativeBigInt.prototype.subtract = function(v) {
+      return new NativeBigInt(this.value - parseValue(v).value);
+    };
+    NativeBigInt.prototype.minus = NativeBigInt.prototype.subtract;
+    BigInteger.prototype.negate = function() {
+      return new BigInteger(this.value, !this.sign);
+    };
+    SmallInteger.prototype.negate = function() {
+      var sign = this.sign;
+      var small = new SmallInteger(-this.value);
+      small.sign = !sign;
+      return small;
+    };
+    NativeBigInt.prototype.negate = function() {
+      return new NativeBigInt(-this.value);
+    };
+    BigInteger.prototype.abs = function() {
+      return new BigInteger(this.value, false);
+    };
+    SmallInteger.prototype.abs = function() {
+      return new SmallInteger(Math.abs(this.value));
+    };
+    NativeBigInt.prototype.abs = function() {
+      return new NativeBigInt(this.value >= 0 ? this.value : -this.value);
+    };
+    function multiplyLong(a, b) {
+      var a_l = a.length, b_l = b.length, l = a_l + b_l, r = createArray(l), base = BASE, product, carry, i2, a_i, b_j;
+      for (i2 = 0;i2 < a_l; ++i2) {
+        a_i = a[i2];
+        for (var j = 0;j < b_l; ++j) {
+          b_j = b[j];
+          product = a_i * b_j + r[i2 + j];
+          carry = Math.floor(product / base);
+          r[i2 + j] = product - carry * base;
+          r[i2 + j + 1] += carry;
+        }
+      }
+      trim(r);
+      return r;
+    }
+    function multiplySmall(a, b) {
+      var l = a.length, r = new Array(l), base = BASE, carry = 0, product, i2;
+      for (i2 = 0;i2 < l; i2++) {
+        product = a[i2] * b + carry;
+        carry = Math.floor(product / base);
+        r[i2] = product - carry * base;
+      }
+      while (carry > 0) {
+        r[i2++] = carry % base;
+        carry = Math.floor(carry / base);
+      }
+      return r;
+    }
+    function shiftLeft(x, n) {
+      var r = [];
+      while (n-- > 0)
+        r.push(0);
+      return r.concat(x);
+    }
+    function multiplyKaratsuba(x, y) {
+      var n = Math.max(x.length, y.length);
+      if (n <= 30)
+        return multiplyLong(x, y);
+      n = Math.ceil(n / 2);
+      var b = x.slice(n), a = x.slice(0, n), d = y.slice(n), c = y.slice(0, n);
+      var ac = multiplyKaratsuba(a, c), bd = multiplyKaratsuba(b, d), abcd = multiplyKaratsuba(addAny(a, b), addAny(c, d));
+      var product = addAny(addAny(ac, shiftLeft(subtract(subtract(abcd, ac), bd), n)), shiftLeft(bd, 2 * n));
+      trim(product);
+      return product;
+    }
+    function useKaratsuba(l1, l2) {
+      return -0.012 * l1 - 0.012 * l2 + 0.000015 * l1 * l2 > 0;
+    }
+    BigInteger.prototype.multiply = function(v) {
+      var n = parseValue(v), a = this.value, b = n.value, sign = this.sign !== n.sign, abs;
+      if (n.isSmall) {
+        if (b === 0)
+          return Integer[0];
+        if (b === 1)
+          return this;
+        if (b === -1)
+          return this.negate();
+        abs = Math.abs(b);
+        if (abs < BASE) {
+          return new BigInteger(multiplySmall(a, abs), sign);
+        }
+        b = smallToArray(abs);
+      }
+      if (useKaratsuba(a.length, b.length))
+        return new BigInteger(multiplyKaratsuba(a, b), sign);
+      return new BigInteger(multiplyLong(a, b), sign);
+    };
+    BigInteger.prototype.times = BigInteger.prototype.multiply;
+    function multiplySmallAndArray(a, b, sign) {
+      if (a < BASE) {
+        return new BigInteger(multiplySmall(b, a), sign);
+      }
+      return new BigInteger(multiplyLong(b, smallToArray(a)), sign);
+    }
+    SmallInteger.prototype._multiplyBySmall = function(a) {
+      if (isPrecise(a.value * this.value)) {
+        return new SmallInteger(a.value * this.value);
+      }
+      return multiplySmallAndArray(Math.abs(a.value), smallToArray(Math.abs(this.value)), this.sign !== a.sign);
+    };
+    BigInteger.prototype._multiplyBySmall = function(a) {
+      if (a.value === 0)
+        return Integer[0];
+      if (a.value === 1)
+        return this;
+      if (a.value === -1)
+        return this.negate();
+      return multiplySmallAndArray(Math.abs(a.value), this.value, this.sign !== a.sign);
+    };
+    SmallInteger.prototype.multiply = function(v) {
+      return parseValue(v)._multiplyBySmall(this);
+    };
+    SmallInteger.prototype.times = SmallInteger.prototype.multiply;
+    NativeBigInt.prototype.multiply = function(v) {
+      return new NativeBigInt(this.value * parseValue(v).value);
+    };
+    NativeBigInt.prototype.times = NativeBigInt.prototype.multiply;
+    function square(a) {
+      var l = a.length, r = createArray(l + l), base = BASE, product, carry, i2, a_i, a_j;
+      for (i2 = 0;i2 < l; i2++) {
+        a_i = a[i2];
+        carry = 0 - a_i * a_i;
+        for (var j = i2;j < l; j++) {
+          a_j = a[j];
+          product = 2 * (a_i * a_j) + r[i2 + j] + carry;
+          carry = Math.floor(product / base);
+          r[i2 + j] = product - carry * base;
+        }
+        r[i2 + l] = carry;
+      }
+      trim(r);
+      return r;
+    }
+    BigInteger.prototype.square = function() {
+      return new BigInteger(square(this.value), false);
+    };
+    SmallInteger.prototype.square = function() {
+      var value = this.value * this.value;
+      if (isPrecise(value))
+        return new SmallInteger(value);
+      return new BigInteger(square(smallToArray(Math.abs(this.value))), false);
+    };
+    NativeBigInt.prototype.square = function(v) {
+      return new NativeBigInt(this.value * this.value);
+    };
+    function divMod1(a, b) {
+      var a_l = a.length, b_l = b.length, base = BASE, result = createArray(b.length), divisorMostSignificantDigit = b[b_l - 1], lambda = Math.ceil(base / (2 * divisorMostSignificantDigit)), remainder = multiplySmall(a, lambda), divisor = multiplySmall(b, lambda), quotientDigit, shift, carry, borrow, i2, l, q;
+      if (remainder.length <= a_l)
+        remainder.push(0);
+      divisor.push(0);
+      divisorMostSignificantDigit = divisor[b_l - 1];
+      for (shift = a_l - b_l;shift >= 0; shift--) {
+        quotientDigit = base - 1;
+        if (remainder[shift + b_l] !== divisorMostSignificantDigit) {
+          quotientDigit = Math.floor((remainder[shift + b_l] * base + remainder[shift + b_l - 1]) / divisorMostSignificantDigit);
+        }
+        carry = 0;
+        borrow = 0;
+        l = divisor.length;
+        for (i2 = 0;i2 < l; i2++) {
+          carry += quotientDigit * divisor[i2];
+          q = Math.floor(carry / base);
+          borrow += remainder[shift + i2] - (carry - q * base);
+          carry = q;
+          if (borrow < 0) {
+            remainder[shift + i2] = borrow + base;
+            borrow = -1;
+          } else {
+            remainder[shift + i2] = borrow;
+            borrow = 0;
+          }
+        }
+        while (borrow !== 0) {
+          quotientDigit -= 1;
+          carry = 0;
+          for (i2 = 0;i2 < l; i2++) {
+            carry += remainder[shift + i2] - base + divisor[i2];
+            if (carry < 0) {
+              remainder[shift + i2] = carry + base;
+              carry = 0;
+            } else {
+              remainder[shift + i2] = carry;
+              carry = 1;
+            }
+          }
+          borrow += carry;
+        }
+        result[shift] = quotientDigit;
+      }
+      remainder = divModSmall(remainder, lambda)[0];
+      return [arrayToSmall(result), arrayToSmall(remainder)];
+    }
+    function divMod2(a, b) {
+      var a_l = a.length, b_l = b.length, result = [], part = [], base = BASE, guess, xlen, highx, highy, check;
+      while (a_l) {
+        part.unshift(a[--a_l]);
+        trim(part);
+        if (compareAbs(part, b) < 0) {
+          result.push(0);
+          continue;
+        }
+        xlen = part.length;
+        highx = part[xlen - 1] * base + part[xlen - 2];
+        highy = b[b_l - 1] * base + b[b_l - 2];
+        if (xlen > b_l) {
+          highx = (highx + 1) * base;
+        }
+        guess = Math.ceil(highx / highy);
+        do {
+          check = multiplySmall(b, guess);
+          if (compareAbs(check, part) <= 0)
+            break;
+          guess--;
+        } while (guess);
+        result.push(guess);
+        part = subtract(part, check);
+      }
+      result.reverse();
+      return [arrayToSmall(result), arrayToSmall(part)];
+    }
+    function divModSmall(value, lambda) {
+      var length = value.length, quotient = createArray(length), base = BASE, i2, q, remainder, divisor;
+      remainder = 0;
+      for (i2 = length - 1;i2 >= 0; --i2) {
+        divisor = remainder * base + value[i2];
+        q = truncate(divisor / lambda);
+        remainder = divisor - q * lambda;
+        quotient[i2] = q | 0;
+      }
+      return [quotient, remainder | 0];
+    }
+    function divModAny(self, v) {
+      var value, n = parseValue(v);
+      if (supportsNativeBigInt) {
+        return [new NativeBigInt(self.value / n.value), new NativeBigInt(self.value % n.value)];
+      }
+      var a = self.value, b = n.value;
+      var quotient;
+      if (b === 0)
+        throw new Error("Cannot divide by zero");
+      if (self.isSmall) {
+        if (n.isSmall) {
+          return [new SmallInteger(truncate(a / b)), new SmallInteger(a % b)];
+        }
+        return [Integer[0], self];
+      }
+      if (n.isSmall) {
+        if (b === 1)
+          return [self, Integer[0]];
+        if (b == -1)
+          return [self.negate(), Integer[0]];
+        var abs = Math.abs(b);
+        if (abs < BASE) {
+          value = divModSmall(a, abs);
+          quotient = arrayToSmall(value[0]);
+          var remainder = value[1];
+          if (self.sign)
+            remainder = -remainder;
+          if (typeof quotient === "number") {
+            if (self.sign !== n.sign)
+              quotient = -quotient;
+            return [new SmallInteger(quotient), new SmallInteger(remainder)];
+          }
+          return [new BigInteger(quotient, self.sign !== n.sign), new SmallInteger(remainder)];
+        }
+        b = smallToArray(abs);
+      }
+      var comparison = compareAbs(a, b);
+      if (comparison === -1)
+        return [Integer[0], self];
+      if (comparison === 0)
+        return [Integer[self.sign === n.sign ? 1 : -1], Integer[0]];
+      if (a.length + b.length <= 200)
+        value = divMod1(a, b);
+      else
+        value = divMod2(a, b);
+      quotient = value[0];
+      var qSign = self.sign !== n.sign, mod = value[1], mSign = self.sign;
+      if (typeof quotient === "number") {
+        if (qSign)
+          quotient = -quotient;
+        quotient = new SmallInteger(quotient);
+      } else
+        quotient = new BigInteger(quotient, qSign);
+      if (typeof mod === "number") {
+        if (mSign)
+          mod = -mod;
+        mod = new SmallInteger(mod);
+      } else
+        mod = new BigInteger(mod, mSign);
+      return [quotient, mod];
+    }
+    BigInteger.prototype.divmod = function(v) {
+      var result = divModAny(this, v);
+      return {
+        quotient: result[0],
+        remainder: result[1]
+      };
+    };
+    NativeBigInt.prototype.divmod = SmallInteger.prototype.divmod = BigInteger.prototype.divmod;
+    BigInteger.prototype.divide = function(v) {
+      return divModAny(this, v)[0];
+    };
+    NativeBigInt.prototype.over = NativeBigInt.prototype.divide = function(v) {
+      return new NativeBigInt(this.value / parseValue(v).value);
+    };
+    SmallInteger.prototype.over = SmallInteger.prototype.divide = BigInteger.prototype.over = BigInteger.prototype.divide;
+    BigInteger.prototype.mod = function(v) {
+      return divModAny(this, v)[1];
+    };
+    NativeBigInt.prototype.mod = NativeBigInt.prototype.remainder = function(v) {
+      return new NativeBigInt(this.value % parseValue(v).value);
+    };
+    SmallInteger.prototype.remainder = SmallInteger.prototype.mod = BigInteger.prototype.remainder = BigInteger.prototype.mod;
+    BigInteger.prototype.pow = function(v) {
+      var n = parseValue(v), a = this.value, b = n.value, value, x, y;
+      if (b === 0)
+        return Integer[1];
+      if (a === 0)
+        return Integer[0];
+      if (a === 1)
+        return Integer[1];
+      if (a === -1)
+        return n.isEven() ? Integer[1] : Integer[-1];
+      if (n.sign) {
+        return Integer[0];
+      }
+      if (!n.isSmall)
+        throw new Error("The exponent " + n.toString() + " is too large.");
+      if (this.isSmall) {
+        if (isPrecise(value = Math.pow(a, b)))
+          return new SmallInteger(truncate(value));
+      }
+      x = this;
+      y = Integer[1];
+      while (true) {
+        if (b & true) {
+          y = y.times(x);
+          --b;
+        }
+        if (b === 0)
+          break;
+        b /= 2;
+        x = x.square();
+      }
+      return y;
+    };
+    SmallInteger.prototype.pow = BigInteger.prototype.pow;
+    NativeBigInt.prototype.pow = function(v) {
+      var n = parseValue(v);
+      var a = this.value, b = n.value;
+      var _0 = BigInt(0), _1 = BigInt(1), _2 = BigInt(2);
+      if (b === _0)
+        return Integer[1];
+      if (a === _0)
+        return Integer[0];
+      if (a === _1)
+        return Integer[1];
+      if (a === BigInt(-1))
+        return n.isEven() ? Integer[1] : Integer[-1];
+      if (n.isNegative())
+        return new NativeBigInt(_0);
+      var x = this;
+      var y = Integer[1];
+      while (true) {
+        if ((b & _1) === _1) {
+          y = y.times(x);
+          --b;
+        }
+        if (b === _0)
+          break;
+        b /= _2;
+        x = x.square();
+      }
+      return y;
+    };
+    BigInteger.prototype.modPow = function(exp, mod) {
+      exp = parseValue(exp);
+      mod = parseValue(mod);
+      if (mod.isZero())
+        throw new Error("Cannot take modPow with modulus 0");
+      var r = Integer[1], base = this.mod(mod);
+      if (exp.isNegative()) {
+        exp = exp.multiply(Integer[-1]);
+        base = base.modInv(mod);
+      }
+      while (exp.isPositive()) {
+        if (base.isZero())
+          return Integer[0];
+        if (exp.isOdd())
+          r = r.multiply(base).mod(mod);
+        exp = exp.divide(2);
+        base = base.square().mod(mod);
+      }
+      return r;
+    };
+    NativeBigInt.prototype.modPow = SmallInteger.prototype.modPow = BigInteger.prototype.modPow;
+    function compareAbs(a, b) {
+      if (a.length !== b.length) {
+        return a.length > b.length ? 1 : -1;
+      }
+      for (var i2 = a.length - 1;i2 >= 0; i2--) {
+        if (a[i2] !== b[i2])
+          return a[i2] > b[i2] ? 1 : -1;
+      }
+      return 0;
+    }
+    BigInteger.prototype.compareAbs = function(v) {
+      var n = parseValue(v), a = this.value, b = n.value;
+      if (n.isSmall)
+        return 1;
+      return compareAbs(a, b);
+    };
+    SmallInteger.prototype.compareAbs = function(v) {
+      var n = parseValue(v), a = Math.abs(this.value), b = n.value;
+      if (n.isSmall) {
+        b = Math.abs(b);
+        return a === b ? 0 : a > b ? 1 : -1;
+      }
+      return -1;
+    };
+    NativeBigInt.prototype.compareAbs = function(v) {
+      var a = this.value;
+      var b = parseValue(v).value;
+      a = a >= 0 ? a : -a;
+      b = b >= 0 ? b : -b;
+      return a === b ? 0 : a > b ? 1 : -1;
+    };
+    BigInteger.prototype.compare = function(v) {
+      if (v === Infinity) {
+        return -1;
+      }
+      if (v === -Infinity) {
+        return 1;
+      }
+      var n = parseValue(v), a = this.value, b = n.value;
+      if (this.sign !== n.sign) {
+        return n.sign ? 1 : -1;
+      }
+      if (n.isSmall) {
+        return this.sign ? -1 : 1;
+      }
+      return compareAbs(a, b) * (this.sign ? -1 : 1);
+    };
+    BigInteger.prototype.compareTo = BigInteger.prototype.compare;
+    SmallInteger.prototype.compare = function(v) {
+      if (v === Infinity) {
+        return -1;
+      }
+      if (v === -Infinity) {
+        return 1;
+      }
+      var n = parseValue(v), a = this.value, b = n.value;
+      if (n.isSmall) {
+        return a == b ? 0 : a > b ? 1 : -1;
+      }
+      if (a < 0 !== n.sign) {
+        return a < 0 ? -1 : 1;
+      }
+      return a < 0 ? 1 : -1;
+    };
+    SmallInteger.prototype.compareTo = SmallInteger.prototype.compare;
+    NativeBigInt.prototype.compare = function(v) {
+      if (v === Infinity) {
+        return -1;
+      }
+      if (v === -Infinity) {
+        return 1;
+      }
+      var a = this.value;
+      var b = parseValue(v).value;
+      return a === b ? 0 : a > b ? 1 : -1;
+    };
+    NativeBigInt.prototype.compareTo = NativeBigInt.prototype.compare;
+    BigInteger.prototype.equals = function(v) {
+      return this.compare(v) === 0;
+    };
+    NativeBigInt.prototype.eq = NativeBigInt.prototype.equals = SmallInteger.prototype.eq = SmallInteger.prototype.equals = BigInteger.prototype.eq = BigInteger.prototype.equals;
+    BigInteger.prototype.notEquals = function(v) {
+      return this.compare(v) !== 0;
+    };
+    NativeBigInt.prototype.neq = NativeBigInt.prototype.notEquals = SmallInteger.prototype.neq = SmallInteger.prototype.notEquals = BigInteger.prototype.neq = BigInteger.prototype.notEquals;
+    BigInteger.prototype.greater = function(v) {
+      return this.compare(v) > 0;
+    };
+    NativeBigInt.prototype.gt = NativeBigInt.prototype.greater = SmallInteger.prototype.gt = SmallInteger.prototype.greater = BigInteger.prototype.gt = BigInteger.prototype.greater;
+    BigInteger.prototype.lesser = function(v) {
+      return this.compare(v) < 0;
+    };
+    NativeBigInt.prototype.lt = NativeBigInt.prototype.lesser = SmallInteger.prototype.lt = SmallInteger.prototype.lesser = BigInteger.prototype.lt = BigInteger.prototype.lesser;
+    BigInteger.prototype.greaterOrEquals = function(v) {
+      return this.compare(v) >= 0;
+    };
+    NativeBigInt.prototype.geq = NativeBigInt.prototype.greaterOrEquals = SmallInteger.prototype.geq = SmallInteger.prototype.greaterOrEquals = BigInteger.prototype.geq = BigInteger.prototype.greaterOrEquals;
+    BigInteger.prototype.lesserOrEquals = function(v) {
+      return this.compare(v) <= 0;
+    };
+    NativeBigInt.prototype.leq = NativeBigInt.prototype.lesserOrEquals = SmallInteger.prototype.leq = SmallInteger.prototype.lesserOrEquals = BigInteger.prototype.leq = BigInteger.prototype.lesserOrEquals;
+    BigInteger.prototype.isEven = function() {
+      return (this.value[0] & 1) === 0;
+    };
+    SmallInteger.prototype.isEven = function() {
+      return (this.value & 1) === 0;
+    };
+    NativeBigInt.prototype.isEven = function() {
+      return (this.value & BigInt(1)) === BigInt(0);
+    };
+    BigInteger.prototype.isOdd = function() {
+      return (this.value[0] & 1) === 1;
+    };
+    SmallInteger.prototype.isOdd = function() {
+      return (this.value & 1) === 1;
+    };
+    NativeBigInt.prototype.isOdd = function() {
+      return (this.value & BigInt(1)) === BigInt(1);
+    };
+    BigInteger.prototype.isPositive = function() {
+      return !this.sign;
+    };
+    SmallInteger.prototype.isPositive = function() {
+      return this.value > 0;
+    };
+    NativeBigInt.prototype.isPositive = SmallInteger.prototype.isPositive;
+    BigInteger.prototype.isNegative = function() {
+      return this.sign;
+    };
+    SmallInteger.prototype.isNegative = function() {
+      return this.value < 0;
+    };
+    NativeBigInt.prototype.isNegative = SmallInteger.prototype.isNegative;
+    BigInteger.prototype.isUnit = function() {
+      return false;
+    };
+    SmallInteger.prototype.isUnit = function() {
+      return Math.abs(this.value) === 1;
+    };
+    NativeBigInt.prototype.isUnit = function() {
+      return this.abs().value === BigInt(1);
+    };
+    BigInteger.prototype.isZero = function() {
+      return false;
+    };
+    SmallInteger.prototype.isZero = function() {
+      return this.value === 0;
+    };
+    NativeBigInt.prototype.isZero = function() {
+      return this.value === BigInt(0);
+    };
+    BigInteger.prototype.isDivisibleBy = function(v) {
+      var n = parseValue(v);
+      if (n.isZero())
+        return false;
+      if (n.isUnit())
+        return true;
+      if (n.compareAbs(2) === 0)
+        return this.isEven();
+      return this.mod(n).isZero();
+    };
+    NativeBigInt.prototype.isDivisibleBy = SmallInteger.prototype.isDivisibleBy = BigInteger.prototype.isDivisibleBy;
+    function isBasicPrime(v) {
+      var n = v.abs();
+      if (n.isUnit())
+        return false;
+      if (n.equals(2) || n.equals(3) || n.equals(5))
+        return true;
+      if (n.isEven() || n.isDivisibleBy(3) || n.isDivisibleBy(5))
+        return false;
+      if (n.lesser(49))
+        return true;
+    }
+    function millerRabinTest(n, a) {
+      var nPrev = n.prev(), b = nPrev, r = 0, d, t, i2, x;
+      while (b.isEven())
+        b = b.divide(2), r++;
+      next:
+        for (i2 = 0;i2 < a.length; i2++) {
+          if (n.lesser(a[i2]))
+            continue;
+          x = bigInt(a[i2]).modPow(b, n);
+          if (x.isUnit() || x.equals(nPrev))
+            continue;
+          for (d = r - 1;d != 0; d--) {
+            x = x.square().mod(n);
+            if (x.isUnit())
+              return false;
+            if (x.equals(nPrev))
+              continue next;
+          }
+          return false;
+        }
+      return true;
+    }
+    BigInteger.prototype.isPrime = function(strict) {
+      var isPrime = isBasicPrime(this);
+      if (isPrime !== undefined2)
+        return isPrime;
+      var n = this.abs();
+      var bits = n.bitLength();
+      if (bits <= 64)
+        return millerRabinTest(n, [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37]);
+      var logN = Math.log(2) * bits.toJSNumber();
+      var t = Math.ceil(strict === true ? 2 * Math.pow(logN, 2) : logN);
+      for (var a = [], i2 = 0;i2 < t; i2++) {
+        a.push(bigInt(i2 + 2));
+      }
+      return millerRabinTest(n, a);
+    };
+    NativeBigInt.prototype.isPrime = SmallInteger.prototype.isPrime = BigInteger.prototype.isPrime;
+    BigInteger.prototype.isProbablePrime = function(iterations, rng) {
+      var isPrime = isBasicPrime(this);
+      if (isPrime !== undefined2)
+        return isPrime;
+      var n = this.abs();
+      var t = iterations === undefined2 ? 5 : iterations;
+      for (var a = [], i2 = 0;i2 < t; i2++) {
+        a.push(bigInt.randBetween(2, n.minus(2), rng));
+      }
+      return millerRabinTest(n, a);
+    };
+    NativeBigInt.prototype.isProbablePrime = SmallInteger.prototype.isProbablePrime = BigInteger.prototype.isProbablePrime;
+    BigInteger.prototype.modInv = function(n) {
+      var { zero: t, one: newT } = bigInt, r = parseValue(n), newR = this.abs(), q, lastT, lastR;
+      while (!newR.isZero()) {
+        q = r.divide(newR);
+        lastT = t;
+        lastR = r;
+        t = newT;
+        r = newR;
+        newT = lastT.subtract(q.multiply(newT));
+        newR = lastR.subtract(q.multiply(newR));
+      }
+      if (!r.isUnit())
+        throw new Error(this.toString() + " and " + n.toString() + " are not co-prime");
+      if (t.compare(0) === -1) {
+        t = t.add(n);
+      }
+      if (this.isNegative()) {
+        return t.negate();
+      }
+      return t;
+    };
+    NativeBigInt.prototype.modInv = SmallInteger.prototype.modInv = BigInteger.prototype.modInv;
+    BigInteger.prototype.next = function() {
+      var value = this.value;
+      if (this.sign) {
+        return subtractSmall(value, 1, this.sign);
+      }
+      return new BigInteger(addSmall(value, 1), this.sign);
+    };
+    SmallInteger.prototype.next = function() {
+      var value = this.value;
+      if (value + 1 < MAX_INT)
+        return new SmallInteger(value + 1);
+      return new BigInteger(MAX_INT_ARR, false);
+    };
+    NativeBigInt.prototype.next = function() {
+      return new NativeBigInt(this.value + BigInt(1));
+    };
+    BigInteger.prototype.prev = function() {
+      var value = this.value;
+      if (this.sign) {
+        return new BigInteger(addSmall(value, 1), true);
+      }
+      return subtractSmall(value, 1, this.sign);
+    };
+    SmallInteger.prototype.prev = function() {
+      var value = this.value;
+      if (value - 1 > -MAX_INT)
+        return new SmallInteger(value - 1);
+      return new BigInteger(MAX_INT_ARR, true);
+    };
+    NativeBigInt.prototype.prev = function() {
+      return new NativeBigInt(this.value - BigInt(1));
+    };
+    var powersOfTwo = [1];
+    while (2 * powersOfTwo[powersOfTwo.length - 1] <= BASE)
+      powersOfTwo.push(2 * powersOfTwo[powersOfTwo.length - 1]);
+    var powers2Length = powersOfTwo.length, highestPower2 = powersOfTwo[powers2Length - 1];
+    function shift_isSmall(n) {
+      return Math.abs(n) <= BASE;
+    }
+    BigInteger.prototype.shiftLeft = function(v) {
+      var n = parseValue(v).toJSNumber();
+      if (!shift_isSmall(n)) {
+        throw new Error(String(n) + " is too large for shifting.");
+      }
+      if (n < 0)
+        return this.shiftRight(-n);
+      var result = this;
+      if (result.isZero())
+        return result;
+      while (n >= powers2Length) {
+        result = result.multiply(highestPower2);
+        n -= powers2Length - 1;
+      }
+      return result.multiply(powersOfTwo[n]);
+    };
+    NativeBigInt.prototype.shiftLeft = SmallInteger.prototype.shiftLeft = BigInteger.prototype.shiftLeft;
+    BigInteger.prototype.shiftRight = function(v) {
+      var remQuo;
+      var n = parseValue(v).toJSNumber();
+      if (!shift_isSmall(n)) {
+        throw new Error(String(n) + " is too large for shifting.");
+      }
+      if (n < 0)
+        return this.shiftLeft(-n);
+      var result = this;
+      while (n >= powers2Length) {
+        if (result.isZero() || result.isNegative() && result.isUnit())
+          return result;
+        remQuo = divModAny(result, highestPower2);
+        result = remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+        n -= powers2Length - 1;
+      }
+      remQuo = divModAny(result, powersOfTwo[n]);
+      return remQuo[1].isNegative() ? remQuo[0].prev() : remQuo[0];
+    };
+    NativeBigInt.prototype.shiftRight = SmallInteger.prototype.shiftRight = BigInteger.prototype.shiftRight;
+    function bitwise(x, y, fn) {
+      y = parseValue(y);
+      var xSign = x.isNegative(), ySign = y.isNegative();
+      var xRem = xSign ? x.not() : x, yRem = ySign ? y.not() : y;
+      var xDigit = 0, yDigit = 0;
+      var xDivMod = null, yDivMod = null;
+      var result = [];
+      while (!xRem.isZero() || !yRem.isZero()) {
+        xDivMod = divModAny(xRem, highestPower2);
+        xDigit = xDivMod[1].toJSNumber();
+        if (xSign) {
+          xDigit = highestPower2 - 1 - xDigit;
+        }
+        yDivMod = divModAny(yRem, highestPower2);
+        yDigit = yDivMod[1].toJSNumber();
+        if (ySign) {
+          yDigit = highestPower2 - 1 - yDigit;
+        }
+        xRem = xDivMod[0];
+        yRem = yDivMod[0];
+        result.push(fn(xDigit, yDigit));
+      }
+      var sum = fn(xSign ? 1 : 0, ySign ? 1 : 0) !== 0 ? bigInt(-1) : bigInt(0);
+      for (var i2 = result.length - 1;i2 >= 0; i2 -= 1) {
+        sum = sum.multiply(highestPower2).add(bigInt(result[i2]));
+      }
+      return sum;
+    }
+    BigInteger.prototype.not = function() {
+      return this.negate().prev();
+    };
+    NativeBigInt.prototype.not = SmallInteger.prototype.not = BigInteger.prototype.not;
+    BigInteger.prototype.and = function(n) {
+      return bitwise(this, n, function(a, b) {
+        return a & b;
+      });
+    };
+    NativeBigInt.prototype.and = SmallInteger.prototype.and = BigInteger.prototype.and;
+    BigInteger.prototype.or = function(n) {
+      return bitwise(this, n, function(a, b) {
+        return a | b;
+      });
+    };
+    NativeBigInt.prototype.or = SmallInteger.prototype.or = BigInteger.prototype.or;
+    BigInteger.prototype.xor = function(n) {
+      return bitwise(this, n, function(a, b) {
+        return a ^ b;
+      });
+    };
+    NativeBigInt.prototype.xor = SmallInteger.prototype.xor = BigInteger.prototype.xor;
+    var LOBMASK_I = 1 << 30, LOBMASK_BI = (BASE & -BASE) * (BASE & -BASE) | LOBMASK_I;
+    function roughLOB(n) {
+      var v = n.value, x = typeof v === "number" ? v | LOBMASK_I : typeof v === "bigint" ? v | BigInt(LOBMASK_I) : v[0] + v[1] * BASE | LOBMASK_BI;
+      return x & -x;
+    }
+    function integerLogarithm(value, base) {
+      if (base.compareTo(value) <= 0) {
+        var tmp = integerLogarithm(value, base.square(base));
+        var p = tmp.p;
+        var e = tmp.e;
+        var t = p.multiply(base);
+        return t.compareTo(value) <= 0 ? { p: t, e: e * 2 + 1 } : { p, e: e * 2 };
+      }
+      return { p: bigInt(1), e: 0 };
+    }
+    BigInteger.prototype.bitLength = function() {
+      var n = this;
+      if (n.compareTo(bigInt(0)) < 0) {
+        n = n.negate().subtract(bigInt(1));
+      }
+      if (n.compareTo(bigInt(0)) === 0) {
+        return bigInt(0);
+      }
+      return bigInt(integerLogarithm(n, bigInt(2)).e).add(bigInt(1));
+    };
+    NativeBigInt.prototype.bitLength = SmallInteger.prototype.bitLength = BigInteger.prototype.bitLength;
+    function max(a, b) {
+      a = parseValue(a);
+      b = parseValue(b);
+      return a.greater(b) ? a : b;
+    }
+    function min(a, b) {
+      a = parseValue(a);
+      b = parseValue(b);
+      return a.lesser(b) ? a : b;
+    }
+    function gcd(a, b) {
+      a = parseValue(a).abs();
+      b = parseValue(b).abs();
+      if (a.equals(b))
+        return a;
+      if (a.isZero())
+        return b;
+      if (b.isZero())
+        return a;
+      var c = Integer[1], d, t;
+      while (a.isEven() && b.isEven()) {
+        d = min(roughLOB(a), roughLOB(b));
+        a = a.divide(d);
+        b = b.divide(d);
+        c = c.multiply(d);
+      }
+      while (a.isEven()) {
+        a = a.divide(roughLOB(a));
+      }
+      do {
+        while (b.isEven()) {
+          b = b.divide(roughLOB(b));
+        }
+        if (a.greater(b)) {
+          t = b;
+          b = a;
+          a = t;
+        }
+        b = b.subtract(a);
+      } while (!b.isZero());
+      return c.isUnit() ? a : a.multiply(c);
+    }
+    function lcm(a, b) {
+      a = parseValue(a).abs();
+      b = parseValue(b).abs();
+      return a.divide(gcd(a, b)).multiply(b);
+    }
+    function randBetween(a, b, rng) {
+      a = parseValue(a);
+      b = parseValue(b);
+      var usedRNG = rng || Math.random;
+      var low = min(a, b), high = max(a, b);
+      var range = high.subtract(low).add(1);
+      if (range.isSmall)
+        return low.add(Math.floor(usedRNG() * range));
+      var digits = toBase(range, BASE).value;
+      var result = [], restricted = true;
+      for (var i2 = 0;i2 < digits.length; i2++) {
+        var top = restricted ? digits[i2] + (i2 + 1 < digits.length ? digits[i2 + 1] / BASE : 0) : BASE;
+        var digit = truncate(usedRNG() * top);
+        result.push(digit);
+        if (digit < digits[i2])
+          restricted = false;
+      }
+      return low.add(Integer.fromArray(result, BASE, false));
+    }
+    var parseBase = function(text, base, alphabet, caseSensitive) {
+      alphabet = alphabet || DEFAULT_ALPHABET;
+      text = String(text);
+      if (!caseSensitive) {
+        text = text.toLowerCase();
+        alphabet = alphabet.toLowerCase();
+      }
+      var length = text.length;
+      var i2;
+      var absBase = Math.abs(base);
+      var alphabetValues = {};
+      for (i2 = 0;i2 < alphabet.length; i2++) {
+        alphabetValues[alphabet[i2]] = i2;
+      }
+      for (i2 = 0;i2 < length; i2++) {
+        var c = text[i2];
+        if (c === "-")
+          continue;
+        if (c in alphabetValues) {
+          if (alphabetValues[c] >= absBase) {
+            if (c === "1" && absBase === 1)
+              continue;
+            throw new Error(c + " is not a valid digit in base " + base + ".");
+          }
+        }
+      }
+      base = parseValue(base);
+      var digits = [];
+      var isNegative = text[0] === "-";
+      for (i2 = isNegative ? 1 : 0;i2 < text.length; i2++) {
+        var c = text[i2];
+        if (c in alphabetValues)
+          digits.push(parseValue(alphabetValues[c]));
+        else if (c === "<") {
+          var start = i2;
+          do {
+            i2++;
+          } while (text[i2] !== ">" && i2 < text.length);
+          digits.push(parseValue(text.slice(start + 1, i2)));
+        } else
+          throw new Error(c + " is not a valid character");
+      }
+      return parseBaseFromArray(digits, base, isNegative);
+    };
+    function parseBaseFromArray(digits, base, isNegative) {
+      var val = Integer[0], pow = Integer[1], i2;
+      for (i2 = digits.length - 1;i2 >= 0; i2--) {
+        val = val.add(digits[i2].times(pow));
+        pow = pow.times(base);
+      }
+      return isNegative ? val.negate() : val;
+    }
+    function stringify(digit, alphabet) {
+      alphabet = alphabet || DEFAULT_ALPHABET;
+      if (digit < alphabet.length) {
+        return alphabet[digit];
+      }
+      return "<" + digit + ">";
+    }
+    function toBase(n, base) {
+      base = bigInt(base);
+      if (base.isZero()) {
+        if (n.isZero())
+          return { value: [0], isNegative: false };
+        throw new Error("Cannot convert nonzero numbers to base 0.");
+      }
+      if (base.equals(-1)) {
+        if (n.isZero())
+          return { value: [0], isNegative: false };
+        if (n.isNegative())
+          return {
+            value: [].concat.apply([], Array.apply(null, Array(-n.toJSNumber())).map(Array.prototype.valueOf, [1, 0])),
+            isNegative: false
+          };
+        var arr = Array.apply(null, Array(n.toJSNumber() - 1)).map(Array.prototype.valueOf, [0, 1]);
+        arr.unshift([1]);
+        return {
+          value: [].concat.apply([], arr),
+          isNegative: false
+        };
+      }
+      var neg = false;
+      if (n.isNegative() && base.isPositive()) {
+        neg = true;
+        n = n.abs();
+      }
+      if (base.isUnit()) {
+        if (n.isZero())
+          return { value: [0], isNegative: false };
+        return {
+          value: Array.apply(null, Array(n.toJSNumber())).map(Number.prototype.valueOf, 1),
+          isNegative: neg
+        };
+      }
+      var out = [];
+      var left = n, divmod;
+      while (left.isNegative() || left.compareAbs(base) >= 0) {
+        divmod = left.divmod(base);
+        left = divmod.quotient;
+        var digit = divmod.remainder;
+        if (digit.isNegative()) {
+          digit = base.minus(digit).abs();
+          left = left.next();
+        }
+        out.push(digit.toJSNumber());
+      }
+      out.push(left.toJSNumber());
+      return { value: out.reverse(), isNegative: neg };
+    }
+    function toBaseString(n, base, alphabet) {
+      var arr = toBase(n, base);
+      return (arr.isNegative ? "-" : "") + arr.value.map(function(x) {
+        return stringify(x, alphabet);
+      }).join("");
+    }
+    BigInteger.prototype.toArray = function(radix) {
+      return toBase(this, radix);
+    };
+    SmallInteger.prototype.toArray = function(radix) {
+      return toBase(this, radix);
+    };
+    NativeBigInt.prototype.toArray = function(radix) {
+      return toBase(this, radix);
+    };
+    BigInteger.prototype.toString = function(radix, alphabet) {
+      if (radix === undefined2)
+        radix = 10;
+      if (radix !== 10 || alphabet)
+        return toBaseString(this, radix, alphabet);
+      var v = this.value, l = v.length, str = String(v[--l]), zeros = "0000000", digit;
+      while (--l >= 0) {
+        digit = String(v[l]);
+        str += zeros.slice(digit.length) + digit;
+      }
+      var sign = this.sign ? "-" : "";
+      return sign + str;
+    };
+    SmallInteger.prototype.toString = function(radix, alphabet) {
+      if (radix === undefined2)
+        radix = 10;
+      if (radix != 10 || alphabet)
+        return toBaseString(this, radix, alphabet);
+      return String(this.value);
+    };
+    NativeBigInt.prototype.toString = SmallInteger.prototype.toString;
+    NativeBigInt.prototype.toJSON = BigInteger.prototype.toJSON = SmallInteger.prototype.toJSON = function() {
+      return this.toString();
+    };
+    BigInteger.prototype.valueOf = function() {
+      return parseInt(this.toString(), 10);
+    };
+    BigInteger.prototype.toJSNumber = BigInteger.prototype.valueOf;
+    SmallInteger.prototype.valueOf = function() {
+      return this.value;
+    };
+    SmallInteger.prototype.toJSNumber = SmallInteger.prototype.valueOf;
+    NativeBigInt.prototype.valueOf = NativeBigInt.prototype.toJSNumber = function() {
+      return parseInt(this.toString(), 10);
+    };
+    function parseStringValue(v) {
+      if (isPrecise(+v)) {
+        var x = +v;
+        if (x === truncate(x))
+          return supportsNativeBigInt ? new NativeBigInt(BigInt(x)) : new SmallInteger(x);
+        throw new Error("Invalid integer: " + v);
+      }
+      var sign = v[0] === "-";
+      if (sign)
+        v = v.slice(1);
+      var split = v.split(/e/i);
+      if (split.length > 2)
+        throw new Error("Invalid integer: " + split.join("e"));
+      if (split.length === 2) {
+        var exp = split[1];
+        if (exp[0] === "+")
+          exp = exp.slice(1);
+        exp = +exp;
+        if (exp !== truncate(exp) || !isPrecise(exp))
+          throw new Error("Invalid integer: " + exp + " is not a valid exponent.");
+        var text = split[0];
+        var decimalPlace = text.indexOf(".");
+        if (decimalPlace >= 0) {
+          exp -= text.length - decimalPlace - 1;
+          text = text.slice(0, decimalPlace) + text.slice(decimalPlace + 1);
+        }
+        if (exp < 0)
+          throw new Error("Cannot include negative exponent part for integers");
+        text += new Array(exp + 1).join("0");
+        v = text;
+      }
+      var isValid = /^([0-9][0-9]*)$/.test(v);
+      if (!isValid)
+        throw new Error("Invalid integer: " + v);
+      if (supportsNativeBigInt) {
+        return new NativeBigInt(BigInt(sign ? "-" + v : v));
+      }
+      var r = [], max2 = v.length, l = LOG_BASE, min2 = max2 - l;
+      while (max2 > 0) {
+        r.push(+v.slice(min2, max2));
+        min2 -= l;
+        if (min2 < 0)
+          min2 = 0;
+        max2 -= l;
+      }
+      trim(r);
+      return new BigInteger(r, sign);
+    }
+    function parseNumberValue(v) {
+      if (supportsNativeBigInt) {
+        return new NativeBigInt(BigInt(v));
+      }
+      if (isPrecise(v)) {
+        if (v !== truncate(v))
+          throw new Error(v + " is not an integer.");
+        return new SmallInteger(v);
+      }
+      return parseStringValue(v.toString());
+    }
+    function parseValue(v) {
+      if (typeof v === "number") {
+        return parseNumberValue(v);
+      }
+      if (typeof v === "string") {
+        return parseStringValue(v);
+      }
+      if (typeof v === "bigint") {
+        return new NativeBigInt(v);
+      }
+      return v;
+    }
+    for (var i = 0;i < 1000; i++) {
+      Integer[i] = parseValue(i);
+      if (i > 0)
+        Integer[-i] = parseValue(-i);
+    }
+    Integer.one = Integer[1];
+    Integer.zero = Integer[0];
+    Integer.minusOne = Integer[-1];
+    Integer.max = max;
+    Integer.min = min;
+    Integer.gcd = gcd;
+    Integer.lcm = lcm;
+    Integer.isInstance = function(x) {
+      return x instanceof BigInteger || x instanceof SmallInteger || x instanceof NativeBigInt;
+    };
+    Integer.randBetween = randBetween;
+    Integer.fromArray = function(digits, base, isNegative) {
+      return parseBaseFromArray(digits.map(parseValue), parseValue(base || 10), isNegative);
+    };
+    return Integer;
+  }();
+  if (typeof module !== "undefined" && module.hasOwnProperty("exports")) {
+    module.exports = bigInt;
+  }
+  if (typeof define === "function" && define.amd) {
+    define(function() {
+      return bigInt;
+    });
+  }
+});
+
+// node_modules/.pnpm/bplist-parser@0.3.2/node_modules/bplist-parser/bplistParser.js
+var require_bplistParser = __commonJS((exports) => {
+  var fs2 = __require("fs");
+  var bigInt = require_BigInteger();
+  var debug = false;
+  exports.maxObjectSize = 100 * 1000 * 1000;
+  exports.maxObjectCount = 32768;
+  var EPOCH = 978307200000;
+  var UID = exports.UID = function(id) {
+    this.UID = id;
+  };
+  exports.parseFile = function(fileNameOrBuffer, callback) {
+    return new Promise(function(resolve, reject) {
+      function tryParseBuffer(buffer) {
+        let err = null;
+        let result;
+        try {
+          result = parseBuffer(buffer);
+          resolve(result);
+        } catch (ex) {
+          err = ex;
+          reject(err);
+        } finally {
+          if (callback)
+            callback(err, result);
+        }
+      }
+      if (Buffer.isBuffer(fileNameOrBuffer)) {
+        return tryParseBuffer(fileNameOrBuffer);
+      }
+      fs2.readFile(fileNameOrBuffer, function(err, data) {
+        if (err) {
+          reject(err);
+          return callback(err);
+        }
+        tryParseBuffer(data);
+      });
+    });
+  };
+  exports.parseFileSync = function(fileNameOrBuffer) {
+    if (!Buffer.isBuffer(fileNameOrBuffer)) {
+      fileNameOrBuffer = fs2.readFileSync(fileNameOrBuffer);
+    }
+    return parseBuffer(fileNameOrBuffer);
+  };
+  var parseBuffer = exports.parseBuffer = function(buffer) {
+    const header = buffer.slice(0, "bplist".length).toString("utf8");
+    if (header !== "bplist") {
+      throw new Error("Invalid binary plist. Expected 'bplist' at offset 0.");
+    }
+    const trailer = buffer.slice(buffer.length - 32, buffer.length);
+    const offsetSize = trailer.readUInt8(6);
+    if (debug) {
+      console.log("offsetSize: " + offsetSize);
+    }
+    const objectRefSize = trailer.readUInt8(7);
+    if (debug) {
+      console.log("objectRefSize: " + objectRefSize);
+    }
+    const numObjects = readUInt64BE(trailer, 8);
+    if (debug) {
+      console.log("numObjects: " + numObjects);
+    }
+    const topObject = readUInt64BE(trailer, 16);
+    if (debug) {
+      console.log("topObject: " + topObject);
+    }
+    const offsetTableOffset = readUInt64BE(trailer, 24);
+    if (debug) {
+      console.log("offsetTableOffset: " + offsetTableOffset);
+    }
+    if (numObjects > exports.maxObjectCount) {
+      throw new Error("maxObjectCount exceeded");
+    }
+    const offsetTable = [];
+    for (let i = 0;i < numObjects; i++) {
+      const offsetBytes = buffer.slice(offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
+      offsetTable[i] = readUInt(offsetBytes, 0);
+      if (debug) {
+        console.log("Offset for Object #" + i + " is " + offsetTable[i] + " [" + offsetTable[i].toString(16) + "]");
+      }
+    }
+    function parseObject(tableOffset) {
+      const offset = offsetTable[tableOffset];
+      const type = buffer[offset];
+      const objType = (type & 240) >> 4;
+      const objInfo = type & 15;
+      switch (objType) {
+        case 0:
+          return parseSimple();
+        case 1:
+          return parseInteger();
+        case 8:
+          return parseUID();
+        case 2:
+          return parseReal();
+        case 3:
+          return parseDate();
+        case 4:
+          return parseData();
+        case 5:
+          return parsePlistString();
+        case 6:
+          return parsePlistString(true);
+        case 10:
+          return parseArray();
+        case 13:
+          return parseDictionary();
+        default:
+          throw new Error("Unhandled type 0x" + objType.toString(16));
+      }
+      function parseSimple() {
+        switch (objInfo) {
+          case 0:
+            return null;
+          case 8:
+            return false;
+          case 9:
+            return true;
+          case 15:
+            return null;
+          default:
+            throw new Error("Unhandled simple type 0x" + objType.toString(16));
+        }
+      }
+      function bufferToHexString(buffer2) {
+        let str = "";
+        let i;
+        for (i = 0;i < buffer2.length; i++) {
+          if (buffer2[i] != 0) {
+            break;
+          }
+        }
+        for (;i < buffer2.length; i++) {
+          const part = "00" + buffer2[i].toString(16);
+          str += part.substr(part.length - 2);
+        }
+        return str;
+      }
+      function parseInteger() {
+        const length = Math.pow(2, objInfo);
+        if (length < exports.maxObjectSize) {
+          const data = buffer.slice(offset + 1, offset + 1 + length);
+          if (length === 16) {
+            const str = bufferToHexString(data);
+            return bigInt(str, 16);
+          }
+          return data.reduce((acc, curr) => {
+            acc <<= 8;
+            acc |= curr & 255;
+            return acc;
+          });
+        }
+        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+      }
+      function parseUID() {
+        const length = objInfo + 1;
+        if (length < exports.maxObjectSize) {
+          return new UID(readUInt(buffer.slice(offset + 1, offset + 1 + length)));
+        }
+        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+      }
+      function parseReal() {
+        const length = Math.pow(2, objInfo);
+        if (length < exports.maxObjectSize) {
+          const realBuffer = buffer.slice(offset + 1, offset + 1 + length);
+          if (length === 4) {
+            return realBuffer.readFloatBE(0);
+          }
+          if (length === 8) {
+            return realBuffer.readDoubleBE(0);
+          }
+        } else {
+          throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+        }
+      }
+      function parseDate() {
+        if (objInfo != 3) {
+          console.error("Unknown date type :" + objInfo + ". Parsing anyway...");
+        }
+        const dateBuffer = buffer.slice(offset + 1, offset + 9);
+        return new Date(EPOCH + 1000 * dateBuffer.readDoubleBE(0));
+      }
+      function parseData() {
+        let dataoffset = 1;
+        let length = objInfo;
+        if (objInfo == 15) {
+          const int_type = buffer[offset + 1];
+          const intType = (int_type & 240) / 16;
+          if (intType != 1) {
+            console.error("0x4: UNEXPECTED LENGTH-INT TYPE! " + intType);
+          }
+          const intInfo = int_type & 15;
+          const intLength = Math.pow(2, intInfo);
+          dataoffset = 2 + intLength;
+          if (intLength < 3) {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          } else {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          }
+        }
+        if (length < exports.maxObjectSize) {
+          return buffer.slice(offset + dataoffset, offset + dataoffset + length);
+        }
+        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+      }
+      function parsePlistString(isUtf16) {
+        isUtf16 = isUtf16 || 0;
+        let enc = "utf8";
+        let length = objInfo;
+        let stroffset = 1;
+        if (objInfo == 15) {
+          const int_type = buffer[offset + 1];
+          const intType = (int_type & 240) / 16;
+          if (intType != 1) {
+            console.error("UNEXPECTED LENGTH-INT TYPE! " + intType);
+          }
+          const intInfo = int_type & 15;
+          const intLength = Math.pow(2, intInfo);
+          stroffset = 2 + intLength;
+          if (intLength < 3) {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          } else {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          }
+        }
+        length *= isUtf16 + 1;
+        if (length < exports.maxObjectSize) {
+          let plistString = Buffer.from(buffer.slice(offset + stroffset, offset + stroffset + length));
+          if (isUtf16) {
+            plistString = swapBytes(plistString);
+            enc = "ucs2";
+          }
+          return plistString.toString(enc);
+        }
+        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + exports.maxObjectSize + " are available.");
+      }
+      function parseArray() {
+        let length = objInfo;
+        let arrayoffset = 1;
+        if (objInfo == 15) {
+          const int_type = buffer[offset + 1];
+          const intType = (int_type & 240) / 16;
+          if (intType != 1) {
+            console.error("0xa: UNEXPECTED LENGTH-INT TYPE! " + intType);
+          }
+          const intInfo = int_type & 15;
+          const intLength = Math.pow(2, intInfo);
+          arrayoffset = 2 + intLength;
+          if (intLength < 3) {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          } else {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          }
+        }
+        if (length * objectRefSize > exports.maxObjectSize) {
+          throw new Error("Too little heap space available!");
+        }
+        const array = [];
+        for (let i = 0;i < length; i++) {
+          const objRef = readUInt(buffer.slice(offset + arrayoffset + i * objectRefSize, offset + arrayoffset + (i + 1) * objectRefSize));
+          array[i] = parseObject(objRef);
+        }
+        return array;
+      }
+      function parseDictionary() {
+        let length = objInfo;
+        let dictoffset = 1;
+        if (objInfo == 15) {
+          const int_type = buffer[offset + 1];
+          const intType = (int_type & 240) / 16;
+          if (intType != 1) {
+            console.error("0xD: UNEXPECTED LENGTH-INT TYPE! " + intType);
+          }
+          const intInfo = int_type & 15;
+          const intLength = Math.pow(2, intInfo);
+          dictoffset = 2 + intLength;
+          if (intLength < 3) {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          } else {
+            length = readUInt(buffer.slice(offset + 2, offset + 2 + intLength));
+          }
+        }
+        if (length * 2 * objectRefSize > exports.maxObjectSize) {
+          throw new Error("Too little heap space available!");
+        }
+        if (debug) {
+          console.log("Parsing dictionary #" + tableOffset);
+        }
+        const dict = {};
+        for (let i = 0;i < length; i++) {
+          const keyRef = readUInt(buffer.slice(offset + dictoffset + i * objectRefSize, offset + dictoffset + (i + 1) * objectRefSize));
+          const valRef = readUInt(buffer.slice(offset + dictoffset + length * objectRefSize + i * objectRefSize, offset + dictoffset + length * objectRefSize + (i + 1) * objectRefSize));
+          const key = parseObject(keyRef);
+          const val = parseObject(valRef);
+          if (debug) {
+            console.log("  DICT #" + tableOffset + ": Mapped " + key + " to " + val);
+          }
+          dict[key] = val;
+        }
+        return dict;
+      }
+    }
+    return [parseObject(topObject)];
+  };
+  function readUInt(buffer, start) {
+    start = start || 0;
+    let l = 0;
+    for (let i = start;i < buffer.length; i++) {
+      l <<= 8;
+      l |= buffer[i] & 255;
+    }
+    return l;
+  }
+  function readUInt64BE(buffer, start) {
+    const data = buffer.slice(start, start + 8);
+    return data.readUInt32BE(4, 8);
+  }
+  function swapBytes(buffer) {
+    const len = buffer.length;
+    for (let i = 0;i < len; i += 2) {
+      const a = buffer[i];
+      buffer[i] = buffer[i + 1];
+      buffer[i + 1] = a;
+    }
+    return buffer;
+  }
+});
 
 // node_modules/.pnpm/json-parse-safe@2.0.0/node_modules/json-parse-safe/index.js
 var require_json_parse_safe = __commonJS((exports, module) => {
@@ -166,8 +1845,8 @@ function nullthrows(value, message) {
 }
 
 // src/utils/plist.ts
-import { Buffer } from "buffer";
-import fs from "fs";
+import { Buffer as Buffer2 } from "buffer";
+import fs2 from "fs";
 
 // node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
 var KeyMappingCode = {
@@ -4187,868 +5866,71 @@ function keystringsToCarbonModifierMask(keystrings) {
 // src/utils/plist.ts
 import { tap } from "chordsapp";
 
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractDecoder.js
-class AbstractDecoder {
-  fatal;
-  constructor(fatal = false) {
-    this.fatal = fatal;
-  }
-  fail() {
-    if (this.fatal) {
-      throw new TypeError("Decoder error");
-    }
-    return 65533;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/ByteBuffer.js
-var END_OF_BUFFER = -1;
-
-class ByteBuffer {
-  bytes;
-  constructor(bytes) {
-    this.bytes = Array.from(bytes).reverse();
-  }
-  isEndOfBuffer() {
-    return this.bytes.length === 0;
-  }
-  read() {
-    return this.bytes.pop() ?? END_OF_BUFFER;
-  }
-  write(...bytes) {
-    this.bytes.push(...bytes);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/constants.js
-var DEFAULT_ENCODING = "utf-8";
-var FINISHED = -1;
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/util.js
-function isASCII(value) {
-  return value >= 0 && value <= 127;
-}
-function convertCodeUnitToBytes(codeUnit, bigEndian) {
-  const byte1 = codeUnit >> 8;
-  const byte2 = codeUnit & 255;
-  if (bigEndian) {
-    return [byte1, byte2];
-  } else {
-    return [byte2, byte1];
-  }
-}
-function inRange(value, min, max) {
-  return value >= min && value <= max;
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF8Decoder.js
-class UTF8Decoder extends AbstractDecoder {
-  codePoint = 0;
-  bytesSeen = 0;
-  bytesNeeded = 0;
-  lowerBoundary = 128;
-  upperBoundary = 191;
-  decode(buffer) {
-    const byte = buffer.read();
-    if (byte === END_OF_BUFFER && this.bytesNeeded !== 0) {
-      this.bytesNeeded = 0;
-      return this.fail();
-    }
-    if (byte === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (this.bytesNeeded === 0) {
-      if (inRange(byte, 0, 127)) {
-        return byte;
-      } else if (inRange(byte, 194, 223)) {
-        this.bytesNeeded = 1;
-        this.codePoint = byte & 31;
-      } else if (inRange(byte, 224, 239)) {
-        if (byte === 224) {
-          this.lowerBoundary = 160;
-        }
-        if (byte === 237) {
-          this.upperBoundary = 159;
-        }
-        this.bytesNeeded = 2;
-        this.codePoint = byte & 15;
-      } else if (inRange(byte, 240, 244)) {
-        if (byte === 240) {
-          this.lowerBoundary = 144;
-        }
-        if (byte === 244) {
-          this.upperBoundary = 143;
-        }
-        this.bytesNeeded = 3;
-        this.codePoint = byte & 7;
-      } else {
-        return this.fail();
-      }
-      return null;
-    }
-    if (!inRange(byte, this.lowerBoundary, this.upperBoundary)) {
-      this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
-      this.lowerBoundary = 128;
-      this.upperBoundary = 191;
-      buffer.write(byte);
-      return this.fail();
-    }
-    this.lowerBoundary = 128;
-    this.upperBoundary = 191;
-    this.codePoint = this.codePoint << 6 | byte & 63;
-    this.bytesSeen += 1;
-    if (this.bytesSeen !== this.bytesNeeded) {
-      return null;
-    }
-    const codePoint = this.codePoint;
-    this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
-    return codePoint;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractEncoder.js
-class AbstractEncoder {
-  fail(codePoint) {
-    throw new TypeError(`The code point ${codePoint} could not be encoded`);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF8Encoder.js
-class UTF8Encoder extends AbstractEncoder {
-  encode(buffer) {
-    const codePoint = buffer.read();
-    if (codePoint === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (isASCII(codePoint)) {
-      return codePoint;
-    }
-    let count;
-    let offset;
-    if (inRange(codePoint, 128, 2047)) {
-      count = 1;
-      offset = 192;
-    } else if (inRange(codePoint, 2048, 65535)) {
-      count = 2;
-      offset = 224;
-    } else if (inRange(codePoint, 65536, 1114111)) {
-      count = 3;
-      offset = 240;
-    } else {
-      return this.fail(codePoint);
-    }
-    const bytes = [(codePoint >> 6 * count) + offset];
-    while (count > 0) {
-      const temp = codePoint >> 6 * (count - 1);
-      bytes.push(128 | temp & 63);
-      count -= 1;
-    }
-    return bytes;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/Encoding.js
-var encodings = new Map;
-function registerEncoding(name, labels, decoder, encoder) {
-  const encoding = new Encoding(name, labels, decoder, encoder);
-  for (const label of encoding.getLabels()) {
-    encodings.set(label, encoding);
-  }
-  return encoding;
-}
-function getEncoding(label) {
-  const encoding = encodings.get(label.trim().toLowerCase());
-  if (encoding == null) {
-    throw new RangeError(`Encoding not supported: ${label}`);
-  }
-  return encoding;
-}
-
-class Encoding {
-  name;
-  labels;
-  decoder;
-  encoder;
-  constructor(name, labels, decoder, encoder) {
-    this.name = name;
-    this.labels = labels;
-    this.decoder = decoder;
-    this.encoder = encoder;
-  }
-  getName() {
-    return this.name;
-  }
-  hasLabel(label) {
-    return this.labels.includes(label.trim().toLowerCase());
-  }
-  getLabels() {
-    return this.labels;
-  }
-  createDecoder(fatal) {
-    return new this.decoder(fatal);
-  }
-  createEncoder() {
-    return new this.encoder;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-8.js
-registerEncoding("utf-8", [
-  "unicode-1-1-utf-8",
-  "utf-8",
-  "utf8"
-], UTF8Decoder, UTF8Encoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF16Decoder.js
-class UTF16Decoder extends AbstractDecoder {
-  bigEndian;
-  leadByte = null;
-  leadSurrogate = null;
-  constructor(bigEndian, fatal) {
-    super(fatal);
-    this.bigEndian = bigEndian;
-  }
-  decode(buffer) {
-    const byte = buffer.read();
-    if (byte === END_OF_BUFFER && (this.leadByte !== null || this.leadSurrogate !== null)) {
-      return this.fail();
-    }
-    if (byte === END_OF_BUFFER && this.leadByte == null && this.leadSurrogate == null) {
-      return FINISHED;
-    }
-    if (this.leadByte == null) {
-      this.leadByte = byte;
-      return null;
-    }
-    let codeUnit;
-    if (this.bigEndian) {
-      codeUnit = (this.leadByte << 8) + byte;
-    } else {
-      codeUnit = (byte << 8) + this.leadByte;
-    }
-    this.leadByte = null;
-    if (this.leadSurrogate !== null) {
-      const leadSurrogate = this.leadSurrogate;
-      this.leadSurrogate = null;
-      if (inRange(codeUnit, 56320, 57343)) {
-        return 65536 + (leadSurrogate - 55296) * 1024 + (codeUnit - 56320);
-      }
-      buffer.write(...convertCodeUnitToBytes(codeUnit, this.bigEndian));
-      return this.fail();
-    }
-    if (inRange(codeUnit, 55296, 56319)) {
-      this.leadSurrogate = codeUnit;
-      return null;
-    }
-    if (inRange(codeUnit, 56320, 57343)) {
-      return this.fail();
-    }
-    return codeUnit;
-  }
-}
-
-class UTF16LEDecoder extends UTF16Decoder {
-  constructor(fatal) {
-    super(false, fatal);
-  }
-}
-
-class UTF16BEDecoder extends UTF16Decoder {
-  constructor(fatal) {
-    super(true, fatal);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF16Encoder.js
-class UTF16Encoder extends AbstractEncoder {
-  bigEndian;
-  constructor(bigEndian) {
-    super();
-    this.bigEndian = bigEndian;
-  }
-  encode(buffer) {
-    const codePoint = buffer.read();
-    if (codePoint === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (inRange(codePoint, 0, 65535)) {
-      return convertCodeUnitToBytes(codePoint, this.bigEndian);
-    }
-    const lead = convertCodeUnitToBytes((codePoint - 65536 >> 10) + 55296, this.bigEndian);
-    const trail = convertCodeUnitToBytes((codePoint - 65536 & 1023) + 56320, this.bigEndian);
-    return lead.concat(trail);
-  }
-}
-
-class UTF16LEEncoder extends UTF16Encoder {
+// node_modules/.pnpm/bplist-creator-pure@0.2.2/node_modules/bplist-creator-pure/index.js
+class WritableStreamBuffer {
   constructor() {
-    super(false);
+    this._chunks = [];
+    this._size = 0;
   }
-}
-
-class UTF16BEEncoder extends UTF16Encoder {
-  constructor() {
-    super(true);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16be.js
-registerEncoding("utf-16be", [
-  "utf-16be"
-], UTF16BEDecoder, UTF16BEEncoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16le.js
-registerEncoding("utf-16le", [
-  "utf-16",
-  "utf-16le"
-], UTF16LEDecoder, UTF16LEEncoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextDecoder.js
-class TextDecoder2 {
-  ignoreBOM;
-  fatal;
-  enc;
-  seenBOM = false;
-  decoder = null;
-  constructor(label = DEFAULT_ENCODING, { fatal = false, ignoreBOM = false } = {}) {
-    this.enc = getEncoding(label);
-    this.fatal = fatal;
-    this.ignoreBOM = ignoreBOM;
-  }
-  get encoding() {
-    return this.enc.getName();
-  }
-  decode(input, { stream = false } = {}) {
-    let bytes;
-    if (input instanceof ArrayBuffer) {
-      bytes = new Uint8Array(input);
-    } else if (ArrayBuffer.isView(input)) {
-      bytes = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+  write(chunk, encoding) {
+    let buf;
+    if (typeof chunk === "number") {
+      buf = Buffer.from([chunk & 255]);
+    } else if (Buffer.isBuffer(chunk)) {
+      buf = Buffer.from(chunk);
+    } else if (chunk instanceof Uint8Array) {
+      buf = Buffer.from(chunk);
+    } else if (typeof chunk === "string") {
+      buf = Buffer.from(chunk, encoding);
     } else {
-      bytes = new Uint8Array(0);
+      throw new TypeError("Unsupported chunk type passed to write()");
     }
-    if (this.decoder == null) {
-      this.decoder = this.enc.createDecoder(this.fatal);
-      this.seenBOM = false;
-    }
-    const inputStream = new ByteBuffer(bytes);
-    let output = "";
-    let result;
-    while (!inputStream.isEndOfBuffer()) {
-      result = this.decoder.decode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (result != null) {
-        if (typeof result === "number") {
-          output += String.fromCodePoint(result);
-        } else {
-          output += String.fromCodePoint(...result);
-        }
-      }
-    }
-    if (!stream) {
-      do {
-        result = this.decoder.decode(inputStream);
-        if (result === FINISHED) {
-          break;
-        }
-        if (result != null) {
-          if (typeof result === "number") {
-            output += String.fromCodePoint(result);
-          } else {
-            output += String.fromCodePoint(...result);
-          }
-        }
-      } while (!inputStream.isEndOfBuffer());
-      this.decoder = null;
-    }
-    if (["utf-8", "utf-16le", "utf-16be"].includes(this.encoding) && !this.ignoreBOM && !this.seenBOM) {
-      if (output.length > 0) {
-        this.seenBOM = true;
-        if (output[0] === "\uFEFF") {
-          return output.substring(1);
-        }
-      }
-    }
-    return output;
+    this._chunks.push(buf);
+    this._size += buf.length;
+    return true;
+  }
+  size() {
+    return this._size;
+  }
+  getContents() {
+    return Buffer.concat(this._chunks, this._size);
   }
 }
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextEncoder.js
-function stringToCodePoints(string) {
-  const n = string.length;
-  let i = 0;
-  const codePoints = [];
-  while (i < n) {
-    const c = string.charCodeAt(i);
-    if (c < 55296 || c > 57343) {
-      codePoints.push(c);
-    } else if (c >= 56320 && c <= 57343) {
-      codePoints.push(65533);
-    } else if (c >= 55296 && c <= 56319) {
-      if (i === n - 1) {
-        codePoints.push(65533);
-      } else {
-        const d = string.charCodeAt(i + 1);
-        if (d >= 56320 && d <= 57343) {
-          const a = c & 1023;
-          const b = d & 1023;
-          codePoints.push(65536 + (a << 10) + b);
-          i++;
-        } else {
-          codePoints.push(65533);
-        }
-      }
-    }
-    i++;
-  }
-  return codePoints;
+function Real(value) {
+  this.value = value;
 }
-
-class TextEncoder2 {
-  enc;
-  encoder = null;
-  constructor(label = "utf-8") {
-    this.enc = getEncoding(label);
+function bplist(dicts) {
+  var buffer = new WritableStreamBuffer;
+  buffer.write(Buffer.from("bplist00"));
+  if (dicts instanceof Array && dicts.length === 1) {
+    dicts = dicts[0];
   }
-  get encoding() {
-    return this.enc.getName();
-  }
-  encode(input = "") {
-    this.encoder ??= this.enc.createEncoder();
-    const inputStream = new ByteBuffer(stringToCodePoints(input));
-    const output = [];
-    let result;
-    while (true) {
-      result = this.encoder.encode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (Array.isArray(result)) {
-        output.push(...result);
-      } else {
-        output.push(result);
-      }
-    }
-    return new Uint8Array(output);
-  }
-  encodeInto(source, destination) {
-    this.encoder ??= this.enc.createEncoder();
-    const inputStream = new ByteBuffer(stringToCodePoints(source));
-    let result;
-    let read = 0;
-    let written = 0;
-    while (written < destination.byteLength) {
-      result = this.encoder.encode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (Array.isArray(result)) {
-        if (result.length + written > destination.byteLength) {
-          break;
-        }
-        destination.set(result, written);
-        written += result.length;
-      } else {
-        destination[written++] = result;
-      }
-      read++;
-    }
-    return { read, written };
-  }
-}
-// src/utils/polyfill.ts
-globalThis.TextEncoder = TextEncoder2;
-globalThis.TextDecoder = TextDecoder2;
-// node_modules/.pnpm/@plist+common@1.1.0/node_modules/@plist/common/lib/esm/constants.js
-var EPOCH = 978307200000;
-var HEADER_BINARY = "bplist00";
-var PlistFormat;
-(function(PlistFormat2) {
-  PlistFormat2[PlistFormat2["BINARY"] = 0] = "BINARY";
-  PlistFormat2[PlistFormat2["XML"] = 1] = "XML";
-  PlistFormat2[PlistFormat2["OPENSTEP"] = 2] = "OPENSTEP";
-})(PlistFormat || (PlistFormat = {}));
-// node_modules/.pnpm/@plist+binary.parse@1.1.0/node_modules/@plist/binary.parse/lib/esm/index.js
-var maxObjectSize = 100 * 1000 * 1000;
-var maxObjectCount = 32768;
-var DECODER_UTF8 = new TextDecoder("utf-8");
-var DECODER_UTF16 = new TextDecoder("utf-16");
-function readDouble(buffer, start = 0) {
-  return new DataView(buffer).getFloat64(start, false);
-}
-function readFloat(buffer, start = 0) {
-  return new DataView(buffer).getFloat32(start, false);
-}
-function readUInt8(buffer, start = 0) {
-  return new DataView(buffer).getUint8(start);
-}
-function readUInt16(buffer, start = 0) {
-  return new DataView(buffer).getUint16(start, false);
-}
-function readUInt32(buffer, start = 0) {
-  return new DataView(buffer).getUint32(start, false);
-}
-function readUInt64(buffer, start = 0) {
-  return new DataView(buffer).getBigUint64(start, false);
-}
-function readUInt(buffer) {
-  switch (buffer.byteLength) {
-    case 1:
-      return readUInt8(buffer);
-    case 2:
-      return readUInt16(buffer);
-    case 4:
-      return readUInt32(buffer);
-    case 8:
-      return readUInt64(buffer);
-    case 16:
-      return readUInt64(buffer, 8);
-  }
-  throw new Error(`Invalid unsigned int length: ${buffer.byteLength}`);
-}
-function readInt8(buffer, start = 0) {
-  return new DataView(buffer).getInt8(start);
-}
-function readInt16(buffer, start = 0) {
-  return new DataView(buffer).getInt16(start, false);
-}
-function readInt32(buffer, start = 0) {
-  return new DataView(buffer).getInt32(start, false);
-}
-function readInt64(buffer, start = 0) {
-  return new DataView(buffer).getBigInt64(start, false);
-}
-function readInt(buffer) {
-  switch (buffer.byteLength) {
-    case 1:
-      return readInt8(buffer);
-    case 2:
-      return readInt16(buffer);
-    case 4:
-      return readInt32(buffer);
-    case 8:
-      return readInt64(buffer);
-    case 16:
-      return readUInt64(buffer, 8);
-  }
-  throw new Error(`Invalid int length: ${buffer.byteLength}`);
-}
-function swapBytes(buffer) {
-  const array = new Uint8Array(buffer);
-  for (let i = 0;i < array.length; i += 2) {
-    const a = array[i];
-    array[i] = array[i + 1];
-    array[i + 1] = a;
-  }
-  return array.buffer;
-}
-var parse = (buffer) => {
-  const headerBytes = buffer.slice(0, HEADER_BINARY.length);
-  if (DECODER_UTF8.decode(headerBytes) !== HEADER_BINARY) {
-    throw new Error(`Invalid binary plist. Expected '${HEADER_BINARY}' at offset 0.`);
-  }
-  const trailer = buffer.slice(buffer.byteLength - 32, buffer.byteLength);
-  const offsetSize = readUInt8(trailer, 6);
-  const objectRefSize = readUInt8(trailer, 7);
-  const numObjects = Number(readUInt64(trailer, 8));
-  const topObject = Number(readUInt64(trailer, 16));
-  const offsetTableOffset = Number(readUInt64(trailer, 24));
-  if (numObjects > maxObjectCount) {
-    throw new Error("maxObjectCount exceeded");
-  }
-  const offsetTable = [];
-  for (let i = 0;i < numObjects; i++) {
-    const offsetBytes = buffer.slice(offsetTableOffset + i * offsetSize, offsetTableOffset + (i + 1) * offsetSize);
-    offsetTable[i] = Number(readUInt(offsetBytes));
-  }
-  function parseObject(tableOffset) {
-    const offset = offsetTable[tableOffset];
-    const type = readUInt8(buffer, offset);
-    const objType = (type & 240) >> 4;
-    const objInfo = type & 15;
-    switch (objType) {
-      case 0:
-        return parseSimple();
-      case 1:
-        return parseInteger();
-      case 8:
-        return parseUID();
-      case 2:
-        return parseReal();
-      case 3:
-        return parseDate();
-      case 4:
-        return parseData();
-      case 5:
-        return parsePlistString();
-      case 6:
-        return parsePlistString(true);
-      case 10:
-        return parseArray();
-      case 13:
-        return parseDictionary();
-      default:
-        throw new Error("Unhandled type 0x" + objType.toString(16));
-    }
-    function parseSimple() {
-      switch (objInfo) {
-        case 0:
-          return null;
-        case 8:
-          return false;
-        case 9:
-          return true;
-        case 15:
-          return null;
-        default:
-          throw new Error("Unhandled simple type 0x" + objType.toString(16));
-      }
-    }
-    function parseInteger() {
-      const length = Math.pow(2, objInfo);
-      if (length < maxObjectSize) {
-        const data = buffer.slice(offset + 1, offset + 1 + length);
-        return readInt(data);
-      }
-      throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
-    }
-    function parseUID() {
-      const length = objInfo + 1;
-      if (length < maxObjectSize) {
-        return {
-          CF$UID: readUInt(buffer.slice(offset + 1, offset + 1 + length))
-        };
-      }
-      throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
-    }
-    function parseReal() {
-      const length = Math.pow(2, objInfo);
-      if (length < maxObjectSize) {
-        const realBuffer = buffer.slice(offset + 1, offset + 1 + length);
-        if (length === 4) {
-          return readFloat(realBuffer);
-        } else if (length === 8) {
-          return readDouble(realBuffer);
-        }
-        throw new Error(`Invalid real length: ${length}`);
-      } else {
-        throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
-      }
-    }
-    function parseDate() {
-      if (objInfo != 3) {
-        console.error("Unknown date type :" + objInfo + ". Parsing anyway...");
-      }
-      const dateBuffer = buffer.slice(offset + 1, offset + 9);
-      return new Date(EPOCH + 1000 * readDouble(dateBuffer));
-    }
-    function parseData() {
-      let dataoffset = 1;
-      let length = objInfo;
-      if (objInfo == 15) {
-        const int_type = readInt8(buffer, offset + 1);
-        const intType = (int_type & 240) / 16;
-        if (intType != 1) {
-          console.error("0x4: UNEXPECTED LENGTH-INT TYPE! " + intType);
-        }
-        const intInfo = int_type & 15;
-        const intLength = Math.pow(2, intInfo);
-        dataoffset = 2 + intLength;
-        length = Number(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-      }
-      if (length < maxObjectSize) {
-        return buffer.slice(offset + dataoffset, offset + dataoffset + Number(length));
-      }
-      throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
-    }
-    function parsePlistString(isUtf16 = false) {
-      let length = objInfo;
-      let stroffset = 1;
-      if (objInfo == 15) {
-        const int_type = readUInt8(buffer, offset + 1);
-        const intType = (int_type & 240) / 16;
-        if (intType != 1) {
-          console.error("UNEXPECTED LENGTH-INT TYPE! " + intType);
-        }
-        const intInfo = int_type & 15;
-        const intLength = Math.pow(2, intInfo);
-        stroffset = 2 + intLength;
-        length = Number(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-      }
-      length *= isUtf16 ? 2 : 1;
-      if (length < maxObjectSize) {
-        let plistString = buffer.slice(offset + stroffset, offset + stroffset + length);
-        if (isUtf16) {
-          plistString = swapBytes(plistString);
-          return DECODER_UTF16.decode(plistString);
-        } else {
-          return DECODER_UTF8.decode(plistString);
-        }
-      }
-      throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
-    }
-    function parseArray() {
-      let length = objInfo;
-      let arrayoffset = 1;
-      if (objInfo == 15) {
-        const int_type = readUInt8(buffer, offset + 1);
-        const intType = (int_type & 240) / 16;
-        if (intType != 1) {
-          console.error("0xa: UNEXPECTED LENGTH-INT TYPE! " + intType);
-        }
-        const intInfo = int_type & 15;
-        const intLength = Math.pow(2, intInfo);
-        arrayoffset = 2 + intLength;
-        length = Number(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-      }
-      if (length * objectRefSize > maxObjectSize) {
-        throw new Error("Too little heap space available!");
-      }
-      const array = [];
-      for (let i = 0;i < length; i++) {
-        const objRef = Number(readUInt(buffer.slice(offset + arrayoffset + i * objectRefSize, offset + arrayoffset + (i + 1) * objectRefSize)));
-        array[i] = parseObject(objRef);
-      }
-      return array;
-    }
-    function parseDictionary() {
-      let length = objInfo;
-      let dictoffset = 1;
-      if (objInfo == 15) {
-        const int_type = readUInt8(buffer, offset + 1);
-        const intType = (int_type & 240) / 16;
-        if (intType != 1) {
-          console.error("0xD: UNEXPECTED LENGTH-INT TYPE! " + intType);
-        }
-        const intInfo = int_type & 15;
-        const intLength = Math.pow(2, intInfo);
-        dictoffset = 2 + intLength;
-        length = Number(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-      }
-      if (length * 2 * objectRefSize > maxObjectSize) {
-        throw new Error("Too little heap space available!");
-      }
-      const dict = {};
-      for (let i = 0;i < length; i++) {
-        const keyRef = Number(readUInt(buffer.slice(offset + dictoffset + i * objectRefSize, offset + dictoffset + (i + 1) * objectRefSize)));
-        const valRef = Number(readUInt(buffer.slice(offset + dictoffset + length * objectRefSize + i * objectRefSize, offset + dictoffset + length * objectRefSize + (i + 1) * objectRefSize)));
-        const key = parseObject(keyRef);
-        if (typeof key !== "string") {
-          throw new Error("Invalid key type.");
-        }
-        if (key === "__proto__") {
-          throw new Error("Attempted prototype pollution");
-        }
-        const val = parseObject(valRef);
-        dict[key] = val;
-      }
-      return dict;
-    }
-  }
-  return parseObject(topObject);
-};
-// node_modules/.pnpm/@plist+binary.serialize@1.1.0/node_modules/@plist/binary.serialize/lib/esm/index.js
-var encoder = new TextEncoder;
-var nullBytes = new Uint8Array([0, 0, 0, 0, 0, 0]);
-var fromHexString = (hexString) => Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-var isUID = (value) => !!value && typeof value === "object" && Object.keys(value).length == 1 && typeof value.CF$UID === "number";
-var toUTF16 = (string) => {
-  const buf = new ArrayBuffer(string.length * 2);
-  const bufView = new Uint16Array(buf);
-  for (let i = 0, strLen = string.length;i < strLen; i++) {
-    bufView[i] = string.charCodeAt(i);
-  }
-  return new Uint8Array(buf);
-};
-var concat = (first, second) => {
-  const third = new Uint8Array(first.length + second.length);
-  third.set(first);
-  third.set(second, first.length);
-  return third;
-};
-var writeUInt = (buffer, int, size) => {
-  const output = new Uint8Array(buffer.length + size);
-  const dataView = new DataView(output.buffer);
-  output.set(buffer);
-  switch (size) {
-    case 1:
-      dataView.setUint8(buffer.length, Number(int));
-      break;
-    case 2:
-      dataView.setUint16(buffer.length, Number(int), false);
-      break;
-    case 4:
-      dataView.setUint32(buffer.length, Number(int), false);
-      break;
-    case 8:
-      dataView.setBigUint64(buffer.length, BigInt(int), false);
-      break;
-    default:
-      throw new Error("Unsupported int size");
-  }
-  return output;
-};
-var writeInt = (buffer, int, size) => {
-  const output = new Uint8Array(buffer.length + size);
-  const dataView = new DataView(output.buffer);
-  output.set(buffer);
-  switch (size) {
-    case 1:
-      dataView.setInt8(buffer.length, Number(int));
-      break;
-    case 2:
-      dataView.setInt16(buffer.length, Number(int), false);
-      break;
-    case 4:
-      dataView.setInt32(buffer.length, Number(int), false);
-      break;
-    case 8:
-      dataView.setBigInt64(buffer.length, BigInt(int), false);
-      break;
-    default:
-      throw new Error("Unsupported int size");
-  }
-  return output;
-};
-var writeDouble = (buffer, double) => {
-  const output = new Uint8Array(buffer.length + 8);
-  const dataView = new DataView(output.buffer);
-  output.set(buffer);
-  dataView.setFloat64(buffer.length, double);
-  return output;
-};
-var serialize = (value) => {
-  let buffer = encoder.encode(HEADER_BINARY);
-  if (value instanceof Array && value.length === 1) {
-    value = value[0];
-  }
-  let entries = toEntries(value);
-  const idSizeInBytes = computeIdSizeInBytes(entries.length);
-  const offsets = [];
-  let offsetSizeInBytes;
-  let offsetTableOffset;
+  var entries = toEntries(dicts);
+  var idSizeInBytes = computeIdSizeInBytes(entries.length);
+  var offsets = [];
+  var offsetSizeInBytes;
+  var offsetTableOffset;
   updateEntryIds();
-  entries.forEach((entry, entryIdx) => {
-    offsets[entryIdx] = buffer.byteLength;
-    if (typeof entry === "undefined" || entry === null) {
-      buffer = writeUInt(buffer, 0, 1);
+  entries.forEach(function(entry, entryIdx) {
+    offsets[entryIdx] = buffer.size();
+    if (!entry) {
+      buffer.write(0);
     } else {
       write(entry);
     }
   });
   writeOffsetTable();
   writeTrailer();
-  return buffer.buffer;
+  return buffer.getContents();
   function updateEntryIds() {
-    const strings = {};
-    let entryId = 0;
-    entries.forEach((entry) => {
+    var strings = {};
+    var entryId = 0;
+    entries.forEach(function(entry) {
       if (entry.id) {
         return;
       }
-      if (typeof entry.value === "string") {
-        if (strings.hasOwnProperty(entry.value)) {
+      if (entry.type === "string") {
+        if (!entry.bplistOverride && strings.hasOwnProperty(entry.value)) {
           entry.type = "stringref";
           entry.id = strings[entry.value];
         } else {
@@ -5058,191 +5940,285 @@ var serialize = (value) => {
         entry.id = entryId++;
       }
     });
-    entries = entries.filter((entry) => {
+    entries = entries.filter(function(entry) {
       return entry.type !== "stringref";
     });
   }
   function writeTrailer() {
-    buffer = concat(buffer, nullBytes);
-    buffer = concat(buffer, new Uint8Array([offsetSizeInBytes, idSizeInBytes]));
-    buffer = writeUInt(buffer, BigInt(entries.length), 8);
-    buffer = writeUInt(buffer, BigInt("0"), 8);
-    buffer = writeUInt(buffer, BigInt(offsetTableOffset), 8);
+    buffer.write(Buffer.from([0, 0, 0, 0, 0, 0]));
+    writeByte(offsetSizeInBytes);
+    writeByte(idSizeInBytes);
+    writeLong(entries.length);
+    writeLong(0);
+    writeLong(offsetTableOffset);
   }
   function writeOffsetTable() {
-    offsetTableOffset = buffer.byteLength;
+    offsetTableOffset = buffer.size();
     offsetSizeInBytes = computeOffsetSizeInBytes(offsetTableOffset);
-    offsets.forEach((offset) => {
-      buffer = writeUInt(buffer, offset, offsetSizeInBytes);
+    offsets.forEach(function(offset) {
+      writeBytes(offset, offsetSizeInBytes);
     });
   }
   function write(entry) {
-    if (entry.type === "primitive") {
-      const value2 = entry.value;
-      switch (typeof value2) {
-        case "number":
-        case "bigint":
-          writeNumber(value2);
-          break;
-        case "string":
-          writeString(value2);
-          break;
-        case "boolean":
-          writeBoolean(value2);
-          break;
-      }
-      if (value2 instanceof Date) {
-        writeDate(value2);
-      } else if (value2 instanceof ArrayBuffer) {
-        writeData(value2);
-      } else if (isUID(value2)) {
-        writeUID(value2.CF$UID);
-      }
-      return;
-    }
     switch (entry.type) {
       case "dict":
         writeDict(entry);
         break;
+      case "number":
+      case "double":
+        writeNumber(entry);
+        break;
+      case "UID":
+        writeUID(entry);
+        break;
       case "array":
         writeArray(entry);
+        break;
+      case "boolean":
+        writeBoolean(entry);
+        break;
+      case "string":
+      case "string-utf16":
+        writeString(entry);
+        break;
+      case "date":
+        writeDate(entry);
+        break;
+      case "data":
+        writeData(entry);
         break;
       default:
         throw new Error("unhandled entry type: " + entry.type);
     }
   }
-  function writeDate(value2) {
-    buffer = writeUInt(buffer, 51, 1);
-    const date = (value2.getTime() - EPOCH) / 1000;
-    buffer = writeDouble(buffer, date);
+  function writeDate(entry) {
+    writeByte(51);
+    var date = Date.parse(entry.value) / 1000 - 978307200;
+    writeDouble(date);
   }
   function writeDict(entry) {
     writeIntHeader(13, entry.entryKeys.length);
-    entry.entryKeys.forEach((entry2) => {
+    entry.entryKeys.forEach(function(entry2) {
       writeID(entry2.id);
     });
-    entry.entryValues.forEach((entry2) => {
+    entry.entryValues.forEach(function(entry2) {
       writeID(entry2.id);
     });
   }
-  function writeNumber(value2) {
-    if (typeof value2 === "bigint") {
-      const width = 16;
-      const hex = value2.toString(16);
-      const buf = fromHexString(hex.padStart(width * 2, "0").slice(0, width * 2));
-      buffer = writeUInt(buffer, 20, 1);
-      buffer = concat(buffer, buf);
-    } else {
-      if (Number.isInteger(value2)) {
-        if (value2 < 0) {
-          buffer = writeUInt(buffer, 19, 1);
-          buffer = writeInt(buffer, value2, 8);
-        } else if (value2 <= 255) {
-          buffer = writeUInt(buffer, 16, 1);
-          buffer = writeUInt(buffer, value2, 1);
-        } else if (value2 <= 65535) {
-          buffer = writeUInt(buffer, 17, 1);
-          buffer = writeUInt(buffer, value2, 2);
-        } else if (value2 <= 4294967295) {
-          buffer = writeUInt(buffer, 18, 1);
-          buffer = writeUInt(buffer, value2, 4);
-        } else {
-          buffer = writeUInt(buffer, 19, 1);
-          buffer = writeUInt(buffer, value2, 8);
-        }
+  function writeNumber(entry) {
+    if (typeof entry.value === "bigint") {
+      var width = 16;
+      var hex = entry.value.toString(width);
+      var buf = Buffer.from(hex.padStart(width * 2, "0").slice(0, width * 2), "hex");
+      writeByte(20);
+      buffer.write(buf);
+    } else if (entry.type !== "double" && parseFloat(entry.value).toFixed() == entry.value) {
+      if (entry.value < 0) {
+        writeByte(19);
+        writeBytes(entry.value, 8, true);
+      } else if (entry.value <= 255) {
+        writeByte(16);
+        writeBytes(entry.value, 1);
+      } else if (entry.value <= 65535) {
+        writeByte(17);
+        writeBytes(entry.value, 2);
+      } else if (entry.value <= 4294967295) {
+        writeByte(18);
+        writeBytes(entry.value, 4);
       } else {
-        buffer = writeUInt(buffer, 35, 1);
-        buffer = writeDouble(buffer, value2);
+        writeByte(19);
+        writeBytes(entry.value, 8);
       }
+    } else {
+      writeByte(35);
+      writeDouble(entry.value);
     }
   }
-  function writeUID(uid) {
+  function writeUID(entry) {
     writeIntHeader(8, 0);
-    writeID(uid);
+    writeID(entry.value);
   }
   function writeArray(entry) {
     writeIntHeader(10, entry.entries.length);
-    entry.entries.forEach((e) => {
+    entry.entries.forEach(function(e) {
       writeID(e.id);
     });
   }
-  function writeBoolean(value2) {
-    buffer = writeUInt(buffer, value2 ? 9 : 8, 1);
+  function writeBoolean(entry) {
+    writeByte(entry.value ? 9 : 8);
   }
-  function writeString(value2) {
-    if (mustBeUtf16(value2)) {
-      const utf16 = toUTF16(value2);
+  function writeString(entry) {
+    if (entry.type === "string-utf16" || mustBeUtf16(entry.value)) {
+      var utf16 = Buffer.from(entry.value, "ucs2");
       writeIntHeader(6, utf16.length / 2);
-      for (let i = 0;i < utf16.length; i += 2) {
-        const t = utf16[i + 0];
+      for (var i = 0;i < utf16.length; i += 2) {
+        var t = utf16[i + 0];
         utf16[i + 0] = utf16[i + 1];
         utf16[i + 1] = t;
       }
-      buffer = concat(buffer, utf16);
+      buffer.write(utf16);
     } else {
-      const utf8 = encoder.encode(value2);
+      var utf8 = Buffer.from(entry.value, "ascii");
       writeIntHeader(5, utf8.length);
-      buffer = concat(buffer, utf8);
+      buffer.write(utf8);
     }
   }
-  function writeData(data) {
-    writeIntHeader(4, data.byteLength);
-    buffer = concat(buffer, new Uint8Array(data));
+  function writeData(entry) {
+    writeIntHeader(4, entry.value.length);
+    buffer.write(entry.value);
   }
-  function writeIntHeader(kind, value2) {
-    if (value2 < 15) {
-      buffer = writeUInt(buffer, (kind << 4) + value2, 1);
+  function writeLong(l) {
+    writeBytes(l, 8);
+  }
+  function writeByte(b) {
+    buffer.write(Buffer.from([b]));
+  }
+  function writeDouble(v) {
+    var buf = Buffer.alloc(8);
+    buf.writeDoubleBE(v, 0);
+    buffer.write(buf);
+  }
+  function writeIntHeader(kind, value) {
+    if (value < 15) {
+      writeByte((kind << 4) + value);
+    } else if (value < 256) {
+      writeByte((kind << 4) + 15);
+      writeByte(16);
+      writeBytes(value, 1);
+    } else if (value < 65536) {
+      writeByte((kind << 4) + 15);
+      writeByte(17);
+      writeBytes(value, 2);
     } else {
-      buffer = writeUInt(buffer, (kind << 4) + 15, 1);
-      writeNumber(value2);
+      writeByte((kind << 4) + 15);
+      writeByte(18);
+      writeBytes(value, 4);
     }
   }
   function writeID(id) {
-    buffer = writeUInt(buffer, id, idSizeInBytes);
+    writeBytes(id, idSizeInBytes);
+  }
+  function writeBytes(value, bytes, is_signedint) {
+    var buf = Buffer.alloc(bytes);
+    var z = 0;
+    while (bytes > 4) {
+      buf[z++] = is_signedint ? 255 : 0;
+      bytes--;
+    }
+    for (var i = bytes - 1;i >= 0; i--) {
+      buf[z++] = value >> 8 * i;
+    }
+    buffer.write(buf);
   }
   function mustBeUtf16(string) {
-    return encoder.encode(string).byteLength != string.length;
+    return Buffer.byteLength(string, "utf8") != string.length;
   }
-};
-var typeofPrimitive = ["string", "number", "boolean", "bigint"];
-function toEntries(value) {
-  if (typeofPrimitive.includes(typeof value) || value instanceof ArrayBuffer || value instanceof Date || isUID(value)) {
+}
+function toEntries(dicts) {
+  if (dicts.bplistOverride) {
+    return [dicts];
+  }
+  if (Array.isArray(dicts)) {
+    return toEntriesArray(dicts);
+  } else if (dicts instanceof Uint8Array || dicts instanceof ArrayBuffer || ArrayBuffer.isView(dicts)) {
     return [
       {
-        type: "primitive",
-        value
+        type: "data",
+        value: dicts instanceof Uint8Array ? dicts : new Uint8Array(dicts.buffer ?? dicts, dicts.byteOffset ?? 0, dicts.byteLength)
       }
     ];
+  } else if (dicts instanceof Real) {
+    return [
+      {
+        type: "double",
+        value: dicts.value
+      }
+    ];
+  } else if (typeof dicts === "object") {
+    if (dicts instanceof Date) {
+      return [
+        {
+          type: "date",
+          value: dicts
+        }
+      ];
+    } else if (Object.keys(dicts).length == 1 && typeof dicts.UID === "number") {
+      return [
+        {
+          type: "UID",
+          value: dicts.UID
+        }
+      ];
+    } else if (dicts !== null && (Object.getPrototypeOf(dicts) === Object.prototype || Object.getPrototypeOf(dicts) === null)) {
+      return toEntriesObject(dicts);
+    } else {
+      throw new Error(`unknown data type: ${Object.prototype.toString.call(dicts)}`);
+    }
+  } else if (typeof dicts === "string") {
+    return [
+      {
+        type: "string",
+        value: dicts
+      }
+    ];
+  } else if (typeof dicts === "number") {
+    return [
+      {
+        type: "number",
+        value: dicts
+      }
+    ];
+  } else if (typeof dicts === "boolean") {
+    return [
+      {
+        type: "boolean",
+        value: dicts
+      }
+    ];
+  } else if (typeof dicts === "bigint") {
+    return [
+      {
+        type: "number",
+        value: dicts
+      }
+    ];
+  } else {
+    throw new Error("unhandled entry: " + dicts);
   }
-  if (value != null && typeof value === "object") {
-    return Array.isArray(value) ? toEntriesArray(value) : toEntriesObject(value);
-  }
-  throw new Error("unhandled entry: " + value);
 }
-function toEntriesArray(array) {
-  const entries = array.map(toEntries);
-  return [
+function toEntriesArray(arr) {
+  var results = [
     {
       type: "array",
-      value: undefined,
-      entries: entries.map((entries2) => entries2[0])
-    },
-    ...entries.flat()
+      entries: []
+    }
   ];
+  arr.forEach(function(v) {
+    var entry = toEntries(v);
+    results[0].entries.push(entry[0]);
+    results = results.concat(entry);
+  });
+  return results;
 }
 function toEntriesObject(dict) {
-  const entryKeys = Object.keys(dict).map(toEntries).flat(1);
-  const entryValues = Object.values(dict).map(toEntries);
-  return [
+  var results = [
     {
       type: "dict",
-      value: undefined,
-      entryKeys,
-      entryValues: entryValues.map((entries) => entries[0])
-    },
-    ...entryKeys,
-    ...entryValues.flat()
+      entryKeys: [],
+      entryValues: []
+    }
   ];
+  Object.keys(dict).forEach(function(key) {
+    var entryKey = toEntries(key);
+    results[0].entryKeys.push(entryKey[0]);
+    results = results.concat(entryKey[0]);
+  });
+  Object.keys(dict).forEach(function(key) {
+    var entryValue = toEntries(dict[key]);
+    results[0].entryValues.push(entryValue[0]);
+    results = results.concat(entryValue);
+  });
+  return results;
 }
 function computeOffsetSizeInBytes(maxOffset) {
   if (maxOffset < 256) {
@@ -5265,6 +6241,30 @@ function computeIdSizeInBytes(numberOfIds) {
   }
   return 4;
 }
+
+// node_modules/.pnpm/simple-plist-es@2.1.0/node_modules/simple-plist-es/dist/writeBinaryFileSync.js
+import fs from "fs";
+function writeBinaryFileSync(aFile, anObject, options) {
+  return fs.writeFileSync(aFile, bplist(anObject), options);
+}
+
+// node_modules/.pnpm/simple-plist-es@2.1.0/node_modules/simple-plist-es/dist/parseBinary.js
+var import_bplist_parser = __toESM(require_bplistParser(), 1);
+function parseBinary(aStringOrBuffer) {
+  const firstByte = aStringOrBuffer[0];
+  let results;
+  try {
+    if (firstByte === 98) {
+      [results] = import_bplist_parser.default.parseBuffer(aStringOrBuffer);
+    } else {
+      throw new Error("Unable to determine format for plist aStringOrBuffer");
+    }
+  } catch (error) {
+    throw error instanceof Error ? error : new Error(`error parsing binary`, { cause: error });
+  }
+  return results;
+}
+
 // node_modules/.pnpm/fast-is-equal@1.2.6/node_modules/fast-is-equal/dist/index.js
 var TYPEOF_OBJECT = "object";
 var TYPEOF_FUNCTION = "function";
@@ -5619,7 +6619,7 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist = parse(fs.readFileSync(plistPath).buffer);
+    const plist = parseBinary(fs2.readFileSync(plistPath));
     return plist;
   }
   function writeShortcuts(writes) {
@@ -5649,12 +6649,12 @@ function getPlistShortcutUtils({
         continue;
       }
       const stringValue = JSON.stringify(object);
-      const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
+      const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer2.from(stringValue, "utf8"));
       root[property] = value;
       plistNeedsUpdates = true;
     }
     if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serialize(root));
+      writeBinaryFileSync(plistPath, root);
     }
     return plistNeedsUpdates;
   }
@@ -5718,10 +6718,10 @@ function includeKeys(object, predicate) {
 }
 
 // src/utils/file.ts
-import fs2 from "fs";
+import fs3 from "fs";
 function exists(path) {
   try {
-    fs2.statSync(path);
+    fs3.statSync(path);
     return true;
   } catch (err) {
     return false;

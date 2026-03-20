@@ -6,7 +6,7 @@ import nullthrows from "nullthrows-es";
 import type { BuildHandler } from "../types/handler.ts";
 import { exists } from "../utils/file.ts";
 import noop from "@stdlib/utils-noop";
-import { serialize } from "@plist/binary.serialize";
+import { writeBinaryFileSync } from "simple-plist-es/writeBinaryFileSync";
 import fs from "fs";
 import parseJson from "json-parse-safe";
 import encodeUtf8 from "encode-utf8";
@@ -85,7 +85,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     }
 
     plist["per-item-hotkeys"] = encodeUtf8(JSON.stringify(perItemHotkeyList));
-    fs.writeFileSync(plistPath, serialize(plist));
+    writeBinaryFileSync(plistPath, plist);
   }
 
   const plistHandler = buildHandler();

@@ -30,6 +30,7 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = import.meta.require;
 
 // node_modules/.pnpm/array-uniq@3.0.0/node_modules/array-uniq/index.js
 function arrayUniq(array) {
