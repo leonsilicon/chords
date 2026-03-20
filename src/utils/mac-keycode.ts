@@ -19,7 +19,7 @@ const MODERN_MODIFIERS: Modifier[] = [
   { string: KeyMappingCode.ControlLeft, mask: 1 << 18 },
   { string: KeyMappingCode.AltLeft, mask: 1 << 19 },
   { string: KeyMappingCode.MetaLeft, mask: 1 << 20 },
-  { string: 'Numpad', mask: 1 << 21 },
+  { string: "Numpad", mask: 1 << 21 },
   { string: KeyMappingCode.Help, mask: 1 << 22 },
   { string: KeyMappingCode.Fn, mask: 1 << 23 },
 ];

@@ -25,7 +25,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 `g` = Ground (Bottom)
 
 `a` = After\
-`o` = Old (Bef`o`re) 
+`o` = Old (Bef`o`re)
 
 `[` = Prev\
 `]` = Next

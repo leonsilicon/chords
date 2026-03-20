@@ -1,7 +1,9 @@
 [config]
-name = "Zed"
-url =
 
+
+
+name = "Zed"
+url = 
 [chords]
 # Debugger
 da = { name = "Debugger: Start", args = ["debugger::Start"], shortcut = "f4" }
@@ -33,7 +35,7 @@ wf = { name = "Window: Fullscreen", args = ["zed::ToggleFullScreen"] }
 zi = { name = "Zoom: In", args = ["zed::IncreaseBufferFontSize"] }
 zo = { name = "Zoom: Out", args = ["zed::DecreaseBufferFontSize"] }
 zr = { name = "Zoom: Reset", args = ["zed::ResetBufferFontSize"] }
-zt = { name = "Zoom: Toggle", args = ["zed::ToggleZoom"]  }
+zt = { name = "Zoom: Toggle", args = ["zed::ToggleZoom"] }
 
 # Select
 's[' = { name = "Select: Previous", args = ["editor::SelectPrevious"] }

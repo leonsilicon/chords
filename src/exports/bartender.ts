@@ -23,10 +23,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(
-      meta.chords,
-      (sequence) => sequence.startsWith("/") || sequence.startsWith("-"),
-    ),
+    includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")),
     {
       bundleId: meta.bundleId,
       // index 2 is the item id, index 1 is the property
@@ -88,11 +85,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
 
   const plistHandler = buildHandler();
 
-  function itemHandler(
-    itemId: string,
-    keyName: string,
-    appName: string,
-  ): boolean {
+  function itemHandler(itemId: string, keyName: string, appName: string): boolean {
     const property = `KeyboardShortcuts_${keyName}`;
     return plistHandler(property);
   }

@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target bun --external chordsapp --external @chordsapp/utils",
+    "build": "vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target bun --external chordsapp --external @chordsapp/utils",
     "prepare": "lefthook install"
   },
   "dependencies": {
