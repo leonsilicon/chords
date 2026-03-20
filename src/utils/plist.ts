@@ -1,4 +1,3 @@
-import { parseBuffer } from "bplist-parser-pure";
 import { Buffer } from "buffer";
 import fs from "fs";
 import {
@@ -9,12 +8,14 @@ import {
 } from "./mac-keycode.ts";
 import { getKeyMap, getKeyMapByCode, KeyMappingCode } from "keycode-ts2";
 import { tap } from "chordsapp";
-import bplist from "bplist-creator-pure";
+import * as binaryPlist from "./plist-binary.ts";
 import { fastIsEqual } from "fast-is-equal";
 
 export function plistValueToString(rawValue: unknown): string {
   const valueString =
-    rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+    rawValue instanceof Uint8Array
+      ? Buffer.from(rawValue).toString("utf8")
+      : String(rawValue);
 
   return valueString;
 }
@@ -24,6 +25,13 @@ type ShortcutWrite = {
   propertyType: "string" | "bytes";
   shortcut: string;
 };
+
+function toArrayBuffer(buf: Buffer) {
+  return buf.buffer.slice(
+    buf.byteOffset,
+    buf.byteOffset + buf.byteLength,
+  ) as ArrayBuffer;
+}
 
 export function getPlistShortcutUtils({
   plistPath,
@@ -37,7 +45,9 @@ export function getPlistShortcutUtils({
   keycodeKey: string;
 }) {
   function readPlist() {
-    const plist = parseBuffer(fs.readFileSync(plistPath).buffer);
+    const plist = binaryPlist.parse(
+      toArrayBuffer(fs.readFileSync(plistPath)),
+    ) as any;
     return plist;
   }
 
@@ -59,14 +69,18 @@ export function getPlistShortcutUtils({
           : keystringsToModifierMask(modifiers);
 
       const code =
-        key in KeyMappingCode ? KeyMappingCode[key as keyof typeof KeyMappingCode] : null;
+        key in KeyMappingCode
+          ? KeyMappingCode[key as keyof typeof KeyMappingCode]
+          : null;
       if (code === null) {
         throw new Error(`Key "${key}" not found in key mapping`);
       }
 
       const keymap = getKeyMapByCode(code);
       if (!keymap?.code) {
-        throw new Error(`Key "${key}" with code "${code}" not found in key mapping`);
+        throw new Error(
+          `Key "${key}" with code "${code}" not found in key mapping`,
+        );
       }
 
       const object = {
@@ -80,14 +94,16 @@ export function getPlistShortcutUtils({
 
       const stringValue = JSON.stringify(object);
       const value =
-        propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
+        propertyType === "string"
+          ? stringValue
+          : new Uint8Array(Buffer.from(stringValue, "utf8"));
 
       root[property] = value;
       plistNeedsUpdates = true;
     }
 
     if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, bplist(plist));
+      fs.writeFileSync(plistPath, binaryPlist.serialize(plist));
     }
 
     return plistNeedsUpdates;

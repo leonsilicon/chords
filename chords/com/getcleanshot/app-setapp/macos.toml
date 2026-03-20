@@ -16,8 +16,8 @@ export default buildHandler(
 "/co" = { name = "CleanShotX: OCR", args = ['LAVAtakeOCR'] }
 "/col" = { name = "CleanShotX: OCR w/ Line Breaks", args = ['LAVAtakeOCR'] }
 "/con" = { name = "CleanShotX: OCR No Line Breaks", args = ['LAVAtakeOCR'] }
-"/ca" = { name = "CleanShotX: Area", args = ['LAVAstartGIFRecording'] }
-"/cav" = { name = "CleanShotX: Area Previous", args = ['LAVAstartGIFRecording'] }
+# "/ca" = { name = "CleanShotX: Area", args = ['LAVAstartGIFRecording'] }
+# "/ca[" = { name = "CleanShotX: Area Previous", args = ['LAVAstartGIFRecording'] }
 "/cs" = { name = "CleanShotX: Scrolling", args = ['LAVAscrollingCapture'] }
 "/cv" = { name = "CleanShotX: Video Recording", args = ['LAVAstartVideoRecording'] }
 "/cg" = { name = "CleanShotX: GIF Recording", args = ['LAVAstartGIFRecording'] }

@@ -1,0 +1,68 @@
+[config]
+name = "Zed"
+url =
+
+[chords]
+# Debugger
+da = { name = "Debugger: Start", args = ["debugger::Start"], shortcut = "f4" }
+do = { name = "Debugger: Stop", args = ["debugger::Stop"], shortcut = "shift+f5" }
+drr = { name = "Debugger: Rerun", args = ["debugger::RerunSession"], shortcut = "shift+cmd+f5" }
+du = { name = "Debugger: Pause", args = ["debugger::Pause"] }
+dsv = { name = "Debugger: Step Over", args = ["debugger::StepOver"] }
+dsi = { name = "Debugger: Step Into", args = ["debugger::StepInto"] }
+dso = { name = "Debugger: Step Out", args = ["debugger::StepOut"] }
+
+# Menu
+mf = { name = "Menu: First", args = ["debugger::StepOut"] }
+ml = { name = "Menu: Last", args = ["debugger::StepOut"] }
+'m]' = { name = "Menu: Next", args = ["debugger::StepOut"] }
+'m[' = { name = "Menu: Previous", args = ["debugger::StepOut"] }
+mc = { name = "Menu: Confirm", args = ["debugger::StepOut"] }
+mq = { name = "Menu: Quit/Cancel", args = ["debugger::StepOut"] }
+mr = { name = "Menu: Restart", args = ["debugger::StepOut"] }
+
+# Window
+wq = { name = "Window: Quit", args = ["zed::Quit"] }
+wx = { name = "Window: Exit", args = ["workspace::CloseWindow"] }
+wh = { name = "Window: Hide", args = ["zed::Hide"] }
+who = { name = "Window: Hide Others", args = ["zed::Hide"] }
+wm = { name = "Window: Minimize", args = ["zed::Hide"] }
+wf = { name = "Window: Fullscreen", args = ["zed::ToggleFullScreen"] }
+
+# Zoom
+zi = { name = "Zoom: In", args = ["zed::IncreaseBufferFontSize"] }
+zo = { name = "Zoom: Out", args = ["zed::DecreaseBufferFontSize"] }
+zr = { name = "Zoom: Reset", args = ["zed::ResetBufferFontSize"] }
+zt = { name = "Zoom: Toggle", args = ["zed::ToggleZoom"]  }
+
+# Select
+'s[' = { name = "Select: Previous", args = ["editor::SelectPrevious"] }
+'s]' = { name = "Select: Next", args = ["editor::SelectNext"] }
+'sa' = { name = "Select: All", args = ["editor::SelectNext"] }
+
+# Folding
+## Fold
+ff = { name = "Folding: Fold", args = ['editor::Fold'], shortcut = "alt+cmd+[" }
+ft = { name = "Folding: Toggle", args = ['editor::ToggleFold'], shortcut = "alt+cmd+[" }
+ffa = { name = "Folding: Fold All", args = ['editor::FoldAll'], shortcut = "cmd+k cmd+0" }
+ffr = { name = "Folding: Fold Recursively", args = [
+  'editor::FoldRecursive',
+], shortcut = "cmd+k cmd+[" }
+
+## Unfold
+fu = { name = "Folding: Unfold", args = ['editor::UnfoldLines'], shortcut = "alt+cmd+]" }
+fua = { name = "Folding: Unfold All", args = ['editor::UnfoldAll'], shortcut = "cmd+k cmd+j" }
+fur = { name = "Folding: Unfold Recursively", args = [
+  'editor::UnfoldRecursive',
+], shortcut = "cmd+k cmd+]" }
+
+f1 = { name = "Fold Level 1", args = ['editor::FoldAtLevel_1'], shortcut = "cmd+k cmd+1" }
+f2 = { name = "Fold Level 2", args = ['editor::FoldAtLevel_2'], shortcut = "cmd+k cmd+2" }
+f3 = { name = "Fold Level 3", args = ['editor::FoldAtLevel_3'], shortcut = "cmd+k cmd+3" }
+f4 = { name = "Fold Level 4", args = ['editor::FoldAtLevel_4'], shortcut = "cmd+k cmd+4" }
+f5 = { name = "Fold Level 5", args = ['editor::FoldAtLevel_5'], shortcut = "cmd+k cmd+5" }
+f6 = { name = "Fold Level 6", args = ['editor::FoldAtLevel_6'], shortcut = "cmd+k cmd+6" }
+f7 = { name = "Fold Level 7", args = ['editor::FoldAtLevel_7'], shortcut = "cmd+k cmd+7" }
+
+## Split
+sr = { name = "Split: Right", args = ['pane::SplitRight'], shortcut = "cmd+backspace" }

@@ -4,7 +4,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 
 # Some General Patterns
 
-# Directions
+## Directions
 
 `l` = Left\
 `c` = Center\
@@ -25,15 +25,22 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 `g` = Ground (Bottom)
 
 `a` = After\
-`o` = Old (Before)
+`o` = Old (Bef`o`re) 
 
-`v` = Prev\
-`x` = Next
+`[` = Prev\
+`]` = Next
 
-# Other
+## Other
 
 `g` = Goto\
 `q` = Quit (instead of Close)
+
+## Playback
+
+`y` = Play
+`u` = Pause
+`o` = Stop
+`a` = Start
 
 ## Browsers
 

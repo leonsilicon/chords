@@ -6,7 +6,7 @@ import nullthrows from "nullthrows-es";
 import type { BuildHandler } from "../types/handler.ts";
 import { exists } from "../utils/file.ts";
 import noop from "@stdlib/utils-noop";
-import bplist from "bplist-creator-pure";
+import { serialize } from "@plist/binary.serialize";
 import { Buffer } from "buffer";
 import fs from "fs";
 
@@ -23,7 +23,10 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")),
+    includeKeys(
+      meta.chords,
+      (sequence) => sequence.startsWith("/") || sequence.startsWith("-"),
+    ),
     {
       bundleId: meta.bundleId,
       // index 2 is the item id, index 1 is the property
@@ -81,12 +84,16 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     root["per-item-hotkeys"] = new Uint8Array(
       Buffer.from(JSON.stringify(perItemHotkeyList), "utf8"),
     );
-    fs.writeFileSync(plistPath, bplist(plist));
+    fs.writeFileSync(plistPath, serialize(plist));
   }
 
   const plistHandler = buildHandler();
 
-  function itemHandler(itemId: string, keyName: string, appName: string): boolean {
+  function itemHandler(
+    itemId: string,
+    keyName: string,
+    appName: string,
+  ): boolean {
     const property = `KeyboardShortcuts_${keyName}`;
     return plistHandler(property);
   }

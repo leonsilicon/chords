@@ -15,8 +15,8 @@ wq = { name = "Window: Quit", command = "Quit Google Chrome", shortcut = "cmd+q"
 tc = { name = "Tab: Close", command = "Close the current tab, or pop-up", shortcut = "cmd+w" }
 tn = { name = "Tab: New", command = "Open a new tab, and jump to it", shortcut = "cmd+t" }
 to = { name = "Tab: Reopen", command = "Reopen previously closed tabs in the order they were closed", shortcut = "cmd+shift+t" }
-tx = { name = "Tab: Next", command = "Jump to the next open tab", shortcut = "ctrl+tab" }
-tv = { name = "Tab: Previous", command = "Jump to the previous open tab", shortcut = "cmd+shift+tab" }
+'t]' = { name = "Tab: Next", command = "Jump to the next open tab", shortcut = "ctrl+tab" }
+'t[' = { name = "Tab: Previous", command = "Jump to the previous open tab", shortcut = "cmd+shift+tab" }
 t1 = { name = "Tab 1", command = "Jump to a specific tab", shortcut = "cmd+1" }
 t2 = { name = "Tab 2", command = "Jump to a specific tab", shortcut = "cmd+2" }
 t3 = { name = "Tab 3", command = "Jump to a specific tab", shortcut = "cmd+3" }
@@ -40,8 +40,8 @@ pm = { name = "Page: Home", command = "Open your home page in the current tab", 
 psd = { name = "Page Setup Dialog", command = "Open the Page Setup dialog", shortcut = "cmd+option+p" }
 
 # Matches
-mx = { name = "Match: Next", command = "Jump to the next match to your Find Bar search", shortcut = "cmd+g" }
-mv = { name = "Match: Previous", command = "Jump to the previous match to your Find Bar search", shortcut = "cmd+shift+g" }
+'m]' = { name = "Match: Next", command = "Jump to the next match to your Find Bar search", shortcut = "cmd+g" }
+'m[' = { name = "Match: Previous", command = "Jump to the previous match to your Find Bar search", shortcut = "cmd+shift+g" }
 
 # Bookmarks
 bt = { name = "Bookmarks: Toggle", command = "Show or hide the Bookmarks Bar", shortcut = "cmd+b" }
@@ -71,8 +71,8 @@ dt = { name = "Developer Tools", command = "Open Developer Tools", shortcut = "c
 odb = { name = "Open Delete Browsing Data", command = "Open the Delete Browsing Data options", shortcut = "cmd+shift+delete" }
 ac = { name = "Account", command = "Log in as a different user, browse as a Guest, or access payment and password info", shortcut = "cmd+shift+m" }
 mm = { name = "Main Menu Bar", command = "Jump to the main menu bar", shortcut = "control+f2" }
-fdx = { name = "Focus Dialog Next", command = "Cycle focus to unfocused dialog (if showing) and all toolbars", shortcut = "cmd+option+up" }
-fdv = { name = "Focus Dialog Previous", command = "Cycle focus to unfocused dialog (if showing) and all toolbars", shortcut = "cmd+option+down" }
+'fd]' = { name = "Focus Dialog Next", command = "Cycle focus to unfocused dialog (if showing) and all toolbars", shortcut = "cmd+option+up" }
+'fd[' = { name = "Focus Dialog Previous", command = "Cycle focus to unfocused dialog (if showing) and all toolbars", shortcut = "cmd+option+down" }
 ofb = { name = "Open Feedback", command = "Open a feedback form", shortcut = "cmd+option+shift+i" }
 cb = { name = "Caret Browsing", command = "Turn on caret browsing", shortcut = "f7" }
 fid = { name = "Focus Inactive Dialogs", command = "Focus on inactive dialogs", shortcut = "cmd+option+shift+a" }
