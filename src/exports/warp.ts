@@ -5,7 +5,7 @@ import { exists } from "#/utils/file.ts";
 import yaml from "js-yaml";
 import os from "os";
 import path from "path";
-import { tap } from 'chordsapp';
+import { tap } from "chordsapp";
 import type { BuildHandler } from "../types/handler.ts";
 
 function extractCommands(chords: ImportMeta["chords"]): string[] {
@@ -21,7 +21,6 @@ function extractCommands(chords: ImportMeta["chords"]): string[] {
 }
 
 export default (function buildWarpHandler(meta) {
-
   const commands = extractCommands(meta.chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(
@@ -53,7 +52,7 @@ export default (function buildWarpHandler(meta) {
 
   for (const cmd of sortedCommands) {
     // Warp uses - instead of + as their keybind separator
-    const keybind = syntheticKeybinds[cmd]!.replaceAll('+', '-');
+    const keybind = syntheticKeybinds[cmd]!.replaceAll("+", "-");
     keybindings[cmd] = keybind;
   }
   fs.writeFileSync(keybindingsPath, "---\n" + yaml.dump(keybindings));
@@ -67,4 +66,4 @@ export default (function buildWarpHandler(meta) {
     tap(keybind.replaceAll("-", "+"));
     return true;
   };
-}) satisfies BuildHandler;
+} satisfies BuildHandler);

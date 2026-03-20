@@ -1,25 +1,27 @@
+import { KeyMappingCode } from "keycode-ts2";
+
 type Modifier = {
   string: string;
   mask: number;
 };
 
 const CARBON_MODIFIERS: Modifier[] = [
-  { string: "MetaLeft", mask: 1 << 8 },
-  { string: "ShiftLeft", mask: 1 << 9 },
-  { string: "AltLeft", mask: 1 << 11 },
-  { string: "ControlLeft", mask: 1 << 12 },
-  { string: "CapsLock", mask: 1 << 10 },
+  { string: KeyMappingCode.MetaLeft, mask: 1 << 8 },
+  { string: KeyMappingCode.ShiftLeft, mask: 1 << 9 },
+  { string: KeyMappingCode.AltLeft, mask: 1 << 11 },
+  { string: KeyMappingCode.ControlLeft, mask: 1 << 12 },
+  { string: KeyMappingCode.CapsLock, mask: 1 << 10 },
 ];
 
 const MODERN_MODIFIERS: Modifier[] = [
-  { string: "CapsLock", mask: 1 << 16 },
-  { string: "ShiftLeft", mask: 1 << 17 },
-  { string: "ControlLeft", mask: 1 << 18 },
-  { string: "AltLeft", mask: 1 << 19 },
-  { string: "MetaLeft", mask: 1 << 20 },
-  { string: "Numpad", mask: 1 << 21 },
-  { string: "Help", mask: 1 << 22 },
-  { string: "Function", mask: 1 << 23 },
+  { string: KeyMappingCode.CapsLock, mask: 1 << 16 },
+  { string: KeyMappingCode.ShiftLeft, mask: 1 << 17 },
+  { string: KeyMappingCode.ControlLeft, mask: 1 << 18 },
+  { string: KeyMappingCode.AltLeft, mask: 1 << 19 },
+  { string: KeyMappingCode.MetaLeft, mask: 1 << 20 },
+  { string: 'Numpad', mask: 1 << 21 },
+  { string: KeyMappingCode.Help, mask: 1 << 22 },
+  { string: KeyMappingCode.Fn, mask: 1 << 23 },
 ];
 
 export function modifiersToKeystrings(mask: number): string[] {

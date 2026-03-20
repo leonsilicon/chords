@@ -355,59 +355,6 @@ function parseRunTimeFlags(value) {
 import { Buffer as Buffer2 } from "buffer";
 import fs from "fs";
 
-// src/utils/mac-keycode.ts
-var CARBON_MODIFIERS = [
-  { string: "MetaLeft", mask: 1 << 8 },
-  { string: "ShiftLeft", mask: 1 << 9 },
-  { string: "AltLeft", mask: 1 << 11 },
-  { string: "ControlLeft", mask: 1 << 12 },
-  { string: "CapsLock", mask: 1 << 10 }
-];
-var MODERN_MODIFIERS = [
-  { string: "CapsLock", mask: 1 << 16 },
-  { string: "ShiftLeft", mask: 1 << 17 },
-  { string: "ControlLeft", mask: 1 << 18 },
-  { string: "AltLeft", mask: 1 << 19 },
-  { string: "MetaLeft", mask: 1 << 20 },
-  { string: "Numpad", mask: 1 << 21 },
-  { string: "Help", mask: 1 << 22 },
-  { string: "Function", mask: 1 << 23 }
-];
-function modifiersToKeystrings(mask) {
-  const result = [];
-  for (const modifier of MODERN_MODIFIERS) {
-    if ((mask & modifier.mask) !== 0) {
-      result.push(modifier.string);
-    }
-  }
-  return result;
-}
-function carbonModifiersToKeystrings(mask) {
-  const result = [];
-  for (const modifier of CARBON_MODIFIERS) {
-    if ((mask & modifier.mask) !== 0) {
-      result.push(modifier.string);
-    }
-  }
-  return result;
-}
-function keystringsToMask(keystrings, modifiers) {
-  let mask = 0;
-  for (const keystring of keystrings) {
-    const modifier = modifiers.find((m) => m.string === keystring);
-    if (modifier) {
-      mask |= modifier.mask;
-    }
-  }
-  return mask;
-}
-function keystringsToModifierMask(keystrings) {
-  return keystringsToMask(keystrings, MODERN_MODIFIERS);
-}
-function keystringsToCarbonModifierMask(keystrings) {
-  return keystringsToMask(keystrings, CARBON_MODIFIERS);
-}
-
 // node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
 var KeyMappingCode = {
   Hyper: "Hyper",
@@ -4370,6 +4317,59 @@ function getKeyMap(mapping) {
       return keyMaps[mapping.id];
   }
 }
+// src/utils/mac-keycode.ts
+var CARBON_MODIFIERS = [
+  { string: KeyMappingCode.MetaLeft, mask: 1 << 8 },
+  { string: KeyMappingCode.ShiftLeft, mask: 1 << 9 },
+  { string: KeyMappingCode.AltLeft, mask: 1 << 11 },
+  { string: KeyMappingCode.ControlLeft, mask: 1 << 12 },
+  { string: KeyMappingCode.CapsLock, mask: 1 << 10 }
+];
+var MODERN_MODIFIERS = [
+  { string: KeyMappingCode.CapsLock, mask: 1 << 16 },
+  { string: KeyMappingCode.ShiftLeft, mask: 1 << 17 },
+  { string: KeyMappingCode.ControlLeft, mask: 1 << 18 },
+  { string: KeyMappingCode.AltLeft, mask: 1 << 19 },
+  { string: KeyMappingCode.MetaLeft, mask: 1 << 20 },
+  { string: "Numpad", mask: 1 << 21 },
+  { string: KeyMappingCode.Help, mask: 1 << 22 },
+  { string: KeyMappingCode.Fn, mask: 1 << 23 }
+];
+function modifiersToKeystrings(mask) {
+  const result = [];
+  for (const modifier of MODERN_MODIFIERS) {
+    if ((mask & modifier.mask) !== 0) {
+      result.push(modifier.string);
+    }
+  }
+  return result;
+}
+function carbonModifiersToKeystrings(mask) {
+  const result = [];
+  for (const modifier of CARBON_MODIFIERS) {
+    if ((mask & modifier.mask) !== 0) {
+      result.push(modifier.string);
+    }
+  }
+  return result;
+}
+function keystringsToMask(keystrings, modifiers) {
+  let mask = 0;
+  for (const keystring of keystrings) {
+    const modifier = modifiers.find((m) => m.string === keystring);
+    if (modifier) {
+      mask |= modifier.mask;
+    }
+  }
+  return mask;
+}
+function keystringsToModifierMask(keystrings) {
+  return keystringsToMask(keystrings, MODERN_MODIFIERS);
+}
+function keystringsToCarbonModifierMask(keystrings) {
+  return keystringsToMask(keystrings, CARBON_MODIFIERS);
+}
+
 // src/utils/plist.ts
 import { tap } from "chordsapp";
 
@@ -5188,11 +5188,13 @@ function ensureGlobalHotkeys(globalChords, {
       console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
       return [];
     }
-    return [{
-      chord,
-      sequence,
-      shortcut
-    }];
+    return [
+      {
+        chord,
+        sequence,
+        shortcut
+      }
+    ];
   });
 }
 
@@ -5270,8 +5272,8 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     };
   }));
   {
-    const plist2 = readPlist();
-    const root = plist2[0];
+    const plist = readPlist();
+    const root = plist[0];
     const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
     const perItemHotkeyList = JSON.parse(rawValue);
     for (const { chord } of globalHotkeys) {
@@ -5292,18 +5294,11 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
       perItemHotkeyList.push(item);
     }
     root["per-item-hotkeys"] = new Uint8Array(Buffer3.from(JSON.stringify(perItemHotkeyList), "utf8"));
-    fs3.writeFileSync(plistPath, bplist(plist2));
+    fs3.writeFileSync(plistPath, bplist(plist));
   }
   const plistHandler = buildHandler();
-  const plist = readPlist();
   function itemHandler(itemId, keyName, appName) {
-    const rawValue = plist[0]?.["per-item-hotkeys"];
-    const value = JSON.parse(plistValueToString(rawValue));
-    const item = value.find((item2) => item2.appBundleIdentifier === itemId);
-    if (item === undefined) {
-      return false;
-    }
-    const property = `KeyboardShortcuts_${item.keyName}`;
+    const property = `KeyboardShortcuts_${keyName}`;
     return plistHandler(property);
   }
   function shortcutHandler(property) {

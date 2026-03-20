@@ -13,28 +13,30 @@ export function ensureGlobalHotkeys(
     bundleId,
     getHotkeyId,
   }: {
-    bundleId: string
-    getHotkeyId: (chord: Chord) => string
-  }
+    bundleId: string;
+    getHotkeyId: (chord: Chord) => string;
+  },
 ): Array<{ sequence: string; chord: Chord; shortcut: string }> {
   return Object.entries(globalChords).flatMap(([sequence, chord]) => {
     if (!chord) {
       return [];
     }
 
-    const hotkeyId = getHotkeyId(chord)
-    const shortcut = getGlobalHotkey(bundleId, hotkeyId) ??
-      registerGlobalHotkey(bundleId, hotkeyId);
+    const hotkeyId = getHotkeyId(chord);
+    const shortcut =
+      getGlobalHotkey(bundleId, hotkeyId) ?? registerGlobalHotkey(bundleId, hotkeyId);
 
     if (shortcut === undefined) {
       console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
-      return []
+      return [];
     }
 
-    return [{
-      chord,
-      sequence,
-      shortcut
-    }]
-  })
+    return [
+      {
+        chord,
+        sequence,
+        shortcut,
+      },
+    ];
+  });
 }

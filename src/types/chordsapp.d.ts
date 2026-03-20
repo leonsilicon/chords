@@ -1,4 +1,4 @@
-declare module 'chordsapp' {
+declare module "chordsapp" {
   export function tap(key: string): void;
   export function press(key: string): void;
   export function release(key: string): void;
@@ -12,11 +12,11 @@ declare module 'chordsapp' {
     3. The original creation date of the bundle identifier folder inside chords/ (according to Git, since system `ctime` isn't reliable)
       - This is necessary because we need a way to consistently order the bundle identifiers that won't change; alphabetical might change if future applications are added
   */
-  export function registerGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined
-  export function getGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined
+  export function registerGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined;
+  export function getGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined;
 }
 
-declare module '@chordsapp/types' {
+declare module "@chordsapp/types" {
   export type Chord = {
     name: string;
     shortcut?: string;

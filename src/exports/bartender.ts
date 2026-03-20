@@ -2,18 +2,18 @@ import untildify from "untildify";
 import { getPlistShortcutUtils, plistValueToString } from "#/utils/plist.ts";
 import { ensureGlobalHotkeys } from "#/utils/global.ts";
 import { includeKeys } from "filter-obj";
-import nullthrows from 'nullthrows-es'
+import nullthrows from "nullthrows-es";
 import type { BuildHandler } from "../types/handler.ts";
 import { exists } from "../utils/file.ts";
 import noop from "@stdlib/utils-noop";
 import bplist from "bplist-creator-pure";
 import { Buffer } from "buffer";
-import fs from 'fs'
+import fs from "fs";
 
 interface PerItemHotkey {
-  appName: string
-  appBundleIdentifier: string
-  keyName: string
+  appName: string;
+  appBundleIdentifier: string;
+  keyName: string;
 }
 
 export default (function buildBartenderHandler(meta, tildepath: string) {
@@ -23,46 +23,50 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(meta.chords, (sequence) => sequence.startsWith('/') || sequence.startsWith('-')),
+    includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")),
     {
       bundleId: meta.bundleId,
       // index 2 is the item id, index 1 is the property
-      getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
-    }
+      getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1]),
+    },
   );
 
   const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
     plistPath,
-    modifierType: 'carbon',
-    modifierMaskKey: 'carbonModifiers',
-    keycodeKey: 'carbonKeyCode',
-  })
-  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => {
-    const property = chord.args?.[2] ? `KeyboardShortcuts_${chord.args[2]}` : nullthrows(chord.args?.[1])
-    return {
-      property,
-      // _Bartender_ stores shortcuts as strings
-      propertyType: 'string',
-      shortcut,
-    }
-  }))
+    modifierType: "carbon",
+    modifierMaskKey: "carbonModifiers",
+    keycodeKey: "carbonKeyCode",
+  });
+  writeShortcuts(
+    globalHotkeys.map(({ chord, shortcut }) => {
+      const property = chord.args?.[2]
+        ? `KeyboardShortcuts_${chord.args[2]}`
+        : nullthrows(chord.args?.[1]);
+      return {
+        property,
+        // _Bartender_ stores shortcuts as strings
+        propertyType: "string",
+        shortcut,
+      };
+    }),
+  );
 
   // TODO: For each per-item shortcut, we also need to add it to per-item-hotkeys
   {
-    const plist = readPlist()
+    const plist = readPlist();
     const root = plist[0]!;
-    const rawValue = plistValueToString(root['per-item-hotkeys']) ?? '[]'
+    const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
     const perItemHotkeyList = JSON.parse(rawValue) as PerItemHotkey[];
 
     for (const { chord } of globalHotkeys) {
-      const appBundleIdentifier = chord.args?.[1]
-      const keyName = chord.args?.[2]
-      const appName = chord.args?.[3]
+      const appBundleIdentifier = chord.args?.[1];
+      const keyName = chord.args?.[2];
+      const appName = chord.args?.[3];
       if (!appBundleIdentifier || !keyName || !appName) {
         continue;
       }
 
-      if (perItemHotkeyList.some(item => item.keyName === keyName)) {
+      if (perItemHotkeyList.some((item) => item.keyName === keyName)) {
         continue;
       }
 
@@ -70,26 +74,20 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
         appName,
         appBundleIdentifier,
         keyName,
-      }
+      };
       perItemHotkeyList.push(item);
     }
 
-    root['per-item-hotkeys'] = new Uint8Array(Buffer.from(JSON.stringify(perItemHotkeyList), 'utf8'));
+    root["per-item-hotkeys"] = new Uint8Array(
+      Buffer.from(JSON.stringify(perItemHotkeyList), "utf8"),
+    );
     fs.writeFileSync(plistPath, bplist(plist));
   }
 
   const plistHandler = buildHandler();
 
-  const plist = readPlist();
   function itemHandler(itemId: string, keyName: string, appName: string): boolean {
-    const rawValue = plist[0]?.['per-item-hotkeys']
-    const value = JSON.parse(plistValueToString(rawValue)) as PerItemHotkey[];
-    const item = value.find(item => item.appBundleIdentifier === itemId);
-    if (item === undefined) {
-      return false;
-    }
-
-    const property = `KeyboardShortcuts_${item.keyName}`;
+    const property = `KeyboardShortcuts_${keyName}`;
     return plistHandler(property);
   }
 
@@ -97,17 +95,26 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     return plistHandler(property);
   }
 
-  function handler(type: 'shortcut', property: string): boolean;
-  function handler(type: 'item', appBundleIdentifier: string, keyName: string, appName: string): boolean;
-  function handler(...args: ['shortcut', property: string] |  ['item', appBundleIdentifier: string, keyName: string, appName: string]): boolean {
-    if (args[0] === 'shortcut') {
+  function handler(type: "shortcut", property: string): boolean;
+  function handler(
+    type: "item",
+    appBundleIdentifier: string,
+    keyName: string,
+    appName: string,
+  ): boolean;
+  function handler(
+    ...args:
+      | ["shortcut", property: string]
+      | ["item", appBundleIdentifier: string, keyName: string, appName: string]
+  ): boolean {
+    if (args[0] === "shortcut") {
       const [type, property] = args;
       return shortcutHandler(property);
     } else {
       const [type, appBundleIdentifier, keyName, appName] = args;
       return itemHandler(appBundleIdentifier, keyName, appName);
     }
-  };
+  }
 
   return handler;
 } satisfies BuildHandler);
