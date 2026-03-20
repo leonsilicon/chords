@@ -2974,8 +2974,8 @@ function extractCommands(chords) {
 function normalizeKeybind(k) {
   return k.replace(/\+/g, "-");
 }
-async function buildWarpHandler(chords) {
-  const commands = extractCommands(chords);
+var buildWarpHandler = function buildWarpHandler(meta) {
+  const commands = extractCommands(meta.chords);
   const syntheticKeybinds = generateSyntheticKeybinds(commands, [
     "alt+{0..9}",
     "alt+cmd+{0..9}",
@@ -3010,7 +3010,7 @@ async function buildWarpHandler(chords) {
     tap(keybind.replaceAll("-", "+"));
     return true;
   };
-}
+};
 export {
-  buildWarpHandler
+  buildWarpHandler as default
 };

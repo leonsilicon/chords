@@ -6,6 +6,7 @@ import yaml from "js-yaml";
 import os from "os";
 import path from "path";
 import { tap } from 'chordsapp';
+import type { BuildHandler } from "../types/handler.ts";
 
 function extractCommands(chords: ImportMeta["chords"]): string[] {
   const result: string[] = [];
@@ -23,8 +24,8 @@ function normalizeKeybind(k: string): string {
   return k.replace(/\+/g, "-");
 }
 
-export async function buildWarpHandler(chords: ImportMeta["chords"]) {
-  const commands = extractCommands(chords);
+export default (function buildWarpHandler(meta) {
+  const commands = extractCommands(meta.chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(
     commands,
@@ -68,4 +69,4 @@ export async function buildWarpHandler(chords: ImportMeta["chords"]) {
     tap(keybind.replaceAll("-", "+"));
     return true;
   };
-}
+}) satisfies BuildHandler;

@@ -161,7 +161,7 @@ function run(cmd, args = []) {
 }
 
 // src/exports/jetbrains.ts
-function buildJetbrainsHandler(ideBinPath) {
+var buildJetbrainsHandler = function buildJetbrainsHandler(meta, ideBinPath) {
   return async function action(commandId) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
@@ -195,7 +195,7 @@ function buildJetbrainsHandler(ideBinPath) {
     fs.rmSync(resultPath);
     return result == "1";
   };
-}
+};
 export {
   buildJetbrainsHandler as default
 };

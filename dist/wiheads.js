@@ -1318,6 +1318,10 @@ function ensureGlobalHotkeys(globalChords, {
     }
     const hotkeyId = getHotkeyId(chord);
     const shortcut = getGlobalHotkey(bundleId, hotkeyId) ?? registerGlobalHotkey(bundleId, hotkeyId);
+    if (shortcut === undefined) {
+      console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
+      return [];
+    }
     return [{
       chord,
       sequence,
@@ -1362,7 +1366,7 @@ function includeKeys(object, predicate) {
 }
 
 // src/exports/wiheads.ts
-function buildWiheadsHandler(meta, tildepath) {
+var buildWiheadsHandler = function buildWiheadsHandler(meta, tildepath) {
   const globalHotkeys = ensureGlobalHotkeys(includeKeys(meta.chords, (sequence) => sequence.startsWith("/")), {
     bundleId: meta.bundleId,
     getHotkeyId: (chord) => nullthrows(chord.args?.[0])
@@ -1379,7 +1383,7 @@ function buildWiheadsHandler(meta, tildepath) {
     shortcut
   })));
   return buildHandler();
-}
+};
 export {
   buildWiheadsHandler as default
 };

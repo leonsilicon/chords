@@ -3,9 +3,10 @@ import fs from "fs";
 import { exists } from "#/utils/file.ts";
 import path from "path";
 import { tap } from 'chordsapp';
+import type { BuildHandler } from "../types/handler.ts";
 
 // TODO: make this work for Cursor
-export default async function buildVscodeHandler() {
+export default (async function buildVscodeHandler() {
   const uid = await run("id", ["-u"]);
 
   return async function command(cmd: string) {
@@ -31,4 +32,4 @@ export default async function buildVscodeHandler() {
 
     return true;
   };
-}
+} satisfies BuildHandler);

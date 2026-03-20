@@ -39,7 +39,7 @@ function exists(path) {
 // src/exports/vscode.ts
 import path from "path";
 import { tap } from "chordsapp";
-async function buildVscodeHandler() {
+var buildVscodeHandler = async function buildVscodeHandler() {
   const uid = await run("id", ["-u"]);
   return async function command(cmd) {
     const tmp = process.env.TMPDIR ?? "/tmp";
@@ -58,7 +58,7 @@ async function buildVscodeHandler() {
     tap("cmd+shift+f17");
     return true;
   };
-}
+};
 export {
   buildVscodeHandler as default
 };

@@ -5,5 +5,8 @@ extends = "com.jetbrains.intellij"
 [config.js]
 module = '''
 import buildHandler from "dist/jetbrains.js";
-export default buildHandler("/Applications/Android Studio.app/Contents/MacOS/studio")
+export default buildHandler(
+  import.meta,
+  "/Applications/Android Studio.app/Contents/MacOS/studio"
+)
 '''

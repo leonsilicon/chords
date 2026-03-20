@@ -5,6 +5,7 @@ name = "CleanShot X (Setapp)"
 module = '''
 import buildHandler from 'dist/maketheweb.js';
 export default buildHandler(
+  import.meta,
   "~/Library/Preferences/com.getcleanshot.app-setapp.plist",
 );
 '''

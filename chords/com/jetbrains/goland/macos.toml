@@ -5,5 +5,8 @@ extends = "com.jetbrains.intellij"
 [config.js]
 module = '''
 import buildHandler from 'dist/jetbrains.js';
-export default buildHandler("/Applications/GoLand.app/Contents/MacOS/goland")
+export default buildHandler(
+  import.meta,
+  "/Applications/GoLand.app/Contents/MacOS/goland"
+)
 '''

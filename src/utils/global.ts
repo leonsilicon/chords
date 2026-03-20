@@ -26,6 +26,11 @@ export function ensureGlobalHotkeys(
     const shortcut = getGlobalHotkey(bundleId, hotkeyId) ??
       registerGlobalHotkey(bundleId, hotkeyId);
 
+    if (shortcut === undefined) {
+      console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
+      return []
+    }
+
     return [{
       chord,
       sequence,

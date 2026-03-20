@@ -5,7 +5,7 @@ url = "https://docs.warp.dev/getting-started/keyboard-shortcuts"
 [config.js]
 module = '''
 import buildHandler from 'dist/warp.js';
-export default buildHandler(import.meta.chords);
+export default buildHandler(import.meta);
 '''
 
 [chords]

@@ -3,6 +3,7 @@ import { getPlistShortcutUtils, plistValueToString } from "#/utils/plist.ts";
 import { ensureGlobalHotkeys } from "../utils/global.ts";
 import { includeKeys } from "filter-obj";
 import nullthrows from 'nullthrows-es'
+import type { BuildHandler } from "../types/handler.ts";
 
 interface PerItemHotkey {
   appName: string
@@ -10,7 +11,7 @@ interface PerItemHotkey {
   keyName: string
 }
 
-export default function buildBartenderHandler(meta: ImportMeta, tildepath: string) {
+export default (function buildBartenderHandler(meta, tildepath: string) {
   const globalHotkeys = ensureGlobalHotkeys(
     includeKeys(meta.chords, (sequence) => sequence.startsWith('/') || sequence.startsWith('-')),
     {
@@ -57,4 +58,4 @@ export default function buildBartenderHandler(meta: ImportMeta, tildepath: strin
   };
 
   return handler;
-}
+} satisfies BuildHandler);

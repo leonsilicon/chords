@@ -1318,6 +1318,10 @@ function ensureGlobalHotkeys(globalChords, {
     }
     const hotkeyId = getHotkeyId(chord);
     const shortcut = getGlobalHotkey(bundleId, hotkeyId) ?? registerGlobalHotkey(bundleId, hotkeyId);
+    if (shortcut === undefined) {
+      console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
+      return [];
+    }
     return [{
       chord,
       sequence,
@@ -1362,7 +1366,7 @@ function nullthrows(value, message) {
 }
 
 // src/exports/bartender.ts
-function buildBartenderHandler(meta, tildepath) {
+var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   const globalHotkeys = ensureGlobalHotkeys(includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
     bundleId: meta.bundleId,
     getHotkeyId: (chord) => nullthrows(chord.args?.[0])
@@ -1397,7 +1401,7 @@ function buildBartenderHandler(meta, tildepath) {
     return type === "item" ? itemHandler(itemIdOrProperty) : shortcutHandler(itemIdOrProperty);
   }
   return handler;
-}
+};
 export {
   buildBartenderHandler as default
 };

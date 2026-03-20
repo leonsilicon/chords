@@ -1,20 +1,8 @@
-type BundleIdData = {
-
-}
-
-type Chord = {
-  name: string;
-  shortcut?: string;
-  shell?: string;
-  args?: string[];
-};
-
 declare global {
   interface ImportMeta {
-    chords: Record<string, Chord>;
+    chords: Record<string, import('@chordsapp/types').Chord>;
     bundleId: string
   }
 }
-
 
 export {};

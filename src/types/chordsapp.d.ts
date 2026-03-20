@@ -12,11 +12,10 @@ declare module 'chordsapp' {
     3. The original creation date of the bundle identifier folder inside chords/ (according to Git, since system `ctime` isn't reliable)
       - This is necessary because we need a way to consistently order the bundle identifiers that won't change; alphabetical might change if future applications are added
   */
-  export function registerGlobalHotkey(bundleId: string, hotkeyId: string): RepoHistoryItem[]
-  export function getGlobalHotkey(bundleId: string, hotkeyId: string): string
+  export function registerGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined
+  export function getGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined
 }
 
-// This should be a global package that also exposes import.meta
 declare module '@chordsapp/types' {
   export type Chord = {
     name: string;
@@ -24,8 +23,4 @@ declare module '@chordsapp/types' {
     shell?: string;
     args?: string[];
   };
-}
-
-declare module '@chordsapp/utils' {
-  export function isGlobalSequence(sequence: string): boolean;
 }

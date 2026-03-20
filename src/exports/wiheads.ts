@@ -3,8 +3,9 @@ import { getPlistShortcutUtils } from "../utils/plist.ts";
 import { ensureGlobalHotkeys } from "../utils/global.ts";
 import nullthrows from 'nullthrows-es'
 import { includeKeys } from 'filter-obj'
+import type { BuildHandler } from "../types/handler.ts";
 
-export default function buildWiheadsHandler(meta: ImportMeta, tildepath: string) {
+export default (function buildWiheadsHandler(meta, tildepath: string) {
   const globalHotkeys = ensureGlobalHotkeys(
     includeKeys(meta.chords, (sequence) => sequence.startsWith('/')),
     {
@@ -27,4 +28,4 @@ export default function buildWiheadsHandler(meta: ImportMeta, tildepath: string)
   })))
 
   return buildHandler()
-}
+} satisfies BuildHandler);

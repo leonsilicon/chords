@@ -4,8 +4,9 @@ extends = "com.surteesstudios.Bartender"
 
 [config.js]
 module = '''
-import { makeShortcut } from 'dist/bartender.js';
-export default makeShortcut(
+import buildHandler from 'dist/bartender.js';
+export default buildHandler(
+  import.meta,
   "~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"
 )
 '''

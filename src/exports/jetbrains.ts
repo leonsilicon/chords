@@ -2,9 +2,10 @@ import fs from "fs";
 import { outdent } from "outdent";
 import path from "path";
 import { run } from "#/utils/exec.ts";
+import type { BuildHandler } from "../types/handler.ts";
 
 // This function makes it possible to programmatically execute IntelliJ commands
-export default function buildJetbrainsHandler(ideBinPath: string) {
+export default (function buildJetbrainsHandler(meta, ideBinPath: string) {
   return async function action(commandId: string) {
     const tmp = process.env.TMPDIR ?? "/tmp";
     const id = Math.random();
@@ -42,4 +43,4 @@ export default function buildJetbrainsHandler(ideBinPath: string) {
 
     return result == "1";
   };
-}
+} satisfies BuildHandler);

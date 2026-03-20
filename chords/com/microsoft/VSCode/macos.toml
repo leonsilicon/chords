@@ -4,7 +4,7 @@ name = "VSCode"
 [config.js]
 module = '''
 import buildHandler from "dist/vscode.js"
-export default buildHandler();
+export default buildHandler(import.meta);
 '''
 
 [chords]

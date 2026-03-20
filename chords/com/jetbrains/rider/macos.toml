@@ -5,5 +5,8 @@ extends = "com.jetbrains.intellij"
 [config.js]
 module = '''
 import buildHandler from 'dist/jetbrains.js';
-export default buildHandler("/Applications/Rider.app/Contents/MacOS/rider")
+export default buildHandler(
+  import.meta,
+  "/Applications/Rider.app/Contents/MacOS/rider"
+)
 '''

@@ -4,7 +4,10 @@ name = "IntelliJ IDEA"
 [config.js]
 module = '''
 import buildHandler from "dist/jetbrains.js";
-export default buildHandler("/Applications/IntelliJ IDEA.app/Contents/MacOS/idea")
+export default buildHandler(
+  import.meta,
+  "/Applications/IntelliJ IDEA.app/Contents/MacOS/idea"
+)
 '''
 
 [chords]
