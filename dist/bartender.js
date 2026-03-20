@@ -31,6 +31,22 @@ var __toESM = (mod, isNodeMode, target) => {
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
 
+// node_modules/.pnpm/json-parse-safe@2.0.0/node_modules/json-parse-safe/index.js
+var require_json_parse_safe = __commonJS((exports, module) => {
+  module.exports = JSONParse;
+  function JSONParse(text, reviver) {
+    try {
+      return {
+        value: JSON.parse(text, reviver)
+      };
+    } catch (ex) {
+      return {
+        error: ex
+      };
+    }
+  }
+});
+
 // node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
 var require_main = __commonJS((exports, module) => {
   function noop() {}
@@ -5514,12 +5530,10 @@ function deepEqual(valA, valB, visited) {
 }
 
 // src/utils/plist.ts
+var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 function plistValueToString(rawValue) {
   const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
   return valueString;
-}
-function toArrayBuffer(buf) {
-  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
 }
 function getPlistShortcutUtils({
   plistPath,
@@ -5528,7 +5542,7 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist2 = parse(toArrayBuffer(fs.readFileSync(plistPath)));
+    const plist2 = parse(fs.readFileSync(plistPath).buffer);
     return plist2;
   }
   function writeShortcuts(writes) {
@@ -5574,7 +5588,11 @@ function getPlistShortcutUtils({
       if (!rawValue) {
         return false;
       }
-      const value = JSON.parse(plistValueToString(rawValue));
+      const result = import_json_parse_safe.default(plistValueToString(rawValue));
+      if ("error" in result) {
+        return false;
+      }
+      const value = result.value;
       const keys = modifierType === "carbon" ? carbonModifiersToKeystrings(value[modifierMaskKey]) : modifiersToKeystrings(value[modifierMaskKey]);
       const keymap = getKeyMap({
         kind: "mac",
@@ -5669,6 +5687,7 @@ function exists(path) {
 
 // src/exports/bartender.ts
 var import_utils_noop = __toESM(require_lib(), 1);
+var import_json_parse_safe2 = __toESM(require_json_parse_safe(), 1);
 import { Buffer as Buffer2 } from "buffer";
 import fs3 from "fs";
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
@@ -5696,8 +5715,14 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   }));
   {
     const root = readPlist();
-    const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
-    const perItemHotkeyList = JSON.parse(rawValue);
+    const rawValue = plistValueToString(root["per-item-hotkeys"]);
+    const result = import_json_parse_safe2.default(rawValue);
+    let perItemHotkeyList = [];
+    if ("error" in result) {
+      perItemHotkeyList = [];
+    } else {
+      perItemHotkeyList = result.value;
+    }
     for (const { chord } of globalHotkeys) {
       const appBundleIdentifier = chord.args?.[1];
       const keyName = chord.args?.[2];

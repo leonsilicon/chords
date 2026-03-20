@@ -31,6 +31,22 @@ var __toESM = (mod, isNodeMode, target) => {
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
 
+// node_modules/.pnpm/json-parse-safe@2.0.0/node_modules/json-parse-safe/index.js
+var require_json_parse_safe = __commonJS((exports, module) => {
+  module.exports = JSONParse;
+  function JSONParse(text, reviver) {
+    try {
+      return {
+        value: JSON.parse(text, reviver)
+      };
+    } catch (ex) {
+      return {
+        error: ex
+      };
+    }
+  }
+});
+
 // node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
 var require_main = __commonJS((exports, module) => {
   function noop() {}
@@ -5514,12 +5530,10 @@ function deepEqual(valA, valB, visited) {
 }
 
 // src/utils/plist.ts
+var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 function plistValueToString(rawValue) {
   const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
   return valueString;
-}
-function toArrayBuffer(buf) {
-  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength);
 }
 function getPlistShortcutUtils({
   plistPath,
@@ -5528,7 +5542,7 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist = parse(toArrayBuffer(fs.readFileSync(plistPath)));
+    const plist = parse(fs.readFileSync(plistPath).buffer);
     return plist;
   }
   function writeShortcuts(writes) {
@@ -5574,7 +5588,11 @@ function getPlistShortcutUtils({
       if (!rawValue) {
         return false;
       }
-      const value = JSON.parse(plistValueToString(rawValue));
+      const result = import_json_parse_safe.default(plistValueToString(rawValue));
+      if ("error" in result) {
+        return false;
+      }
+      const value = result.value;
       const keys = modifierType === "carbon" ? carbonModifiersToKeystrings(value[modifierMaskKey]) : modifiersToKeystrings(value[modifierMaskKey]);
       const keymap = getKeyMap({
         kind: "mac",

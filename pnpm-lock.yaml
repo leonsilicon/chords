@@ -20,6 +20,9 @@ importers:
       '@stdlib/utils-noop':
         specifier: ^0.2.3
         version: 0.2.3
+      '@types/json-parse-safe':
+        specifier: ^2.0.3
+        version: 2.0.3
       array-uniq:
         specifier: ^3.0.0
         version: 3.0.0
@@ -35,6 +38,9 @@ importers:
       js-yaml:
         specifier: ^4.1.1
         version: 4.1.1
+      json-parse-safe:
+        specifier: ^2.0.0
+        version: 2.0.0
       just-filter-object:
         specifier: ^3.2.0
         version: 3.2.0
@@ -253,6 +259,9 @@ packages:
   '@types/json-diff@1.0.3':
     resolution: {integrity: sha512-Qvxm8fpRMv/1zZR3sQWImeRK2mBYJji20xF51Fq9Gt//Ed18u0x6/FNLogLS1xhfUWTEmDyqveJqn95ltB6Kvw==}
 
+  '@types/json-parse-safe@2.0.3':
+    resolution: {integrity: sha512-lVLo1xBRy1ZZtyZC4ekRxMLi6yhq19zreodli9RieXRjG2HjKez0759hze1wQqNGVFKgl3viHpUeMJBheMj8OA==}
+
   '@types/node@25.5.0':
     resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
 
@@ -354,6 +363,10 @@ packages:
   json-diff@1.0.6:
     resolution: {integrity: sha512-tcFIPRdlc35YkYdGxcamJjllUhXWv4n2rK9oJ2RsAzV4FBkuV4ojKEDgcZ+kpKxDmJKv+PFK65+1tVVOnSeEqA==}
     hasBin: true
+
+  json-parse-safe@2.0.0:
+    resolution: {integrity: sha512-aK7Ccg46n9JkRil/M5s8ytNP9wk0Tc0TsTDVMOYxB2cGsL7XFJ1vfWsurkVZy6zR55KZ+2SWHEuzQeZK4PH6lg==}
+    engines: {node: '>=6'}
 
   jsonpatch@3.1.0:
     resolution: {integrity: sha512-rJa0FepwDzebgYAuT389AtziWfn3EZA4N5e/B8d50IC1glqlZ7njo7iAI/ph5MYw2GGH7lCE6DGqBGQ7TVa06w==}
@@ -704,6 +717,8 @@ snapshots:
 
   '@types/json-diff@1.0.3': {}
 
+  '@types/json-parse-safe@2.0.3': {}
+
   '@types/node@25.5.0':
     dependencies:
       undici-types: 7.18.2
@@ -783,6 +798,8 @@ snapshots:
       '@ewoudenberg/difflib': 0.1.0
       colors: 1.4.0
       dreamopt: 0.8.0
+
+  json-parse-safe@2.0.0: {}
 
   jsonpatch@3.1.0: {}
 

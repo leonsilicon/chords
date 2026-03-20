@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target bun --external chordsapp --external @chordsapp/utils",
+    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target bun --external chordsapp --external @chordsapp/utils",
     "prepare": "lefthook install"
   },
   "dependencies": {
@@ -17,11 +17,13 @@
     "@plist/binary.parse": "*",
     "@plist/binary.serialize": "*",
     "@stdlib/utils-noop": "^0.2.3",
+    "@types/json-parse-safe": "^2.0.3",
     "array-uniq": "^3.0.0",
     "brace-expansion": "^5.0.4",
     "fast-is-equal": "^1.2.6",
     "filter-obj": "^6.1.0",
     "js-yaml": "^4.1.1",
+    "json-parse-safe": "^2.0.0",
     "just-filter-object": "^3.2.0",
     "just-zip-it": "^3.2.0",
     "keycode-ts2": "^0.1.0",

@@ -9,6 +9,7 @@ import noop from "@stdlib/utils-noop";
 import { serialize } from "@plist/binary.serialize";
 import { Buffer } from "buffer";
 import fs from "fs";
+import parseJson from "json-parse-safe";
 
 interface PerItemHotkey {
   appName: string;
@@ -54,8 +55,14 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   // TODO: For each per-item shortcut, we also need to add it to per-item-hotkeys
   {
     const root = readPlist();
-    const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
-    const perItemHotkeyList = JSON.parse(rawValue) as PerItemHotkey[];
+    const rawValue = plistValueToString(root["per-item-hotkeys"]);
+    const result = parseJson(rawValue);
+    let perItemHotkeyList: PerItemHotkey[] = [];
+    if ("error" in result) {
+      perItemHotkeyList = [];
+    } else {
+      perItemHotkeyList = result.value;
+    }
 
     for (const { chord } of globalHotkeys) {
       const appBundleIdentifier = chord.args?.[1];

@@ -10,6 +10,7 @@ import { getKeyMap, getKeyMapByCode, KeyMappingCode } from "keycode-ts2";
 import { tap } from "chordsapp";
 import * as binaryPlist from "./plist-binary.ts";
 import { fastIsEqual } from "fast-is-equal";
+import parseJson from "json-parse-safe";
 
 export function plistValueToString(rawValue: unknown): string {
   const valueString =
@@ -24,10 +25,6 @@ type ShortcutWrite = {
   shortcut: string;
 };
 
-function toArrayBuffer(buf: Buffer) {
-  return buf.buffer.slice(buf.byteOffset, buf.byteOffset + buf.byteLength) as ArrayBuffer;
-}
-
 export function getPlistShortcutUtils({
   plistPath,
   modifierMaskKey,
@@ -40,7 +37,7 @@ export function getPlistShortcutUtils({
   keycodeKey: string;
 }) {
   function readPlist() {
-    const plist = binaryPlist.parse(toArrayBuffer(fs.readFileSync(plistPath))) as any;
+    const plist = binaryPlist.parse(fs.readFileSync(plistPath).buffer as ArrayBuffer) as any;
     return plist;
   }
 
@@ -105,7 +102,12 @@ export function getPlistShortcutUtils({
         return false;
       }
 
-      const value = JSON.parse(plistValueToString(rawValue));
+      const result = parseJson(plistValueToString(rawValue));
+      if ("error" in result) {
+        return false;
+      }
+      const value = result.value;
+
       const keys =
         modifierType === "carbon"
           ? carbonModifiersToKeystrings(value[modifierMaskKey])
