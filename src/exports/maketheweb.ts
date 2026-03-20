@@ -4,8 +4,15 @@ import nullthrows from 'nullthrows-es'
 import { getPlistShortcutUtils } from "#/utils/plist.ts";
 import { includeKeys } from "filter-obj";
 import type { BuildHandler } from "../types/handler.ts";
+import { exists } from "../utils/file.ts";
+import noop from "@stdlib/utils-noop";
 
 export default (function buildMakethewebHandler(meta, tildepath: string) {
+  const plistPath = untildify(tildepath);
+  if (!exists(plistPath)) {
+    return noop;
+  }
+
   const globalHotkeys = ensureGlobalHotkeys(
     includeKeys(meta.chords, (sequence) => sequence.startsWith('/')),
     {
@@ -15,7 +22,7 @@ export default (function buildMakethewebHandler(meta, tildepath: string) {
   );
 
   const { buildHandler, writeShortcuts } = getPlistShortcutUtils({
-    plistPath: untildify(tildepath),
+    plistPath,
     modifierType: 'carbon',
     modifierMaskKey: 'carbonModifiers',
     keycodeKey: 'carbonKey',

@@ -4,6 +4,8 @@ import { ensureGlobalHotkeys } from "#/utils/global.ts";
 import { includeKeys } from "filter-obj";
 import nullthrows from 'nullthrows-es'
 import type { BuildHandler } from "../types/handler.ts";
+import { exists } from "../utils/file.ts";
+import noop from "@stdlib/utils-noop";
 
 interface PerItemHotkey {
   appName: string
@@ -12,6 +14,11 @@ interface PerItemHotkey {
 }
 
 export default (function buildBartenderHandler(meta, tildepath: string) {
+  const plistPath = untildify(tildepath);
+  if (!exists(plistPath)) {
+    return noop;
+  }
+
   const globalHotkeys = ensureGlobalHotkeys(
     includeKeys(meta.chords, (sequence) => sequence.startsWith('/') || sequence.startsWith('-')),
     {
@@ -21,13 +28,14 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   );
 
   const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
-    plistPath: untildify(tildepath),
+    plistPath,
     modifierType: 'carbon',
     modifierMaskKey: 'carbonModifiers',
     keycodeKey: 'carbonKeyCode',
   })
   writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    property: nullthrows(chord.args?.[0]),
+    // The 0th entry is the type ('item | 'shortcut')
+    property: nullthrows(chord.args?.[1]),
     // _Bartender_ stores shortcuts as strings
     propertyType: 'string',
     shortcut,

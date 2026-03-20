@@ -21,6 +21,7 @@ function extractCommands(chords: ImportMeta["chords"]): string[] {
 }
 
 export default (function buildWarpHandler(meta) {
+
   const commands = extractCommands(meta.chords);
 
   const syntheticKeybinds = generateSyntheticKeybinds(

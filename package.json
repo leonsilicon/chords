@@ -13,6 +13,7 @@
     "prepare": "lefthook install"
   },
   "dependencies": {
+    "@stdlib/utils-noop": "^0.2.3",
     "array-uniq": "^3.0.0",
     "bplist-creator-pure": "^0.2.0",
     "bplist-parser-pure": "^0.0.1",

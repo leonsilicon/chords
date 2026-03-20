@@ -1,4 +1,48 @@
 // @bun
+var __create = Object.create;
+var __getProtoOf = Object.getPrototypeOf;
+var __defProp = Object.defineProperty;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+function __accessProp(key) {
+  return this[key];
+}
+var __toESMCache_node;
+var __toESMCache_esm;
+var __toESM = (mod, isNodeMode, target) => {
+  var canCache = mod != null && typeof mod === "object";
+  if (canCache) {
+    var cache = isNodeMode ? __toESMCache_node ??= new WeakMap : __toESMCache_esm ??= new WeakMap;
+    var cached = cache.get(mod);
+    if (cached)
+      return cached;
+  }
+  target = mod != null ? __create(__getProtoOf(mod)) : {};
+  const to = isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", { value: mod, enumerable: true }) : target;
+  for (let key of __getOwnPropNames(mod))
+    if (!__hasOwnProp.call(to, key))
+      __defProp(to, key, {
+        get: __accessProp.bind(mod, key),
+        enumerable: true
+      });
+  if (canCache)
+    cache.set(mod, to);
+  return to;
+};
+var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+
+// node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
+var require_main = __commonJS((exports, module) => {
+  function noop() {}
+  module.exports = noop;
+});
+
+// node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/index.js
+var require_lib = __commonJS((exports, module) => {
+  var main = require_main();
+  module.exports = main;
+});
+
 // node_modules/.pnpm/untildify@6.0.0/node_modules/untildify/index.js
 import os from "os";
 var homeDirectory;
@@ -1365,20 +1409,36 @@ function nullthrows(value, message) {
   throw new TypeError(message !== null && message !== undefined ? message : `Expected value not to be null or undefined but got ${value}`);
 }
 
+// src/utils/file.ts
+import fs2 from "fs";
+function exists(path) {
+  try {
+    fs2.statSync(path);
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
 // src/exports/bartender.ts
+var import_utils_noop = __toESM(require_lib(), 1);
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
+  const plistPath = untildify(tildepath);
+  if (!exists(plistPath)) {
+    return import_utils_noop.default;
+  }
   const globalHotkeys = ensureGlobalHotkeys(includeKeys(meta.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
     bundleId: meta.bundleId,
     getHotkeyId: (chord) => nullthrows(chord.args?.[0])
   });
   const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
-    plistPath: untildify(tildepath),
+    plistPath,
     modifierType: "carbon",
     modifierMaskKey: "carbonModifiers",
     keycodeKey: "carbonKeyCode"
   });
   writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    property: nullthrows(chord.args?.[0]),
+    property: nullthrows(chord.args?.[1]),
     propertyType: "string",
     shortcut
   })));

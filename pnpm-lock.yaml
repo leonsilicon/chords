@@ -8,15 +8,21 @@ importers:
 
   .:
     dependencies:
-      '@types/js-yaml':
-        specifier: ^4.0.9
-        version: 4.0.9
+      '@stdlib/utils-noop':
+        specifier: ^0.2.3
+        version: 0.2.3
+      array-uniq:
+        specifier: ^3.0.0
+        version: 3.0.0
       bplist-creator-pure:
         specifier: ^0.2.0
         version: 0.2.0
       bplist-parser-pure:
         specifier: ^0.0.1
         version: 0.0.1
+      brace-expansion:
+        specifier: ^5.0.4
+        version: 5.0.4
       fast-is-equal:
         specifier: ^1.2.6
         version: 1.2.6
@@ -47,9 +53,9 @@ importers:
       os-keycode:
         specifier: ^1.0.0
         version: 1.0.0
-      simple-plist:
-        specifier: ^1.3.1
-        version: 1.3.1
+      outdent:
+        specifier: ^0.8.0
+        version: 0.8.0
       type-fest:
         specifier: ^5.5.0
         version: 5.5.0
@@ -57,27 +63,18 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
     devDependencies:
+      '@types/js-yaml':
+        specifier: ^4.0.9
+        version: 4.0.9
       '@types/node':
         specifier: ^25.5.0
         version: 25.5.0
-      add:
-        specifier: ^2.0.6
-        version: 2.0.6
-      array-uniq:
-        specifier: ^3.0.0
-        version: 3.0.0
-      brace-expansion:
-        specifier: ^5.0.4
-        version: 5.0.4
       lefthook:
         specifier: ^2.1.4
         version: 2.1.4
       llrt-types:
         specifier: github:awslabs/llrt#path:/types
         version: https://codeload.github.com/awslabs/llrt/tar.gz/d9879ae258016f5d62362bbbe42a698a84355c90#path:/types
-      outdent:
-        specifier: ^0.8.0
-        version: 0.8.0
       rimraf:
         specifier: ^6.1.3
         version: 6.1.3
@@ -87,18 +84,16 @@ importers:
 
 packages:
 
+  '@stdlib/utils-noop@0.2.3':
+    resolution: {integrity: sha512-kZQWwUwq+RwmKBZZD+6dnRwhjfut5fBgbEappugvVjFGp12wDKXCj6D6Y/xTmBdKFRumO8/gzkj9n6DKNDchpA==}
+    engines: {node: '>=0.10.0', npm: '>2.7.0'}
+    os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
   '@types/js-yaml@4.0.9':
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
 
   '@types/node@25.5.0':
     resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
-
-  '@xmldom/xmldom@0.8.11':
-    resolution: {integrity: sha512-cQzWCtO6C8TQiYl1ruKNn2U6Ao4o4WBBcbL61yJl84x+j5sOWWFU9X7DpND8XZG3daDppSsigMdfAIl2upQBRw==}
-    engines: {node: '>=10.0.0'}
-
-  add@2.0.6:
-    resolution: {integrity: sha512-j5QzrmsokwWWp6kUcJQySpbG+xfOBqqKnup3OIk1pz+kB/80SLorZ9V8zHFLO92Lcd+hbvq8bT+zOGoPkmBV0Q==}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -111,25 +106,11 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  base64-js@1.5.1:
-    resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-
-  big-integer@1.6.52:
-    resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
-    engines: {node: '>=0.6'}
-
   bplist-creator-pure@0.2.0:
     resolution: {integrity: sha512-d73iwu3TOxrrt+iQGD9jTXE/2b3gaSvbYKyA188BWeCn73s7xDUnaysdLp8UtbTqb9bd0a2s09Cq+sBZoB2ypQ==}
 
-  bplist-creator@0.1.0:
-    resolution: {integrity: sha512-sXaHZicyEEmY86WyueLTQesbeoH/mquvarJaQNbjuOQO+7gbFcDEWqKmcWA4cOTLzFlfgvkiVxolk1k5bBIpmg==}
-
   bplist-parser-pure@0.0.1:
     resolution: {integrity: sha512-Mw1dqhw9c0w4SzA8AlgwfBiaf7mXSCaluNNMHBikqvF+HGM/iN1lDZpVSyRckjdEthJ2VkrrTNTlifR75HGUFQ==}
-
-  bplist-parser@0.3.1:
-    resolution: {integrity: sha512-PyJxiNtA5T2PlLIeBot4lbp7rj4OadzjnMZD/G5zuBNt8ei/yCU7+wW0h2bag9vr8c+/WuRWmSxbqAl9hL1rBA==}
-    engines: {node: '>= 5.10.0'}
 
   brace-expansion@5.0.4:
     resolution: {integrity: sha512-h+DEnpVvxmfVefa4jFbCf5HdH5YMDXRsmKflpf1pILZWRFlTbJpxeU55nJl4Smt5HQaGzg1o6RHFPJaOqnmBDg==}
@@ -258,21 +239,10 @@ packages:
     resolution: {integrity: sha512-3O/iVVsJAPsOnpwWIeD+d6z/7PmqApyQePUtCndjatj/9I5LylHvt5qluFaBT3I5h3r1ejfR056c+FCv+NnNXg==}
     engines: {node: 18 || 20 || >=22}
 
-  plist@3.1.0:
-    resolution: {integrity: sha512-uysumyrvkUX0rX/dEVqt8gC3sTBzd4zoWfLeS29nb53imdaXVvLINYXTI2GNqzaMuvacNx4uJQ8+b3zXR0pkgQ==}
-    engines: {node: '>=10.4.0'}
-
   rimraf@6.1.3:
     resolution: {integrity: sha512-LKg+Cr2ZF61fkcaK1UdkH2yEBBKnYjTyWzTJT6KNPcSPaiT7HSdhtMXQuN5wkTX0Xu72KQ1l8S42rlmexS2hSA==}
     engines: {node: 20 || >=22}
     hasBin: true
-
-  simple-plist@1.3.1:
-    resolution: {integrity: sha512-iMSw5i0XseMnrhtIzRb7XpQEXepa9xhWxGUojHBL43SIpQuDQkh3Wpy67ZbDzZVr6EKxvwVChnVpdl8hEVLDiw==}
-
-  stream-buffers@2.2.0:
-    resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
-    engines: {node: '>= 0.10.0'}
 
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
@@ -294,11 +264,9 @@ packages:
     resolution: {integrity: sha512-sA2YTBvW2F463GvSbiZtso+dpuQV+B7xX9saX30SGrR5Fyx4AUcvA/zN+ShAkABKUKVyDaHECsJrHv5ToTuHsQ==}
     engines: {node: '>=20'}
 
-  xmlbuilder@15.1.1:
-    resolution: {integrity: sha512-yMqGBqtXyeN1e3TGYvgNgDVZ3j84W4cwkOXQswghol6APgZWaff9lnbvN7MHYJOiXsvGPXtjTYJEiC9J2wv9Eg==}
-    engines: {node: '>=8.0'}
-
 snapshots:
+
+  '@stdlib/utils-noop@0.2.3': {}
 
   '@types/js-yaml@4.0.9': {}
 
@@ -306,31 +274,15 @@ snapshots:
     dependencies:
       undici-types: 7.18.2
 
-  '@xmldom/xmldom@0.8.11': {}
-
-  add@2.0.6: {}
-
   argparse@2.0.1: {}
 
   array-uniq@3.0.0: {}
 
   balanced-match@4.0.4: {}
 
-  base64-js@1.5.1: {}
-
-  big-integer@1.6.52: {}
-
   bplist-creator-pure@0.2.0: {}
 
-  bplist-creator@0.1.0:
-    dependencies:
-      stream-buffers: 2.2.0
-
   bplist-parser-pure@0.0.1: {}
-
-  bplist-parser@0.3.1:
-    dependencies:
-      big-integer: 1.6.52
 
   brace-expansion@5.0.4:
     dependencies:
@@ -430,24 +382,10 @@ snapshots:
       lru-cache: 11.2.7
       minipass: 7.1.3
 
-  plist@3.1.0:
-    dependencies:
-      '@xmldom/xmldom': 0.8.11
-      base64-js: 1.5.1
-      xmlbuilder: 15.1.1
-
   rimraf@6.1.3:
     dependencies:
       glob: 13.0.6
       package-json-from-dist: 1.0.1
-
-  simple-plist@1.3.1:
-    dependencies:
-      bplist-creator: 0.1.0
-      bplist-parser: 0.3.1
-      plist: 3.1.0
-
-  stream-buffers@2.2.0: {}
 
   tagged-tag@1.0.0: {}
 
@@ -460,5 +398,3 @@ snapshots:
   undici-types@7.18.2: {}
 
   untildify@6.0.0: {}
-
-  xmlbuilder@15.1.1: {}
