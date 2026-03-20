@@ -53,8 +53,7 @@ export function getPlistShortcutUtils({
 
   function writeShortcuts(writes: ShortcutWrite[]) {
     let plistNeedsUpdates = false;
-    const plist = readPlist();
-    const root = plist[0];
+    const root = readPlist();
     if (!root) {
       throw new Error("plist root is not an object");
     }
@@ -114,7 +113,7 @@ export function getPlistShortcutUtils({
     const plist = readPlist();
 
     return function handler(property: string) {
-      const rawValue = plist[0]?.[property];
+      const rawValue = plist?.[property];
       if (!rawValue) {
         return false;
       }

@@ -1,4 +1,3 @@
-import "#/utils/polyfill.ts";
 import untildify from "untildify";
 import { getPlistShortcutUtils } from "#/utils/plist.ts";
 import { ensureGlobalHotkeys } from "#/utils/global.ts";

@@ -43,480 +43,6 @@ var require_lib = __commonJS((exports, module) => {
   module.exports = main;
 });
 
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractDecoder.js
-class AbstractDecoder {
-  fatal;
-  constructor(fatal = false) {
-    this.fatal = fatal;
-  }
-  fail() {
-    if (this.fatal) {
-      throw new TypeError("Decoder error");
-    }
-    return 65533;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/ByteBuffer.js
-var END_OF_BUFFER = -1;
-
-class ByteBuffer {
-  bytes;
-  constructor(bytes) {
-    this.bytes = Array.from(bytes).reverse();
-  }
-  isEndOfBuffer() {
-    return this.bytes.length === 0;
-  }
-  read() {
-    return this.bytes.pop() ?? END_OF_BUFFER;
-  }
-  write(...bytes) {
-    this.bytes.push(...bytes);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/constants.js
-var DEFAULT_ENCODING = "utf-8";
-var FINISHED = -1;
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/util.js
-function isASCII(value) {
-  return value >= 0 && value <= 127;
-}
-function convertCodeUnitToBytes(codeUnit, bigEndian) {
-  const byte1 = codeUnit >> 8;
-  const byte2 = codeUnit & 255;
-  if (bigEndian) {
-    return [byte1, byte2];
-  } else {
-    return [byte2, byte1];
-  }
-}
-function inRange(value, min, max) {
-  return value >= min && value <= max;
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF8Decoder.js
-class UTF8Decoder extends AbstractDecoder {
-  codePoint = 0;
-  bytesSeen = 0;
-  bytesNeeded = 0;
-  lowerBoundary = 128;
-  upperBoundary = 191;
-  decode(buffer) {
-    const byte = buffer.read();
-    if (byte === END_OF_BUFFER && this.bytesNeeded !== 0) {
-      this.bytesNeeded = 0;
-      return this.fail();
-    }
-    if (byte === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (this.bytesNeeded === 0) {
-      if (inRange(byte, 0, 127)) {
-        return byte;
-      } else if (inRange(byte, 194, 223)) {
-        this.bytesNeeded = 1;
-        this.codePoint = byte & 31;
-      } else if (inRange(byte, 224, 239)) {
-        if (byte === 224) {
-          this.lowerBoundary = 160;
-        }
-        if (byte === 237) {
-          this.upperBoundary = 159;
-        }
-        this.bytesNeeded = 2;
-        this.codePoint = byte & 15;
-      } else if (inRange(byte, 240, 244)) {
-        if (byte === 240) {
-          this.lowerBoundary = 144;
-        }
-        if (byte === 244) {
-          this.upperBoundary = 143;
-        }
-        this.bytesNeeded = 3;
-        this.codePoint = byte & 7;
-      } else {
-        return this.fail();
-      }
-      return null;
-    }
-    if (!inRange(byte, this.lowerBoundary, this.upperBoundary)) {
-      this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
-      this.lowerBoundary = 128;
-      this.upperBoundary = 191;
-      buffer.write(byte);
-      return this.fail();
-    }
-    this.lowerBoundary = 128;
-    this.upperBoundary = 191;
-    this.codePoint = this.codePoint << 6 | byte & 63;
-    this.bytesSeen += 1;
-    if (this.bytesSeen !== this.bytesNeeded) {
-      return null;
-    }
-    const codePoint = this.codePoint;
-    this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
-    return codePoint;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractEncoder.js
-class AbstractEncoder {
-  fail(codePoint) {
-    throw new TypeError(`The code point ${codePoint} could not be encoded`);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF8Encoder.js
-class UTF8Encoder extends AbstractEncoder {
-  encode(buffer) {
-    const codePoint = buffer.read();
-    if (codePoint === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (isASCII(codePoint)) {
-      return codePoint;
-    }
-    let count;
-    let offset;
-    if (inRange(codePoint, 128, 2047)) {
-      count = 1;
-      offset = 192;
-    } else if (inRange(codePoint, 2048, 65535)) {
-      count = 2;
-      offset = 224;
-    } else if (inRange(codePoint, 65536, 1114111)) {
-      count = 3;
-      offset = 240;
-    } else {
-      return this.fail(codePoint);
-    }
-    const bytes = [(codePoint >> 6 * count) + offset];
-    while (count > 0) {
-      const temp = codePoint >> 6 * (count - 1);
-      bytes.push(128 | temp & 63);
-      count -= 1;
-    }
-    return bytes;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/Encoding.js
-var encodings = new Map;
-function registerEncoding(name, labels, decoder, encoder) {
-  const encoding = new Encoding(name, labels, decoder, encoder);
-  for (const label of encoding.getLabels()) {
-    encodings.set(label, encoding);
-  }
-  return encoding;
-}
-function getEncoding(label) {
-  const encoding = encodings.get(label.trim().toLowerCase());
-  if (encoding == null) {
-    throw new RangeError(`Encoding not supported: ${label}`);
-  }
-  return encoding;
-}
-
-class Encoding {
-  name;
-  labels;
-  decoder;
-  encoder;
-  constructor(name, labels, decoder, encoder) {
-    this.name = name;
-    this.labels = labels;
-    this.decoder = decoder;
-    this.encoder = encoder;
-  }
-  getName() {
-    return this.name;
-  }
-  hasLabel(label) {
-    return this.labels.includes(label.trim().toLowerCase());
-  }
-  getLabels() {
-    return this.labels;
-  }
-  createDecoder(fatal) {
-    return new this.decoder(fatal);
-  }
-  createEncoder() {
-    return new this.encoder;
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-8.js
-registerEncoding("utf-8", [
-  "unicode-1-1-utf-8",
-  "utf-8",
-  "utf8"
-], UTF8Decoder, UTF8Encoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF16Decoder.js
-class UTF16Decoder extends AbstractDecoder {
-  bigEndian;
-  leadByte = null;
-  leadSurrogate = null;
-  constructor(bigEndian, fatal) {
-    super(fatal);
-    this.bigEndian = bigEndian;
-  }
-  decode(buffer) {
-    const byte = buffer.read();
-    if (byte === END_OF_BUFFER && (this.leadByte !== null || this.leadSurrogate !== null)) {
-      return this.fail();
-    }
-    if (byte === END_OF_BUFFER && this.leadByte == null && this.leadSurrogate == null) {
-      return FINISHED;
-    }
-    if (this.leadByte == null) {
-      this.leadByte = byte;
-      return null;
-    }
-    let codeUnit;
-    if (this.bigEndian) {
-      codeUnit = (this.leadByte << 8) + byte;
-    } else {
-      codeUnit = (byte << 8) + this.leadByte;
-    }
-    this.leadByte = null;
-    if (this.leadSurrogate !== null) {
-      const leadSurrogate = this.leadSurrogate;
-      this.leadSurrogate = null;
-      if (inRange(codeUnit, 56320, 57343)) {
-        return 65536 + (leadSurrogate - 55296) * 1024 + (codeUnit - 56320);
-      }
-      buffer.write(...convertCodeUnitToBytes(codeUnit, this.bigEndian));
-      return this.fail();
-    }
-    if (inRange(codeUnit, 55296, 56319)) {
-      this.leadSurrogate = codeUnit;
-      return null;
-    }
-    if (inRange(codeUnit, 56320, 57343)) {
-      return this.fail();
-    }
-    return codeUnit;
-  }
-}
-
-class UTF16LEDecoder extends UTF16Decoder {
-  constructor(fatal) {
-    super(false, fatal);
-  }
-}
-
-class UTF16BEDecoder extends UTF16Decoder {
-  constructor(fatal) {
-    super(true, fatal);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF16Encoder.js
-class UTF16Encoder extends AbstractEncoder {
-  bigEndian;
-  constructor(bigEndian) {
-    super();
-    this.bigEndian = bigEndian;
-  }
-  encode(buffer) {
-    const codePoint = buffer.read();
-    if (codePoint === END_OF_BUFFER) {
-      return FINISHED;
-    }
-    if (inRange(codePoint, 0, 65535)) {
-      return convertCodeUnitToBytes(codePoint, this.bigEndian);
-    }
-    const lead = convertCodeUnitToBytes((codePoint - 65536 >> 10) + 55296, this.bigEndian);
-    const trail = convertCodeUnitToBytes((codePoint - 65536 & 1023) + 56320, this.bigEndian);
-    return lead.concat(trail);
-  }
-}
-
-class UTF16LEEncoder extends UTF16Encoder {
-  constructor() {
-    super(false);
-  }
-}
-
-class UTF16BEEncoder extends UTF16Encoder {
-  constructor() {
-    super(true);
-  }
-}
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16be.js
-registerEncoding("utf-16be", [
-  "utf-16be"
-], UTF16BEDecoder, UTF16BEEncoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16le.js
-registerEncoding("utf-16le", [
-  "utf-16",
-  "utf-16le"
-], UTF16LEDecoder, UTF16LEEncoder);
-
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextDecoder.js
-class TextDecoder2 {
-  ignoreBOM;
-  fatal;
-  enc;
-  seenBOM = false;
-  decoder = null;
-  constructor(label = DEFAULT_ENCODING, { fatal = false, ignoreBOM = false } = {}) {
-    this.enc = getEncoding(label);
-    this.fatal = fatal;
-    this.ignoreBOM = ignoreBOM;
-  }
-  get encoding() {
-    return this.enc.getName();
-  }
-  decode(input, { stream = false } = {}) {
-    let bytes;
-    if (input instanceof ArrayBuffer) {
-      bytes = new Uint8Array(input);
-    } else if (ArrayBuffer.isView(input)) {
-      bytes = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
-    } else {
-      bytes = new Uint8Array(0);
-    }
-    if (this.decoder == null) {
-      this.decoder = this.enc.createDecoder(this.fatal);
-      this.seenBOM = false;
-    }
-    const inputStream = new ByteBuffer(bytes);
-    let output = "";
-    let result;
-    while (!inputStream.isEndOfBuffer()) {
-      result = this.decoder.decode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (result != null) {
-        if (typeof result === "number") {
-          output += String.fromCodePoint(result);
-        } else {
-          output += String.fromCodePoint(...result);
-        }
-      }
-    }
-    if (!stream) {
-      do {
-        result = this.decoder.decode(inputStream);
-        if (result === FINISHED) {
-          break;
-        }
-        if (result != null) {
-          if (typeof result === "number") {
-            output += String.fromCodePoint(result);
-          } else {
-            output += String.fromCodePoint(...result);
-          }
-        }
-      } while (!inputStream.isEndOfBuffer());
-      this.decoder = null;
-    }
-    if (["utf-8", "utf-16le", "utf-16be"].includes(this.encoding) && !this.ignoreBOM && !this.seenBOM) {
-      if (output.length > 0) {
-        this.seenBOM = true;
-        if (output[0] === "\uFEFF") {
-          return output.substring(1);
-        }
-      }
-    }
-    return output;
-  }
-}
-// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextEncoder.js
-function stringToCodePoints(string) {
-  const n = string.length;
-  let i = 0;
-  const codePoints = [];
-  while (i < n) {
-    const c = string.charCodeAt(i);
-    if (c < 55296 || c > 57343) {
-      codePoints.push(c);
-    } else if (c >= 56320 && c <= 57343) {
-      codePoints.push(65533);
-    } else if (c >= 55296 && c <= 56319) {
-      if (i === n - 1) {
-        codePoints.push(65533);
-      } else {
-        const d = string.charCodeAt(i + 1);
-        if (d >= 56320 && d <= 57343) {
-          const a = c & 1023;
-          const b = d & 1023;
-          codePoints.push(65536 + (a << 10) + b);
-          i++;
-        } else {
-          codePoints.push(65533);
-        }
-      }
-    }
-    i++;
-  }
-  return codePoints;
-}
-
-class TextEncoder2 {
-  enc;
-  encoder = null;
-  constructor(label = "utf-8") {
-    this.enc = getEncoding(label);
-  }
-  get encoding() {
-    return this.enc.getName();
-  }
-  encode(input = "") {
-    this.encoder ??= this.enc.createEncoder();
-    const inputStream = new ByteBuffer(stringToCodePoints(input));
-    const output = [];
-    let result;
-    while (true) {
-      result = this.encoder.encode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (Array.isArray(result)) {
-        output.push(...result);
-      } else {
-        output.push(result);
-      }
-    }
-    return new Uint8Array(output);
-  }
-  encodeInto(source, destination) {
-    this.encoder ??= this.enc.createEncoder();
-    const inputStream = new ByteBuffer(stringToCodePoints(source));
-    let result;
-    let read = 0;
-    let written = 0;
-    while (written < destination.byteLength) {
-      result = this.encoder.encode(inputStream);
-      if (result === FINISHED) {
-        break;
-      }
-      if (Array.isArray(result)) {
-        if (result.length + written > destination.byteLength) {
-          break;
-        }
-        destination.set(result, written);
-        written += result.length;
-      } else {
-        destination[written++] = result;
-      }
-      read++;
-    }
-    return { read, written };
-  }
-}
-// src/utils/polyfill.ts
-globalThis.TextEncoder = TextEncoder2;
-globalThis.TextDecoder = TextDecoder2;
-
 // node_modules/.pnpm/untildify@6.0.0/node_modules/untildify/index.js
 import os from "os";
 var homeDirectory;
@@ -4568,6 +4094,480 @@ function keystringsToCarbonModifierMask(keystrings) {
 
 // src/utils/plist.ts
 import { tap } from "chordsapp";
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractDecoder.js
+class AbstractDecoder {
+  fatal;
+  constructor(fatal = false) {
+    this.fatal = fatal;
+  }
+  fail() {
+    if (this.fatal) {
+      throw new TypeError("Decoder error");
+    }
+    return 65533;
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/ByteBuffer.js
+var END_OF_BUFFER = -1;
+
+class ByteBuffer {
+  bytes;
+  constructor(bytes) {
+    this.bytes = Array.from(bytes).reverse();
+  }
+  isEndOfBuffer() {
+    return this.bytes.length === 0;
+  }
+  read() {
+    return this.bytes.pop() ?? END_OF_BUFFER;
+  }
+  write(...bytes) {
+    this.bytes.push(...bytes);
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/constants.js
+var DEFAULT_ENCODING = "utf-8";
+var FINISHED = -1;
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/util.js
+function isASCII(value) {
+  return value >= 0 && value <= 127;
+}
+function convertCodeUnitToBytes(codeUnit, bigEndian) {
+  const byte1 = codeUnit >> 8;
+  const byte2 = codeUnit & 255;
+  if (bigEndian) {
+    return [byte1, byte2];
+  } else {
+    return [byte2, byte1];
+  }
+}
+function inRange(value, min, max) {
+  return value >= min && value <= max;
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF8Decoder.js
+class UTF8Decoder extends AbstractDecoder {
+  codePoint = 0;
+  bytesSeen = 0;
+  bytesNeeded = 0;
+  lowerBoundary = 128;
+  upperBoundary = 191;
+  decode(buffer) {
+    const byte = buffer.read();
+    if (byte === END_OF_BUFFER && this.bytesNeeded !== 0) {
+      this.bytesNeeded = 0;
+      return this.fail();
+    }
+    if (byte === END_OF_BUFFER) {
+      return FINISHED;
+    }
+    if (this.bytesNeeded === 0) {
+      if (inRange(byte, 0, 127)) {
+        return byte;
+      } else if (inRange(byte, 194, 223)) {
+        this.bytesNeeded = 1;
+        this.codePoint = byte & 31;
+      } else if (inRange(byte, 224, 239)) {
+        if (byte === 224) {
+          this.lowerBoundary = 160;
+        }
+        if (byte === 237) {
+          this.upperBoundary = 159;
+        }
+        this.bytesNeeded = 2;
+        this.codePoint = byte & 15;
+      } else if (inRange(byte, 240, 244)) {
+        if (byte === 240) {
+          this.lowerBoundary = 144;
+        }
+        if (byte === 244) {
+          this.upperBoundary = 143;
+        }
+        this.bytesNeeded = 3;
+        this.codePoint = byte & 7;
+      } else {
+        return this.fail();
+      }
+      return null;
+    }
+    if (!inRange(byte, this.lowerBoundary, this.upperBoundary)) {
+      this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
+      this.lowerBoundary = 128;
+      this.upperBoundary = 191;
+      buffer.write(byte);
+      return this.fail();
+    }
+    this.lowerBoundary = 128;
+    this.upperBoundary = 191;
+    this.codePoint = this.codePoint << 6 | byte & 63;
+    this.bytesSeen += 1;
+    if (this.bytesSeen !== this.bytesNeeded) {
+      return null;
+    }
+    const codePoint = this.codePoint;
+    this.codePoint = this.bytesNeeded = this.bytesSeen = 0;
+    return codePoint;
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/AbstractEncoder.js
+class AbstractEncoder {
+  fail(codePoint) {
+    throw new TypeError(`The code point ${codePoint} could not be encoded`);
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF8Encoder.js
+class UTF8Encoder extends AbstractEncoder {
+  encode(buffer) {
+    const codePoint = buffer.read();
+    if (codePoint === END_OF_BUFFER) {
+      return FINISHED;
+    }
+    if (isASCII(codePoint)) {
+      return codePoint;
+    }
+    let count;
+    let offset;
+    if (inRange(codePoint, 128, 2047)) {
+      count = 1;
+      offset = 192;
+    } else if (inRange(codePoint, 2048, 65535)) {
+      count = 2;
+      offset = 224;
+    } else if (inRange(codePoint, 65536, 1114111)) {
+      count = 3;
+      offset = 240;
+    } else {
+      return this.fail(codePoint);
+    }
+    const bytes = [(codePoint >> 6 * count) + offset];
+    while (count > 0) {
+      const temp = codePoint >> 6 * (count - 1);
+      bytes.push(128 | temp & 63);
+      count -= 1;
+    }
+    return bytes;
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/Encoding.js
+var encodings = new Map;
+function registerEncoding(name, labels, decoder, encoder) {
+  const encoding = new Encoding(name, labels, decoder, encoder);
+  for (const label of encoding.getLabels()) {
+    encodings.set(label, encoding);
+  }
+  return encoding;
+}
+function getEncoding(label) {
+  const encoding = encodings.get(label.trim().toLowerCase());
+  if (encoding == null) {
+    throw new RangeError(`Encoding not supported: ${label}`);
+  }
+  return encoding;
+}
+
+class Encoding {
+  name;
+  labels;
+  decoder;
+  encoder;
+  constructor(name, labels, decoder, encoder) {
+    this.name = name;
+    this.labels = labels;
+    this.decoder = decoder;
+    this.encoder = encoder;
+  }
+  getName() {
+    return this.name;
+  }
+  hasLabel(label) {
+    return this.labels.includes(label.trim().toLowerCase());
+  }
+  getLabels() {
+    return this.labels;
+  }
+  createDecoder(fatal) {
+    return new this.decoder(fatal);
+  }
+  createEncoder() {
+    return new this.encoder;
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-8.js
+registerEncoding("utf-8", [
+  "unicode-1-1-utf-8",
+  "utf-8",
+  "utf8"
+], UTF8Decoder, UTF8Encoder);
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/decoders/UTF16Decoder.js
+class UTF16Decoder extends AbstractDecoder {
+  bigEndian;
+  leadByte = null;
+  leadSurrogate = null;
+  constructor(bigEndian, fatal) {
+    super(fatal);
+    this.bigEndian = bigEndian;
+  }
+  decode(buffer) {
+    const byte = buffer.read();
+    if (byte === END_OF_BUFFER && (this.leadByte !== null || this.leadSurrogate !== null)) {
+      return this.fail();
+    }
+    if (byte === END_OF_BUFFER && this.leadByte == null && this.leadSurrogate == null) {
+      return FINISHED;
+    }
+    if (this.leadByte == null) {
+      this.leadByte = byte;
+      return null;
+    }
+    let codeUnit;
+    if (this.bigEndian) {
+      codeUnit = (this.leadByte << 8) + byte;
+    } else {
+      codeUnit = (byte << 8) + this.leadByte;
+    }
+    this.leadByte = null;
+    if (this.leadSurrogate !== null) {
+      const leadSurrogate = this.leadSurrogate;
+      this.leadSurrogate = null;
+      if (inRange(codeUnit, 56320, 57343)) {
+        return 65536 + (leadSurrogate - 55296) * 1024 + (codeUnit - 56320);
+      }
+      buffer.write(...convertCodeUnitToBytes(codeUnit, this.bigEndian));
+      return this.fail();
+    }
+    if (inRange(codeUnit, 55296, 56319)) {
+      this.leadSurrogate = codeUnit;
+      return null;
+    }
+    if (inRange(codeUnit, 56320, 57343)) {
+      return this.fail();
+    }
+    return codeUnit;
+  }
+}
+
+class UTF16LEDecoder extends UTF16Decoder {
+  constructor(fatal) {
+    super(false, fatal);
+  }
+}
+
+class UTF16BEDecoder extends UTF16Decoder {
+  constructor(fatal) {
+    super(true, fatal);
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encoders/UTF16Encoder.js
+class UTF16Encoder extends AbstractEncoder {
+  bigEndian;
+  constructor(bigEndian) {
+    super();
+    this.bigEndian = bigEndian;
+  }
+  encode(buffer) {
+    const codePoint = buffer.read();
+    if (codePoint === END_OF_BUFFER) {
+      return FINISHED;
+    }
+    if (inRange(codePoint, 0, 65535)) {
+      return convertCodeUnitToBytes(codePoint, this.bigEndian);
+    }
+    const lead = convertCodeUnitToBytes((codePoint - 65536 >> 10) + 55296, this.bigEndian);
+    const trail = convertCodeUnitToBytes((codePoint - 65536 & 1023) + 56320, this.bigEndian);
+    return lead.concat(trail);
+  }
+}
+
+class UTF16LEEncoder extends UTF16Encoder {
+  constructor() {
+    super(false);
+  }
+}
+
+class UTF16BEEncoder extends UTF16Encoder {
+  constructor() {
+    super(true);
+  }
+}
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16be.js
+registerEncoding("utf-16be", [
+  "utf-16be"
+], UTF16BEDecoder, UTF16BEEncoder);
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/encodings/utf-16le.js
+registerEncoding("utf-16le", [
+  "utf-16",
+  "utf-16le"
+], UTF16LEDecoder, UTF16LEEncoder);
+
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextDecoder.js
+class TextDecoder2 {
+  ignoreBOM;
+  fatal;
+  enc;
+  seenBOM = false;
+  decoder = null;
+  constructor(label = DEFAULT_ENCODING, { fatal = false, ignoreBOM = false } = {}) {
+    this.enc = getEncoding(label);
+    this.fatal = fatal;
+    this.ignoreBOM = ignoreBOM;
+  }
+  get encoding() {
+    return this.enc.getName();
+  }
+  decode(input, { stream = false } = {}) {
+    let bytes;
+    if (input instanceof ArrayBuffer) {
+      bytes = new Uint8Array(input);
+    } else if (ArrayBuffer.isView(input)) {
+      bytes = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+    } else {
+      bytes = new Uint8Array(0);
+    }
+    if (this.decoder == null) {
+      this.decoder = this.enc.createDecoder(this.fatal);
+      this.seenBOM = false;
+    }
+    const inputStream = new ByteBuffer(bytes);
+    let output = "";
+    let result;
+    while (!inputStream.isEndOfBuffer()) {
+      result = this.decoder.decode(inputStream);
+      if (result === FINISHED) {
+        break;
+      }
+      if (result != null) {
+        if (typeof result === "number") {
+          output += String.fromCodePoint(result);
+        } else {
+          output += String.fromCodePoint(...result);
+        }
+      }
+    }
+    if (!stream) {
+      do {
+        result = this.decoder.decode(inputStream);
+        if (result === FINISHED) {
+          break;
+        }
+        if (result != null) {
+          if (typeof result === "number") {
+            output += String.fromCodePoint(result);
+          } else {
+            output += String.fromCodePoint(...result);
+          }
+        }
+      } while (!inputStream.isEndOfBuffer());
+      this.decoder = null;
+    }
+    if (["utf-8", "utf-16le", "utf-16be"].includes(this.encoding) && !this.ignoreBOM && !this.seenBOM) {
+      if (output.length > 0) {
+        this.seenBOM = true;
+        if (output[0] === "\uFEFF") {
+          return output.substring(1);
+        }
+      }
+    }
+    return output;
+  }
+}
+// node_modules/.pnpm/@kayahr+text-encoding@2.1.0/node_modules/@kayahr/text-encoding/lib/main/TextEncoder.js
+function stringToCodePoints(string) {
+  const n = string.length;
+  let i = 0;
+  const codePoints = [];
+  while (i < n) {
+    const c = string.charCodeAt(i);
+    if (c < 55296 || c > 57343) {
+      codePoints.push(c);
+    } else if (c >= 56320 && c <= 57343) {
+      codePoints.push(65533);
+    } else if (c >= 55296 && c <= 56319) {
+      if (i === n - 1) {
+        codePoints.push(65533);
+      } else {
+        const d = string.charCodeAt(i + 1);
+        if (d >= 56320 && d <= 57343) {
+          const a = c & 1023;
+          const b = d & 1023;
+          codePoints.push(65536 + (a << 10) + b);
+          i++;
+        } else {
+          codePoints.push(65533);
+        }
+      }
+    }
+    i++;
+  }
+  return codePoints;
+}
+
+class TextEncoder2 {
+  enc;
+  encoder = null;
+  constructor(label = "utf-8") {
+    this.enc = getEncoding(label);
+  }
+  get encoding() {
+    return this.enc.getName();
+  }
+  encode(input = "") {
+    this.encoder ??= this.enc.createEncoder();
+    const inputStream = new ByteBuffer(stringToCodePoints(input));
+    const output = [];
+    let result;
+    while (true) {
+      result = this.encoder.encode(inputStream);
+      if (result === FINISHED) {
+        break;
+      }
+      if (Array.isArray(result)) {
+        output.push(...result);
+      } else {
+        output.push(result);
+      }
+    }
+    return new Uint8Array(output);
+  }
+  encodeInto(source, destination) {
+    this.encoder ??= this.enc.createEncoder();
+    const inputStream = new ByteBuffer(stringToCodePoints(source));
+    let result;
+    let read = 0;
+    let written = 0;
+    while (written < destination.byteLength) {
+      result = this.encoder.encode(inputStream);
+      if (result === FINISHED) {
+        break;
+      }
+      if (Array.isArray(result)) {
+        if (result.length + written > destination.byteLength) {
+          break;
+        }
+        destination.set(result, written);
+        written += result.length;
+      } else {
+        destination[written++] = result;
+      }
+      read++;
+    }
+    return { read, written };
+  }
+}
+// src/utils/polyfill.ts
+globalThis.TextEncoder = TextEncoder2;
+globalThis.TextDecoder = TextDecoder2;
 // node_modules/.pnpm/@plist+common@1.1.0/node_modules/@plist/common/lib/esm/constants.js
 var EPOCH = 978307200000;
 var HEADER_BINARY = "bplist00";
@@ -5528,13 +5528,12 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist = parse(toArrayBuffer(fs.readFileSync(plistPath)));
-    return plist;
+    const plist2 = parse(toArrayBuffer(fs.readFileSync(plistPath)));
+    return plist2;
   }
   function writeShortcuts(writes) {
     let plistNeedsUpdates = false;
-    const plist = readPlist();
-    const root = plist[0];
+    const root = readPlist();
     if (!root) {
       throw new Error("plist root is not an object");
     }
@@ -5569,9 +5568,9 @@ function getPlistShortcutUtils({
     return plistNeedsUpdates;
   }
   function buildHandler() {
-    const plist = readPlist();
+    const plist2 = readPlist();
     return function handler(property) {
-      const rawValue = plist[0]?.[property];
+      const rawValue = plist2?.[property];
       if (!rawValue) {
         return false;
       }

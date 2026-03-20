@@ -56,8 +56,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
 
   // TODO: For each per-item shortcut, we also need to add it to per-item-hotkeys
   {
-    const plist = readPlist();
-    const root = plist[0]!;
+    const root = readPlist();
     const rawValue = plistValueToString(root["per-item-hotkeys"]) ?? "[]";
     const perItemHotkeyList = JSON.parse(rawValue) as PerItemHotkey[];
 

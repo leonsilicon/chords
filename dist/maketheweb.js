@@ -5562,13 +5562,12 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist = parse(toArrayBuffer(fs.readFileSync(plistPath)));
-    return plist;
+    const plist2 = parse(toArrayBuffer(fs.readFileSync(plistPath)));
+    return plist2;
   }
   function writeShortcuts(writes) {
     let plistNeedsUpdates = false;
-    const plist = readPlist();
-    const root = plist[0];
+    const root = readPlist();
     if (!root) {
       throw new Error("plist root is not an object");
     }
@@ -5603,9 +5602,9 @@ function getPlistShortcutUtils({
     return plistNeedsUpdates;
   }
   function buildHandler() {
-    const plist = readPlist();
+    const plist2 = readPlist();
     return function handler(property) {
-      const rawValue = plist[0]?.[property];
+      const rawValue = plist2?.[property];
       if (!rawValue) {
         return false;
       }

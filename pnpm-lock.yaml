@@ -23,12 +23,6 @@ importers:
       array-uniq:
         specifier: ^3.0.0
         version: 3.0.0
-      bplist-creator-pure:
-        specifier: ^0.2.1
-        version: 0.2.1
-      bplist-parser-pure:
-        specifier: ^0.0.2
-        version: 0.0.2
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
@@ -283,12 +277,6 @@ packages:
   balanced-match@4.0.4:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
-
-  bplist-creator-pure@0.2.1:
-    resolution: {integrity: sha512-qPiFXC2387TWqnU1kH+D8hdd9S7SALLgvnl8I2dM1CTPxwuKqFREpVrI0IurLUSCX/+STryboYty0VJ71LBElg==}
-
-  bplist-parser-pure@0.0.2:
-    resolution: {integrity: sha512-HsP2A3Jd1FJubab4tP/bF0O2UVehZXYyhjTB3N4jUMLep5RbnBF1sxQ8DfzeVpdzO3bxLnd772dz7+to/CMU1Q==}
 
   brace-expansion@2.0.2:
     resolution: {integrity: sha512-Jt0vHyM+jmUBqojB7E1NIYadt0vI0Qxjxd2TErW94wDz+E2LAm5vKMXXwg6ZZBTHPuUlDgQHKXvjGBdfcF1ZDQ==}
@@ -733,10 +721,6 @@ snapshots:
   balanced-match@1.0.2: {}
 
   balanced-match@4.0.4: {}
-
-  bplist-creator-pure@0.2.1: {}
-
-  bplist-parser-pure@0.0.2: {}
 
   brace-expansion@2.0.2:
     dependencies:

@@ -1,10 +1,10 @@
 #!/usr/bin/env bun
-import { parseBuffer } from "bplist-parser-pure";
+import { parse } from "@plist/binary.parse";
 import fs from "fs";
-console.log(parseBuffer(fs.readFileSync(process.argv[2]!).buffer));
+console.log(parse(fs.readFileSync(process.argv[2]!).buffer));
 
 console.log(
   new TextDecoder().decode(
-    parseBuffer(fs.readFileSync(process.argv[2]!).buffer)[0]["per-item-hotkeys"],
+    parse(fs.readFileSync(process.argv[2]!).buffer)["per-item-hotkeys"],
   ),
 );
