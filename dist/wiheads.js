@@ -5528,8 +5528,8 @@ function getPlistShortcutUtils({
   keycodeKey
 }) {
   function readPlist() {
-    const plist2 = parse(toArrayBuffer(fs.readFileSync(plistPath)));
-    return plist2;
+    const plist = parse(toArrayBuffer(fs.readFileSync(plistPath)));
+    return plist;
   }
   function writeShortcuts(writes) {
     let plistNeedsUpdates = false;
@@ -5563,14 +5563,14 @@ function getPlistShortcutUtils({
       plistNeedsUpdates = true;
     }
     if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serialize(plist));
+      fs.writeFileSync(plistPath, serialize(root));
     }
     return plistNeedsUpdates;
   }
   function buildHandler() {
-    const plist2 = readPlist();
+    const plist = readPlist();
     return function handler(property) {
-      const rawValue = plist2?.[property];
+      const rawValue = plist?.[property];
       if (!rawValue) {
         return false;
       }

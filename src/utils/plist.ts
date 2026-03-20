@@ -102,7 +102,7 @@ export function getPlistShortcutUtils({
     }
 
     if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, binaryPlist.serialize(plist));
+      fs.writeFileSync(plistPath, binaryPlist.serialize(root));
     }
 
     return plistNeedsUpdates;

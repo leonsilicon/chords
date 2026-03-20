@@ -5563,7 +5563,7 @@ function getPlistShortcutUtils({
       plistNeedsUpdates = true;
     }
     if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serialize(plist));
+      fs.writeFileSync(plistPath, serialize(root));
     }
     return plistNeedsUpdates;
   }
