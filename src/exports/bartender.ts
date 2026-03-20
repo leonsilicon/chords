@@ -40,6 +40,8 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
     propertyType: 'string',
     shortcut,
   })))
+  // TODO: For each per-item shortcut, we also need to add it to per-item-hotkeys
+
   const plistHandler = buildHandler();
 
   const plist = readPlist();

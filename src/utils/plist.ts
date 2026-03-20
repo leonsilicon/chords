@@ -53,7 +53,8 @@ export function getPlistShortcutUtils({
 
       const object = {
         [modifierMaskKey]: mask,
-        [keycodeKey]: keycode(key)
+        // TODO: make more robust (we need to roll our own lib)
+        [keycodeKey]: keycode(key.toLowerCase())
       }
       if (fastIsEqual(root[property], object)) {
         continue;

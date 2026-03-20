@@ -4,22 +4,22 @@ type Modifier = {
 };
 
 const CARBON_MODIFIERS: Modifier[] = [
-  { string: "cmd", mask: 1 << 8 },
-  { string: "shift", mask: 1 << 9 },
-  { string: "alt", mask: 1 << 11 },
-  { string: "ctrl", mask: 1 << 12 },
-  { string: "caps_lock", mask: 1 << 10 },
+  { string: "MetaLeft", mask: 1 << 8 },
+  { string: "ShiftLeft", mask: 1 << 9 },
+  { string: "AltLeft", mask: 1 << 11 },
+  { string: "ControlLeft", mask: 1 << 12 },
+  { string: "CapsLock", mask: 1 << 10 },
 ];
 
 const MODERN_MODIFIERS: Modifier[] = [
-  { string: "caps_lock", mask: 1 << 16 },
-  { string: "shift", mask: 1 << 17 },
-  { string: "ctrl", mask: 1 << 18 },
-  { string: "alt", mask: 1 << 19 },
-  { string: "cmd", mask: 1 << 20 },
-  { string: "numeric_pad", mask: 1 << 21 },
-  { string: "help", mask: 1 << 22 },
-  { string: "fn", mask: 1 << 23 },
+  { string: "CapsLock", mask: 1 << 16 },
+  { string: "ShiftLeft", mask: 1 << 17 },
+  { string: "ControlLeft", mask: 1 << 18 },
+  { string: "AltLeft", mask: 1 << 19 },
+  { string: "MetaLeft", mask: 1 << 20 },
+  { string: "Numpad", mask: 1 << 21 },
+  { string: "Help", mask: 1 << 22 },
+  { string: "Function", mask: 1 << 23 },
 ];
 
 export function modifiersToKeystrings(mask: number): string[] {
