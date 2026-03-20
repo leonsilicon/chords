@@ -3,7 +3,7 @@ name = "PixelSnap 2 (Setapp)"
 
 [config.js]
 module = '''
-import { buildMakethewebHandler } from 'dist/maketheweb.js';
+import buildMakethewebHandler from 'dist/maketheweb.js';
 export default buildMakethewebHandler(
   import.meta,
   "~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist"
