@@ -5161,7 +5161,7 @@ function getPlistShortcutUtils({
       }
       const object = {
         [modifierMaskKey]: mask,
-        [keycodeKey]: keymap.code
+        [keycodeKey]: keymap.mac
       };
       if (fastIsEqual(root[property], object)) {
         continue;
