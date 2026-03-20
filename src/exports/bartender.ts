@@ -39,7 +39,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
   })
   writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
     // The 0th entry is the type ('item | 'shortcut')
-    property: nullthrows(chord.args?.[1]),
+    property: chord.args![2] ?? chord.args![1]!,
     // _Bartender_ stores shortcuts as strings
     propertyType: 'string',
     shortcut,

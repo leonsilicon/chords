@@ -1441,7 +1441,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     keycodeKey: "carbonKeyCode"
   });
   writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    property: nullthrows(chord.args?.[1]),
+    property: chord.args[2] ?? chord.args[1],
     propertyType: "string",
     shortcut
   })));
