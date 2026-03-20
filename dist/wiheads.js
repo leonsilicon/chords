@@ -5532,7 +5532,7 @@ function deepEqual(valA, valB, visited) {
 // src/utils/plist.ts
 var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 function plistValueToString(rawValue) {
-  const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const valueString = rawValue instanceof ArrayBuffer ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
   return valueString;
 }
 function getPlistShortcutUtils({

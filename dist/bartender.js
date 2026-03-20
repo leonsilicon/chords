@@ -5532,7 +5532,7 @@ function deepEqual(valA, valB, visited) {
 // src/utils/plist.ts
 var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 function plistValueToString(rawValue) {
-  const valueString = rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+  const valueString = rawValue instanceof ArrayBuffer ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
   return valueString;
 }
 function getPlistShortcutUtils({
@@ -5740,7 +5740,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
       };
       perItemHotkeyList.push(item);
     }
-    plist["per-item-hotkeys"] = new Uint8Array(Buffer2.from(JSON.stringify(perItemHotkeyList), "utf8"));
+    plist["per-item-hotkeys"] = Buffer2.from(JSON.stringify(perItemHotkeyList), "utf8");
     fs3.writeFileSync(plistPath, serialize(plist));
   }
   const plistHandler = buildHandler();

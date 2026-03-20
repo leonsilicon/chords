@@ -14,7 +14,7 @@ import parseJson from "json-parse-safe";
 
 export function plistValueToString(rawValue: unknown): string {
   const valueString =
-    rawValue instanceof Uint8Array ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
+    rawValue instanceof ArrayBuffer ? Buffer.from(rawValue).toString("utf8") : String(rawValue);
 
   return valueString;
 }

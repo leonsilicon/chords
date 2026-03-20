@@ -84,9 +84,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
       perItemHotkeyList.push(item);
     }
 
-    plist["per-item-hotkeys"] = new Uint8Array(
-      Buffer.from(JSON.stringify(perItemHotkeyList), "utf8"),
-    );
+    plist["per-item-hotkeys"] = Buffer.from(JSON.stringify(perItemHotkeyList), "utf8");
     fs.writeFileSync(plistPath, serialize(plist));
   }
 
