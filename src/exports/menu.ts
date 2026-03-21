@@ -13,14 +13,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
         };
 
         const normalize = (s: string) =>
-          s
-            .normalize("NFKD")
-            .replace(/[\u0300-\u036f]/g, "")
-            // remove invisible / formatting chars
-            .replace(/[\u200B-\u200D\uFEFF]/g, "") // zero-width
-            .replace(/[\u202A-\u202E]/g, "") // bidi control
-            .toLowerCase()
-            .trim();
+          s.replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim();
 
         const findByName = (collection: any, target: string, label: string) => {
           const normTarget = normalize(target);

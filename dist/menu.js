@@ -130,7 +130,7 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
       const log = (...args) => {
         console.log("[JXA]", ...args);
       };
-      const normalize = (s) => s.normalize("NFKD").replace(/[\u0300-\u036f]/g, "").replace(/[\u200B-\u200D\uFEFF]/g, "").replace(/[\u202A-\u202E]/g, "").toLowerCase().trim();
+      const normalize = (s) => s.replace(/[\u200B-\u200F\uFEFF\u202A-\u202E]/g, "").trim();
       const findByName = (collection, target, label) => {
         const normTarget = normalize(target);
         const items = collection();
