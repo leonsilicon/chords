@@ -124,7 +124,7 @@ JSON.stringify({ result: out });
 
 // src/exports/menu.ts
 var import_jxa_run_compat = __toESM(require_run(), 1);
-async function buildMenuHandler(processName) {
+var buildMenuHandler = async function buildMenuHandler(meta, processName) {
   return function menu(menuBarItem, menuItems) {
     return import_jxa_run_compat.run((processName2, menuBarItem2, menuItems2) => {
       const se = Application("System Events");
@@ -143,7 +143,7 @@ async function buildMenuHandler(processName) {
       }
     }, processName, menuBarItem, menuItems);
   };
-}
+};
 export {
-  buildMenuHandler
+  buildMenuHandler as default
 };
