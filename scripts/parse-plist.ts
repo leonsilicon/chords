@@ -13,6 +13,6 @@ const seralizedParsed = parseBplist(fs.readFileSync('test.plist'))
 console.log(detailedDiff(parsed, seralizedParsed))
 console.log(fastIsEqual(parsed, seralizedParsed))
 
-// console.log(
-//   new TextDecoder().decode(parse(fs.readFileSync(process.argv[2]!).buffer)["per-item-hotkeys"]),
-// );
+console.log(
+  new TextDecoder().decode(parseBplist(fs.readFileSync(process.argv[2]!))["per-item-hotkeys"]),
+);

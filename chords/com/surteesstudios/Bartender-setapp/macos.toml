@@ -74,7 +74,12 @@ export default buildHandler(
   'com.apple.controlcenter-FocusModes',
   'Focus',
 ] }
-
+'-p' = { name = "Bar: Playing", args = [
+  'item',
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-NowPlaying',
+  'Now Playing',
+] }
 '-j' = { name = "Bar: JoyTap", args = [
   'item',
   'com.joytap.app-setapp',
