@@ -1,13 +1,13 @@
-import { run } from "#/utils/exec.ts";
 import fs from "fs";
 import { exists } from "#/utils/file.ts";
 import path from "path";
 import { tap } from "chordsapp";
 import type { BuildHandler } from "../types/handler.ts";
+import spawn from "nano-spawn";
 
 // TODO: make this work for Cursor
 export default (async function buildVscodeHandler() {
-  const uid = await run("id", ["-u"]);
+  const uid = await spawn("id", ["-u"]);
 
   return async function command(cmd: string) {
     const tmp = process.env.TMPDIR ?? "/tmp";

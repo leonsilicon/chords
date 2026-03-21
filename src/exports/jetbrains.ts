@@ -3,6 +3,7 @@ import { outdent } from "outdent";
 import path from "path";
 import { run } from "#/utils/exec.ts";
 import type { BuildHandler } from "../types/handler.ts";
+import spawn from "nano-spawn";
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export default (function buildJetbrainsHandler(meta, ideBinPath: string) {
@@ -35,7 +36,7 @@ export default (function buildJetbrainsHandler(meta, ideBinPath: string) {
     `;
 
     fs.writeFileSync(scriptPath, script);
-    await run(ideBinPath, ["ideScript", scriptPath]);
+    await spawn(ideBinPath, ["ideScript", scriptPath]);
     const result = fs.readFileSync(resultPath, "utf8");
 
     fs.rmSync(scriptPath);

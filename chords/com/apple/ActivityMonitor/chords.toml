@@ -1,0 +1,12 @@
+[config]
+name = "Activity Monitor"
+
+[config.js]
+module = '''
+export const menu = buildMenuHandler()
+'''
+
+[chords]
+'/am' = { name = "Activity Monitor", shell = "open -a 'Activity Monitor'" }
+
+crm = { name = "Columns: Real Memory", 'menu:args' = [] }
