@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 var __create = Object.create;
 var __getProtoOf = Object.getPrototypeOf;
 var __defProp = Object.defineProperty;
@@ -29,6 +30,7 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = /* @__PURE__ */ createRequire(import.meta.url);
 
 // node_modules/.pnpm/json-parse-safe@2.0.0/node_modules/json-parse-safe/index.js
 var require_json_parse_safe = __commonJS((exports, module) => {

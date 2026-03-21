@@ -3,10 +3,39 @@ name = "Activity Monitor"
 
 [config.js]
 module = '''
-export const menu = buildMenuHandler()
+import buildMenuHandler from "dist/menu.js"
+export const menu = buildMenuHandler("Activity Monitor")
 '''
 
 [chords]
 '/am' = { name = "Activity Monitor", shell = "open -a 'Activity Monitor'" }
 
-crm = { name = "Columns: Real Memory", 'menu:args' = [] }
+# Columns
+cpi  = { name = "Columns: Process ID", 'menu:args' = ["View", "Columns", "Process ID"] }
+cu   = { name = "Columns: User", 'menu:args' = ["View", "Columns", "User"] }
+cpc  = { name = "Columns: % CPU", 'menu:args' = ["View", "Columns", "% CPU"] }
+cct  = { name = "Columns: CPU Time", 'menu:args' = ["View", "Columns", "CPU Time"] }
+cpg  = { name = "Columns: % GPU", 'menu:args' = ["View", "Columns", "% GPU"] }
+cgt  = { name = "Columns: GPU Time", 'menu:args' = ["View", "Columns", "GPU Time"] }
+cnt  = { name = "Columns: # Threads", 'menu:args' = ["View", "Columns", "# Threads"] }
+cnp  = { name = "Columns: # Ports", 'menu:args' = ["View", "Columns", "# Ports"] }
+crm  = { name = "Columns: Real Memory", 'menu:args' = ["View", "Columns", "Real Memory"] }
+crpm = { name = "Columns: Real Private Memory", 'menu:args' = ["View", "Columns", "Real Private Memory"] }
+crsm = { name = "Columns: Real Shared Memory", 'menu:args' = ["View", "Columns", "Real Shared Memory"] }
+ck   = { name = "Columns: Kind", 'menu:args' = ["View", "Columns", "Kind"] }
+cst  = { name = "Columns: Sudden Termination", 'menu:args' = ["View", "Columns", "Sudden Termination"] }
+cs   = { name = "Columns: Sandbox", 'menu:args' = ["View", "Columns", "Sandbox"] }
+cr   = { name = "Columns: Restricted", 'menu:args' = ["View", "Columns", "Restricted"] }
+ciwu = { name = "Columns: Idle Wake Ups", 'menu:args' = ["View", "Columns", "Idle Wake Ups"] }
+cei  = { name = "Columns: Energy Impact", 'menu:args' = ["View", "Columns", "Energy Impact"] }
+can  = { name = "Columns: App Nap", 'menu:args' = ["View", "Columns", "App Nap"] }
+csb  = { name = "Columns: Sent Bytes", 'menu:args' = ["View", "Columns", "Sent Bytes"] }
+csp  = { name = "Columns: Sent Packets", 'menu:args' = ["View", "Columns", "Sent Packets"] }
+crb  = { name = "Columns: Received Bytes", 'menu:args' = ["View", "Columns", "Received Bytes"] }
+crp  = { name = "Columns: Received Packets", 'menu:args' = ["View", "Columns", "Received Packets"] }
+cpm  = { name = "Columns: Purgeable Memory", 'menu:args' = ["View", "Columns", "Purgeable Memory"] }
+cm   = { name = "Columns: Memory", 'menu:args' = ["View", "Columns", "Memory"] }
+ccm  = { name = "Columns: Compressed Memory", 'menu:args' = ["View", "Columns", "Compressed Memory"] }
+cbw  = { name = "Columns: Bytes Written", 'menu:args' = ["View", "Columns", "Bytes Written"] }
+cbr  = { name = "Columns: Bytes Read", 'menu:args' = ["View", "Columns", "Bytes Read"] }
+cps  = { name = "Columns: Preventing Sleep", 'menu:args' = ["View", "Columns", "Preventing Sleep"] }

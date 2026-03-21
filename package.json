@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target node --external chordsapp --external @chordsapp/utils",
+    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target node --external chordsapp",
     "prepare": "lefthook install"
   },
   "dependencies": {
@@ -27,6 +27,7 @@
     "json-parse-safe": "^2.0.0",
     "just-filter-object": "^3.2.0",
     "just-zip-it": "^3.2.0",
+    "jxa-run-compat": "^1.5.0",
     "keycode-ts2": "^0.1.0",
     "map-obj": "^6.0.0",
     "nano-spawn-compat": "^2.0.4",
@@ -37,6 +38,7 @@
     "untildify": "^6.0.0"
   },
   "devDependencies": {
+    "@jxa/global-type": "^1.4.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.0",
     "deep-object-diff": "^1.1.9",

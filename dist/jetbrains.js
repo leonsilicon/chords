@@ -1,3 +1,4 @@
+import { createRequire } from "node:module";
 var __create = Object.create;
 var __getProtoOf = Object.getPrototypeOf;
 var __defProp = Object.defineProperty;
@@ -29,6 +30,7 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __require = /* @__PURE__ */ createRequire(import.meta.url);
 
 // node_modules/.pnpm/outdent@0.8.0/node_modules/outdent/lib/index.js
 var require_lib = __commonJS((exports, module) => {

@@ -50,6 +50,9 @@ importers:
       just-zip-it:
         specifier: ^3.2.0
         version: 3.2.0
+      jxa-run-compat:
+        specifier: ^1.5.0
+        version: 1.5.0
       keycode-ts2:
         specifier: ^0.1.0
         version: 0.1.0
@@ -75,6 +78,9 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
     devDependencies:
+      '@jxa/global-type':
+        specifier: ^1.4.0
+        version: 1.4.0
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -98,6 +104,12 @@ importers:
         version: 5.9.3
 
 packages:
+
+  '@jxa/global-type@1.4.0':
+    resolution: {integrity: sha512-3Gg632we69oelbanFFQ1XbKTfqEYzwQxg00O13XG2an6IJzP829XLKjv0EDy/UtublyZbZFCk1CmDXq9ku4oGw==}
+
+  '@jxa/types@1.4.0':
+    resolution: {integrity: sha512-3MNk9eYHAdNVUGASHrfvadVL5sE/NMet0CAugHERsofmLp4SYRGCD+sXAMjlnpRjL1g3q7nkAU9wUL2h0Z+LQA==}
 
   '@kayahr/text-encoding@2.1.0':
     resolution: {integrity: sha512-U/2bmZyKG0TvhIws4+tfA8AWtl0RHOaFENQG8DAe7UyEhIYuhpSgijOh4WDFHLIDO6+WyFRM9nZtKm5Pe6iquw==}
@@ -174,6 +186,9 @@ packages:
 
   just-zip-it@3.2.0:
     resolution: {integrity: sha512-ZJxc8mLz8XkaoOegJ237Xuo3ZQB5zUN/8BTXqalBJbh/uj+ahfJbOJKadJPmXDBbxHzh+MQYH43VxV5TlQvlfw==}
+
+  jxa-run-compat@1.5.0:
+    resolution: {integrity: sha512-MQf+ZcV8pXRFCbDhuxr9vWRvzT/j9OpQkJlpUE6pKdoJrAYr14cLfoVscuum88JuBFIjijNZc2Jz0zgqER1ipA==}
 
   keycode-ts2@0.1.0:
     resolution: {integrity: sha512-GVpkNchsaKxraSqYNReQJaAp3RdlrKc/Nw/fhMl+DKisTehAiCCYjxlTlohjdPNkb4kvmAjSQEpIVoHgpwVyXg==}
@@ -309,6 +324,12 @@ packages:
 
 snapshots:
 
+  '@jxa/global-type@1.4.0':
+    dependencies:
+      '@jxa/types': 1.4.0
+
+  '@jxa/types@1.4.0': {}
+
   '@kayahr/text-encoding@2.1.0': {}
 
   '@stdlib/utils-noop@0.2.3': {}
@@ -362,6 +383,8 @@ snapshots:
   just-filter-object@3.2.0: {}
 
   just-zip-it@3.2.0: {}
+
+  jxa-run-compat@1.5.0: {}
 
   keycode-ts2@0.1.0: {}
 
