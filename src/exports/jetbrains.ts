@@ -3,7 +3,7 @@ import { outdent } from "outdent";
 import path from "path";
 import { run } from "#/utils/exec.ts";
 import type { BuildHandler } from "../types/handler.ts";
-import spawn from "nano-spawn";
+import spawn from "nano-spawn-compat";
 
 // This function makes it possible to programmatically execute IntelliJ commands
 export default (function buildJetbrainsHandler(meta, ideBinPath: string) {

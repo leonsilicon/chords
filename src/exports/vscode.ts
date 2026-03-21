@@ -3,7 +3,7 @@ import { exists } from "#/utils/file.ts";
 import path from "path";
 import { tap } from "chordsapp";
 import type { BuildHandler } from "../types/handler.ts";
-import spawn from "nano-spawn";
+import spawn from "nano-spawn-compat";
 
 // TODO: make this work for Cursor
 export default (async function buildVscodeHandler() {

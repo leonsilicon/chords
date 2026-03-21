@@ -173,12 +173,34 @@ var import_outdent = __toESM(require_lib(), 1);
 import fs2 from "fs";
 import path3 from "path";
 
-// node_modules/nano-spawn/source/context.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/context.js
 import process2 from "node:process";
-import { stripVTControlCharacters } from "node:util";
+
+// node_modules/.pnpm/ansi-regex@6.2.2/node_modules/ansi-regex/index.js
+function ansiRegex({ onlyFirst = false } = {}) {
+  const ST = "(?:\\u0007|\\u001B\\u005C|\\u009C)";
+  const osc = `(?:\\u001B\\][\\s\\S]*?${ST})`;
+  const csi = "[\\u001B\\u009B][[\\]()#;?]*(?:\\d{1,4}(?:[;:]\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]";
+  const pattern = `${osc}|${csi}`;
+  return new RegExp(pattern, onlyFirst ? undefined : "g");
+}
+
+// node_modules/.pnpm/strip-ansi@7.2.0/node_modules/strip-ansi/index.js
+var regex = ansiRegex();
+function stripAnsi(string) {
+  if (typeof string !== "string") {
+    throw new TypeError(`Expected a \`string\`, got \`${typeof string}\``);
+  }
+  if (!string.includes("\x1B") && !string.includes("")) {
+    return string;
+  }
+  return string.replace(regex, "");
+}
+
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/context.js
 var getContext = (raw) => ({
   start: process2.hrtime.bigint(),
-  command: raw.map((part) => getCommandPart(stripVTControlCharacters(part))).join(" "),
+  command: raw.map((part) => getCommandPart(stripAnsi(part))).join(" "),
   state: {
     stdout: "",
     stderr: "",
@@ -189,7 +211,7 @@ var getContext = (raw) => ({
 });
 var getCommandPart = (part) => /[^\w./-]/.test(part) ? `'${part.replaceAll("'", "'\\''")}'` : part;
 
-// node_modules/nano-spawn/source/options.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/options.js
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import process3 from "node:process";
@@ -221,12 +243,12 @@ var addLocalPath = ({ Path = "", PATH = Path, ...env }, cwd) => {
 };
 var getLocalPaths = (localPaths, localPath) => localPaths.at(-1) === localPath ? localPaths : getLocalPaths([...localPaths, localPath], path.resolve(localPath, ".."));
 
-// node_modules/nano-spawn/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/spawn.js
 import { spawn } from "node:child_process";
 import { once as once2 } from "node:events";
 import process6 from "node:process";
 
-// node_modules/nano-spawn/source/windows.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/windows.js
 import fs from "node:fs/promises";
 import path2 from "node:path";
 import process4 from "node:process";
@@ -249,7 +271,7 @@ var exeExtensions = [".exe", ".com"];
 var escapeArgument = (argument) => escapeFile(escapeFile(`"${argument.replaceAll(/(\\*)"/g, "$1$1\\\"").replace(/(\\*)$/, "$1$1")}"`));
 var escapeFile = (file) => file.replaceAll(/([()\][%!^"`<>&|;, *?])/g, "^$1");
 
-// node_modules/nano-spawn/source/result.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/result.js
 import { once, on } from "node:events";
 import process5 from "node:process";
 var getResult = async (nodeChildProcess, { input }, context) => {
@@ -305,7 +327,7 @@ var getOutputs = ({ state: { stdout, stderr, output }, command, start }) => ({
 var getOutput = (output) => output.at(-1) === `
 ` ? output.slice(0, output.at(-2) === "\r" ? -2 : -1) : output;
 
-// node_modules/nano-spawn/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/spawn.js
 var spawnSubprocess = async (file, commandArguments, options, context) => {
   try {
     if (["node", "node.exe"].includes(file.toLowerCase())) {
@@ -338,7 +360,7 @@ var bufferOutput = (stream, { state }, streamName) => {
   }
 };
 
-// node_modules/nano-spawn/source/pipe.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/pipe.js
 import { pipeline } from "node:stream/promises";
 var handlePipe = async (subprocesses) => {
   const [[from, to]] = await Promise.all([Promise.allSettled(subprocesses), pipeStreams(subprocesses)]);
@@ -371,8 +393,7 @@ var closeStdin = async (nodeChildProcess) => {
   stdin.end();
 };
 
-// node_modules/nano-spawn/source/iterable.js
-import * as readline from "node:readline/promises";
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/iterable.js
 var lineIterator = async function* (subprocess, { state }, streamName, index) {
   if (state.isIterating[streamName] === false) {
     throw new Error(`The subprocess must be iterated right away, for example:
@@ -387,7 +408,15 @@ var lineIterator = async function* (subprocess, { state }, streamName, index) {
       throw new TypeError(`The subprocess cannot be iterated unless ${message} is 'pipe'.`);
     }
     handleErrors(subprocess);
-    yield* readline.createInterface({ input: stream });
+    let buffer = "";
+    for await (const chunk of stream.iterator({ destroyOnReturn: false })) {
+      const lines = `${buffer}${chunk}`.split(/\r?\n/);
+      buffer = lines.pop();
+      yield* lines;
+    }
+    if (buffer) {
+      yield buffer;
+    }
   } finally {
     await subprocess;
   }
@@ -423,7 +452,7 @@ var getNext = async (iterator, index, { nonIterable }) => {
 };
 var shouldIgnoreError = (nonIterable, index) => nonIterable.every(Boolean) ? index !== nonIterable.length - 1 : nonIterable[index];
 
-// node_modules/nano-spawn/source/index.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/index.js
 function spawn2(file, second, third, previous) {
   const [commandArguments = [], options = {}] = Array.isArray(second) ? [second, third] : [[], second];
   const context = getContext([file, ...commandArguments]);
