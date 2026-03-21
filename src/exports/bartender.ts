@@ -7,9 +7,9 @@ import type { BuildHandler } from "../types/handler.ts";
 import { exists } from "../utils/file.ts";
 import noop from "@stdlib/utils-noop";
 import { writeBinaryFileSync } from "simple-plist-es/writeBinaryFileSync";
-import fs from "fs";
 import parseJson from "json-parse-safe";
 import encodeUtf8 from "encode-utf8";
+import { Buffer } from "buffer";
 
 interface PerItemHotkey {
   appName: string;
@@ -84,7 +84,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
       perItemHotkeyList.push(item);
     }
 
-    plist["per-item-hotkeys"] = encodeUtf8(JSON.stringify(perItemHotkeyList));
+    plist["per-item-hotkeys"] = Buffer.from(encodeUtf8(JSON.stringify(perItemHotkeyList)));
     writeBinaryFileSync(plistPath, plist);
   }
 

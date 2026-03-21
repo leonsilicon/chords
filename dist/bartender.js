@@ -2381,7 +2381,6 @@ function untildify(pathWithTilde) {
 }
 
 // src/utils/plist.ts
-import { Buffer as Buffer2 } from "buffer";
 import fs2 from "fs";
 
 // node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
@@ -6769,8 +6768,9 @@ function deepEqual(valA, valB, visited) {
 // src/utils/plist.ts
 var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 var import_decode_utf8 = __toESM(require_decode_utf8(), 1);
+import { Buffer as Buffer2 } from "buffer";
 function plistValueToString(rawValue) {
-  const valueString = rawValue instanceof ArrayBuffer ? import_decode_utf8.default(rawValue) : String(rawValue);
+  const valueString = Buffer2.isBuffer(rawValue) ? import_decode_utf8.default(rawValue) : String(rawValue);
   return valueString;
 }
 function getPlistShortcutUtils({
@@ -6785,8 +6785,8 @@ function getPlistShortcutUtils({
   }
   function writeShortcuts(writes) {
     let plistNeedsUpdates = false;
-    const root = readPlist();
-    if (!root) {
+    const plist = readPlist();
+    if (!plist) {
       throw new Error("plist root is not an object");
     }
     for (const { shortcut, property, propertyType } of writes) {
@@ -6806,16 +6806,16 @@ function getPlistShortcutUtils({
         [modifierMaskKey]: mask,
         [keycodeKey]: keymap.mac
       };
-      if (fastIsEqual(root[property], object)) {
+      if (fastIsEqual(plist[property], object)) {
         continue;
       }
       const stringValue = JSON.stringify(object);
-      const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer2.from(stringValue, "utf8"));
-      root[property] = value;
+      const value = propertyType === "string" ? stringValue : Buffer2.from(stringValue, "utf8");
+      plist[property] = value;
       plistNeedsUpdates = true;
     }
     if (plistNeedsUpdates) {
-      writeBinaryFileSync(plistPath, root);
+      writeBinaryFileSync(plistPath, plist);
     }
     return plistNeedsUpdates;
   }
@@ -6968,6 +6968,7 @@ function encodeUtf8(input) {
 }
 
 // src/exports/bartender.ts
+import { Buffer as Buffer3 } from "buffer";
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
@@ -7018,7 +7019,7 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
       };
       perItemHotkeyList.push(item);
     }
-    plist["per-item-hotkeys"] = encodeUtf8(JSON.stringify(perItemHotkeyList));
+    plist["per-item-hotkeys"] = Buffer3.from(encodeUtf8(JSON.stringify(perItemHotkeyList)));
     writeBinaryFileSync(plistPath, plist);
   }
   const plistHandler = buildHandler();

@@ -1,4 +1,3 @@
-import { Buffer } from "buffer";
 import fs from "fs";
 import {
   carbonModifiersToKeystrings,
@@ -13,9 +12,10 @@ import { parseBinary } from "simple-plist-es/parseBinary";
 import { fastIsEqual } from "fast-is-equal";
 import parseJson from "json-parse-safe";
 import decodeUtf8 from "decode-utf8";
+import { Buffer } from "buffer";
 
 export function plistValueToString(rawValue: unknown): string {
-  const valueString = rawValue instanceof ArrayBuffer ? decodeUtf8(rawValue) : String(rawValue);
+  const valueString = Buffer.isBuffer(rawValue) ? decodeUtf8(rawValue) : String(rawValue);
 
   return valueString;
 }
@@ -44,8 +44,8 @@ export function getPlistShortcutUtils({
 
   function writeShortcuts(writes: ShortcutWrite[]) {
     let plistNeedsUpdates = false;
-    const root = readPlist();
-    if (!root) {
+    const plist = readPlist();
+    if (!plist) {
       throw new Error("plist root is not an object");
     }
 
@@ -74,20 +74,19 @@ export function getPlistShortcutUtils({
         [keycodeKey]: keymap.mac,
       };
 
-      if (fastIsEqual(root[property], object)) {
+      if (fastIsEqual(plist[property], object)) {
         continue;
       }
 
       const stringValue = JSON.stringify(object);
-      const value =
-        propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
+      const value = propertyType === "string" ? stringValue : Buffer.from(stringValue, "utf8");
 
-      root[property] = value;
+      plist[property] = value;
       plistNeedsUpdates = true;
     }
 
     if (plistNeedsUpdates) {
-      writeBinaryFileSync(plistPath, root);
+      writeBinaryFileSync(plistPath, plist);
     }
 
     return plistNeedsUpdates;
