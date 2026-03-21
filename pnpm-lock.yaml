@@ -17,6 +17,9 @@ importers:
       '@types/json-parse-safe':
         specifier: ^2.0.3
         version: 2.0.3
+      any-ascii:
+        specifier: ^0.3.3
+        version: 0.3.3
       array-uniq:
         specifier: ^3.0.0
         version: 3.0.0
@@ -131,6 +134,10 @@ packages:
   ansi-regex@6.2.2:
     resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
+
+  any-ascii@0.3.3:
+    resolution: {integrity: sha512-8hm+zPrc1VnlxD5eRgMo9F9k2wEMZhbZVLKwA/sPKIt6ywuz7bI9uV/yb27uvc8fv8q6Wl2piJT51q1saKX0Jw==}
+    engines: {node: '>=12.20'}
 
   argparse@2.0.1:
     resolution: {integrity: sha512-8+9WqebbFzpX9OR+Wa6O29asIogeRMzcGtAINdpMHHyAg10f05aSFVBbcEqGf/PXw1EjAZ+q2/bEBg3DvurK3Q==}
@@ -343,6 +350,8 @@ snapshots:
       undici-types: 7.18.2
 
   ansi-regex@6.2.2: {}
+
+  any-ascii@0.3.3: {}
 
   argparse@2.0.1: {}
 

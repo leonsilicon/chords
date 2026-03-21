@@ -1,6 +1,7 @@
 import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 import type { BuildHandler } from "../types/handler.ts";
+import anyAscii from "any-ascii";
 
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
@@ -10,31 +11,39 @@ export default (async function buildMenuHandler(meta, processName: string) {
           console.log("[JXA]", ...args);
         };
 
-        const assertExists = (obj: any, label: string) => {
-          try {
-            if (!obj || (typeof obj.exists === "function" && !obj.exists())) {
-              throw new Error(`Missing: ${label}`);
-            }
-            log("OK:", label);
-            return obj;
-          } catch (e) {
-            throw new Error(`❌ Failed at: ${label}\n${e}`);
-          }
-        };
+        const normalize = (s: string) => anyAscii(s).normalize("NFKD").toLowerCase().trim();
 
-        const waitFor = (fn: () => any, label: string, timeout = 2) => {
-          const start = Date.now();
-          while (Date.now() - start < timeout * 1000) {
+        const findByName = (collection: any, target: string, label: string) => {
+          const normTarget = normalize(target);
+          const items = collection();
+
+          for (let i = 0; i < items.length; i++) {
             try {
-              const result = fn();
-              if (result && result.exists()) {
-                log("OK (wait):", label);
-                return result;
+              const raw = items[i].name();
+              const norm = normalize(raw);
+
+              if (norm === normTarget) {
+                log(`Matched ${label}:`, `"${raw}"`);
+                return items[i];
               }
             } catch {}
-            delay(0.05);
           }
-          throw new Error(`❌ Timeout waiting for: ${label}`);
+
+          // debug dump if not found
+          log(`❌ Available ${label}s:`);
+          for (let i = 0; i < items.length; i++) {
+            try {
+              log("-", `"${items[i].name()}"`);
+            } catch {}
+          }
+
+          throw new Error(`Missing: ${label} "${target}"`);
+        };
+
+        const assertExists = (obj: any, label: string) => {
+          if (!obj) throw new Error(`❌ Failed at: ${label}`);
+          log("OK:", label);
+          return obj;
         };
 
         const se = Application("System Events");
@@ -42,21 +51,15 @@ export default (async function buildMenuHandler(meta, processName: string) {
 
         log("Activating app:", processName);
         app.activate();
-
-        // small delay helps ensure focus actually switches
         delay(0.1);
 
-        // 🔥 CRITICAL: use frontmost process, not byName
         const proc = assertExists(se.processes.whose({ frontmost: true })[0], "frontmost process");
 
         log("Frontmost process:", proc.name());
 
         const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
 
-        const menuBarItemRef = waitFor(
-          () => menuBar.menuBarItems.byName(menuBarItem),
-          `menuBarItem "${menuBarItem}"`,
-        );
+        const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem, "menuBarItem");
 
         let current = menuBarItemRef;
 
@@ -66,7 +69,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
 
           const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
 
-          const next = waitFor(() => menu.menuItems.byName(name), `menuItem "${name}"`);
+          const next = findByName(menu.menuItems, name, "menuItem");
 
           if (i === menuItems.length - 1) {
             log(`Clicking "${name}"`);
