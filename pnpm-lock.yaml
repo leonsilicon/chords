@@ -17,9 +17,9 @@ importers:
       '@types/json-parse-safe':
         specifier: ^2.0.3
         version: 2.0.3
-      any-ascii:
-        specifier: ^0.3.3
-        version: 0.3.3
+      any-ascii-json:
+        specifier: ^0.4.0
+        version: 0.4.0
       array-uniq:
         specifier: ^3.0.0
         version: 3.0.0
@@ -135,8 +135,8 @@ packages:
     resolution: {integrity: sha512-Bq3SmSpyFHaWjPk8If9yc6svM8c56dB5BAtW4Qbw5jHTwwXXcTLoRMkpDJp6VL0XzlWaCHTXrkFURMYmD0sLqg==}
     engines: {node: '>=12'}
 
-  any-ascii@0.3.3:
-    resolution: {integrity: sha512-8hm+zPrc1VnlxD5eRgMo9F9k2wEMZhbZVLKwA/sPKIt6ywuz7bI9uV/yb27uvc8fv8q6Wl2piJT51q1saKX0Jw==}
+  any-ascii-json@0.4.0:
+    resolution: {integrity: sha512-DS5sNSP4ubXWJ4wORnxGud0vLryt18kDC5UBo1z9QdytgJL8O6bXG1Ezi6nrBwAyYi4LAqf/n5DNbXo6XwfjLg==}
     engines: {node: '>=12.20'}
 
   argparse@2.0.1:
@@ -351,7 +351,7 @@ snapshots:
 
   ansi-regex@6.2.2: {}
 
-  any-ascii@0.3.3: {}
+  any-ascii-json@0.4.0: {}
 
   argparse@2.0.1: {}
 

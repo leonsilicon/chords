@@ -1,17 +1,28 @@
 import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 import type { BuildHandler } from "../types/handler.ts";
-import anyAscii from "any-ascii";
+import anyAsciiJson from "any-ascii-json";
 
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
-      (processName: string, menuBarItem: string, menuItems: string[]) => {
+      (
+        processName: string,
+        menuBarItem: string,
+        menuItems: string[],
+        anyAsciiJson: Record<string, string>,
+      ) => {
         const log = (...args: any[]) => {
           console.log("[JXA]", ...args);
         };
 
-        const normalize = (s: string) => anyAscii(s).normalize("NFKD").toLowerCase().trim();
+        const normalize = (s: string) =>
+          [...s]
+            .map((c) => anyAsciiJson[c] ?? "")
+            .join("")
+            .normalize("NFKD")
+            .toLowerCase()
+            .trim();
 
         const findByName = (collection: any, target: string, label: string) => {
           const normTarget = normalize(target);
@@ -84,6 +95,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
       processName,
       menuBarItem,
       menuItems,
+      anyAsciiJson,
     );
   };
 } satisfies BuildHandler);
