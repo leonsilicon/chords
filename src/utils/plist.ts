@@ -7,8 +7,7 @@ import {
 } from "./mac-keycode.ts";
 import { getKeyMap, getKeyMapByCode, KeyMappingCode } from "keycode-ts2";
 import { tap } from "chordsapp";
-import { writeBinaryFileSync } from "simple-plist-es/writeBinaryFileSync";
-import { parseBinary } from "simple-plist-es/parseBinary";
+import { parseBplist, serializeBplist } from "bplist-lossless";
 import { fastIsEqual } from "fast-is-equal";
 import parseJson from "json-parse-safe";
 import decodeUtf8 from "decode-utf8";
@@ -38,7 +37,7 @@ export function getPlistShortcutUtils({
   keycodeKey: string;
 }) {
   function readPlist() {
-    const plist = parseBinary(fs.readFileSync(plistPath));
+    const plist = parseBplist(fs.readFileSync(plistPath));
     return plist;
   }
 
@@ -86,7 +85,7 @@ export function getPlistShortcutUtils({
     }
 
     if (plistNeedsUpdates) {
-      writeBinaryFileSync(plistPath, plist);
+      fs.writeFileSync(plistPath, serializeBplist(plist));
     }
 
     return plistNeedsUpdates;

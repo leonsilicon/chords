@@ -1,18 +1,14 @@
 #!/usr/bin/env bun
 import fs from "fs";
-import {fastIsEqual} from 'fast-is-equal'
-import { parseBinary } from 'simple-plist-es/parseBinary'
-import { writeBinaryFileSync } from 'simple-plist-es/writeBinaryFileSync'
+import { fastIsEqual } from 'fast-is-equal'
+import { parseBplist, serializeBplist } from 'bplist-lossless'
 import { detailedDiff } from 'deep-object-diff'
-import {Buffer} from 'buffer'
 
-const plist = fs.readFileSync(process.argv[2]!)
-
-const parsed = parseBinary(plist)
+const  plist = fs.readFileSync(process.argv[2]!)
+const parsed = parseBplist(plist)
 console.log(parsed)
-parsed['test'] = Buffer.alloc(100000)
-writeBinaryFileSync('test.plist', parsed)
-const seralizedParsed = parseBinary(fs.readFileSync('test.plist'))
+fs.writeFileSync('test.plist', serializeBplist({ ...parsed, 'per-item-hotkeys': "test" }))
+const seralizedParsed = parseBplist(fs.readFileSync('test.plist'))
 
 console.log(detailedDiff(parsed, seralizedParsed))
 console.log(fastIsEqual(parsed, seralizedParsed))
