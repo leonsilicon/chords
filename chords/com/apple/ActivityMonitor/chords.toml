@@ -10,6 +10,32 @@ export const menu = buildMenuHandler("Activity Monitor")
 [chords]
 '/am' = { name = "Activity Monitor", shell = "open -a 'Activity Monitor'" }
 
+# View
+va = { name = "View: All Processes", 'menu:args' = ["View", "All Processes"] }
+vh = { name = "View: Hierarchially, All Processes", 'menu:args' = ["View", "All Processes, Hierarchically"] }
+vm = { name = "View: My Processes", 'menu:args' = ["View", "My Processes"] }
+vs = { name = "View: Selected Processes", 'menu:args' = ["View", "Selected Processes"] }
+vy = { name = "View: System Processes", 'menu:args' = ["View", "System Processes"] }
+vo = { name = "View: Other Users' Processes", 'menu:args' = ["View", "Other Users’ Processes"] }
+vc = { name = "View: Current (Active) Processes", 'menu:args' = ["View", "Active Processes"] }
+vi = { name = "View: Inactive Processes", 'menu:args' = ["View", "Inactive Processes"] }
+vg = { name = "View: GPU Processes", 'menu:args' = ["View", "GPU Processes"] }
+vw = { name = "View: Windowed Processes", 'menu:args' = ["View", "Windowed Processes"] }
+vl = { name = "View: Last 12 Hour Applications", 'menu:args' = ["View", "Applications in last 12 hours"] }
+vp = { name = "View: Processes, by GPU", 'menu:args' = ["View", "Processes, by GPU"] }
+
+# Process
+pf  = { name = "Process: Filter", 'menu:args' = ["View", "Filter Processes"] }
+pi  = { name = "Process: Inspect", 'menu:args' = ["View", "Inspect Process"] }
+ps  = { name = "Process: Sample", 'menu:args' = ["View", "Sample Process"] }
+pq  = { name = "Process: Quit", 'menu:args' = ["View", "Quit Process"] }
+pss = { name = "Process: Send Signal", 'menu:args' = ["View", "Send Signal to Process..."] }
+psd = { name = "Process: Show Deltas", 'menu:args' = ["View", "Show Deltas for Process"] }
+
+# Run
+rs = { name = "Run: Spindump", 'menu:args' = ["View", "Run Spindump"] }
+rd = { name = "Run: Diagonstics for System", 'menu:args' = ["View", "Run System Diagnostics..."] }
+
 # Columns
 cpi  = { name = "Columns: Process ID", 'menu:args' = ["View", "Columns", "Process ID"] }
 cu   = { name = "Columns: User", 'menu:args' = ["View", "Columns", "User"] }
