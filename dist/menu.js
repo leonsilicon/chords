@@ -127,20 +127,42 @@ var import_jxa_run_compat = __toESM(require_run(), 1);
 var buildMenuHandler = async function buildMenuHandler(meta, processName) {
   return function menu(menuBarItem, menuItems) {
     return import_jxa_run_compat.run((processName2, menuBarItem2, menuItems2) => {
+      const log = (...args) => {
+        console.log("[JXA]", ...args);
+      };
+      const assertExists = (obj, label) => {
+        try {
+          if (!obj || typeof obj.exists === "function" && !obj.exists()) {
+            throw new Error(`Missing: ${label}`);
+          }
+          log("OK:", label);
+          return obj;
+        } catch (e) {
+          throw new Error(`❌ Failed at: ${label}
+${e}`);
+        }
+      };
       const se = Application("System Events");
-      const am = Application(processName2);
-      am.activate();
-      const proc = se.processes[processName2];
-      let current = proc.menuBars[0].menuBarItems[menuBarItem2];
+      const app = Application(processName2);
+      log("Activating app:", processName2);
+      app.activate();
+      const proc = assertExists(se.processes.byName(processName2), `process "${processName2}"`);
+      const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
+      const menuBarItemRef = assertExists(menuBar.menuBarItems.byName(menuBarItem2), `menuBarItem "${menuBarItem2}"`);
+      let current = menuBarItemRef;
       for (let i = 0;i < menuItems2.length; i++) {
         const name = menuItems2[i];
-        const next = current.menus[0].menuItems[name];
+        log(`Traversing -> "${name}"`);
+        const menu2 = assertExists(current.menus[0], `menus[0] for "${name}"`);
+        const next = assertExists(menu2.menuItems.byName(name), `menuItem "${name}"`);
         if (i === menuItems2.length - 1) {
+          log(`Clicking "${name}"`);
           next.click();
         } else {
           current = next;
         }
       }
+      log("Done");
     }, processName, menuBarItem, menuItems);
   };
 };
