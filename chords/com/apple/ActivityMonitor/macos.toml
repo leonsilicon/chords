@@ -4,7 +4,7 @@ name = "Activity Monitor"
 [config.js]
 module = '''
 import buildMenuHandler from "dist/menu.js"
-export const menu = buildMenuHandler("Activity Monitor")
+export const menu = buildMenuHandler(import.meta, "Activity Monitor")
 '''
 
 [chords]
