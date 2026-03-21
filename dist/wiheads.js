@@ -48,15 +48,15 @@ var require_json_parse_safe = __commonJS((exports, module) => {
 
 // node_modules/.pnpm/decode-utf8@1.0.1/node_modules/decode-utf8/index.js
 var require_decode_utf8 = __commonJS((exports, module) => {
-  function toUint8Array(input) {
+  function toUint8Array2(input) {
     if (input instanceof Uint8Array)
       return input;
     if (input instanceof ArrayBuffer)
       return new Uint8Array(input);
     throw new TypeError('Expected "input" to be an ArrayBuffer or Uint8Array');
   }
-  module.exports = function decodeUtf8(input) {
-    const data = toUint8Array(input);
+  module.exports = function decodeUtf82(input) {
+    const data = toUint8Array2(input);
     const size = data.length;
     let result = "";
     for (let index = 0;index < size; index++) {
@@ -4151,25 +4151,159 @@ function keystringsToCarbonModifierMask(keystrings) {
 // src/utils/plist.ts
 import { tap } from "chordsapp";
 
-// node_modules/.pnpm/bplist-lossless@0.1.1_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/plist-date.js
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/utils/bytes.js
+var UTF8_ENCODER = new TextEncoder;
+var UTF8_DECODER = new TextDecoder("utf-8");
+var BASE64_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+function isByteSource(value) {
+  return value instanceof ArrayBuffer || ArrayBuffer.isView(value);
+}
+function toUint8Array(input) {
+  if (input instanceof Uint8Array) {
+    return input;
+  }
+  if (input instanceof ArrayBuffer) {
+    return new Uint8Array(input);
+  }
+  return new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+}
+function copyBytes(input) {
+  return new Uint8Array(toUint8Array(input));
+}
+function concatBytes(chunks, totalSize) {
+  const size = totalSize ?? chunks.reduce((sum, chunk) => sum + chunk.byteLength, 0);
+  const out = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    out.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return out;
+}
+function encodeUtf8(value) {
+  return UTF8_ENCODER.encode(value);
+}
+function decodeUtf8(input) {
+  return UTF8_DECODER.decode(toUint8Array(input));
+}
+function encodeLatin1(value) {
+  const out = new Uint8Array(value.length);
+  for (let i = 0;i < value.length; i++) {
+    const codeUnit = value.charCodeAt(i);
+    if (codeUnit > 255) {
+      throw new RangeError("Latin-1 encoding only supports code units <= 0xFF.");
+    }
+    out[i] = codeUnit;
+  }
+  return out;
+}
+function encodeUtf16BE(value) {
+  const out = new Uint8Array(value.length * 2);
+  for (let i = 0;i < value.length; i++) {
+    const codeUnit = value.charCodeAt(i);
+    out[i * 2] = codeUnit >>> 8;
+    out[i * 2 + 1] = codeUnit & 255;
+  }
+  return out;
+}
+function decodeUtf16BE(input) {
+  const bytes = toUint8Array(input);
+  if (bytes.length % 2 !== 0) {
+    throw new Error("Invalid UTF-16 byte length");
+  }
+  let result = "";
+  const chunkSize = 16384;
+  for (let start = 0;start < bytes.length; start += chunkSize * 2) {
+    const end = Math.min(start + chunkSize * 2, bytes.length);
+    const codeUnits = new Array((end - start) / 2);
+    for (let i = start, j = 0;i < end; i += 2, j++) {
+      codeUnits[j] = bytes[i] << 8 | bytes[i + 1];
+    }
+    result += String.fromCharCode(...codeUnits);
+  }
+  return result;
+}
+function toHex(input) {
+  const bytes = toUint8Array(input);
+  let out = "";
+  for (const byte of bytes) {
+    out += byte.toString(16).padStart(2, "0");
+  }
+  return out;
+}
+function fromHex(hex) {
+  if (hex.length % 2 !== 0) {
+    throw new TypeError("Hex input must have an even number of characters.");
+  }
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0;i < hex.length; i += 2) {
+    const byte = Number.parseInt(hex.slice(i, i + 2), 16);
+    if (Number.isNaN(byte)) {
+      throw new TypeError("Invalid hexadecimal input.");
+    }
+    out[i / 2] = byte;
+  }
+  return out;
+}
+function toBase64(input) {
+  const bytes = toUint8Array(input);
+  let out = "";
+  for (let i = 0;i < bytes.length; i += 3) {
+    const a = bytes[i];
+    const b = i + 1 < bytes.length ? bytes[i + 1] : 0;
+    const c = i + 2 < bytes.length ? bytes[i + 2] : 0;
+    const n = a << 16 | b << 8 | c;
+    out += BASE64_ALPHABET[n >> 18 & 63];
+    out += BASE64_ALPHABET[n >> 12 & 63];
+    out += i + 1 < bytes.length ? BASE64_ALPHABET[n >> 6 & 63] : "=";
+    out += i + 2 < bytes.length ? BASE64_ALPHABET[n & 63] : "=";
+  }
+  return out;
+}
+function bytesEqual(left, right) {
+  const a = toUint8Array(left);
+  const b = toUint8Array(right);
+  if (a.byteLength !== b.byteLength) {
+    return false;
+  }
+  for (let i = 0;i < a.byteLength; i++) {
+    if (a[i] !== b[i]) {
+      return false;
+    }
+  }
+  return true;
+}
+function writeFloat64BE(value) {
+  const out = new Uint8Array(8);
+  new DataView(out.buffer, out.byteOffset, out.byteLength).setFloat64(0, value, false);
+  return out;
+}
+function readFloat32BE(input, offset = 0) {
+  const bytes = toUint8Array(input);
+  return new DataView(bytes.buffer, bytes.byteOffset + offset, 4).getFloat32(0, false);
+}
+function readFloat64BE(input, offset = 0) {
+  const bytes = toUint8Array(input);
+  return new DataView(bytes.buffer, bytes.byteOffset + offset, 8).getFloat64(0, false);
+}
+
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/plist-date.js
 var APPLE_PLIST_EPOCH_MS = Date.UTC(2001, 0, 1);
 function isBinaryInput(value) {
-  return Buffer.isBuffer(value) || value instanceof Uint8Array || value instanceof ArrayBuffer;
+  return value instanceof ArrayBuffer || ArrayBuffer.isView(value);
 }
 function normalizeRaw8(input) {
-  const raw = Buffer.isBuffer(input) ? Buffer.from(input) : input instanceof Uint8Array ? Buffer.from(input) : Buffer.from(new Uint8Array(input));
+  const raw = copyBytes(input);
   if (raw.length !== 8) {
     throw new RangeError(`PlistDate raw value must be exactly 8 bytes, got ${raw.length}.`);
   }
   return raw;
 }
 function encodePlistSeconds(seconds) {
-  const raw = Buffer.allocUnsafe(8);
-  raw.writeDoubleBE(seconds, 0);
-  return raw;
+  return writeFloat64BE(seconds);
 }
 function decodePlistSeconds(raw) {
-  return raw.readDoubleBE(0);
+  return readFloat64BE(raw);
 }
 function plistSecondsToUnixMilliseconds(seconds) {
   return APPLE_PLIST_EPOCH_MS + seconds * 1000;
@@ -4233,6 +4367,9 @@ class PlistDate extends Date {
   static fromBuffer(input) {
     return new PlistDate(input);
   }
+  static fromBytes(input) {
+    return new PlistDate(input);
+  }
   static fromPlistSeconds(seconds) {
     return new PlistDate(encodePlistSeconds(seconds));
   }
@@ -4243,7 +4380,7 @@ class PlistDate extends Date {
     return value instanceof PlistDate;
   }
   #applyCanonicalState(state) {
-    this.#raw = Buffer.from(state.raw);
+    this.#raw = copyBytes(state.raw);
     super.setTime(state.unixMilliseconds);
   }
   #replaceFromRaw(input) {
@@ -4269,10 +4406,13 @@ class PlistDate extends Date {
     return numberToStableString(this.plistSeconds);
   }
   getRawBytes() {
-    return Buffer.from(this.#raw);
+    return copyBytes(this.#raw);
   }
   toRawString(encoding = "hex") {
-    return this.#raw.toString(encoding);
+    if (encoding === "hex") {
+      return toHex(this.#raw);
+    }
+    return toBase64(this.#raw);
   }
   getRawHex() {
     return this.toRawString("hex");
@@ -4283,8 +4423,11 @@ class PlistDate extends Date {
   toPlistString() {
     return this.getPlistSecondsString();
   }
-  toBuffer() {
+  toBytes() {
     return this.getRawBytes();
+  }
+  toBuffer() {
+    return this.toBytes();
   }
   setPlistSeconds(seconds) {
     if (typeof seconds !== "number") {
@@ -4301,7 +4444,7 @@ class PlistDate extends Date {
     if (typeof hex !== "string" || !/^[0-9a-fA-F]{16}$/.test(hex)) {
       throw new TypeError("PlistDate raw hex must be a 16-character hexadecimal string.");
     }
-    return this.setRawBytes(Buffer.from(hex, "hex"));
+    return this.setRawBytes(fromHex(hex));
   }
   getTime() {
     return plistSecondsToUnixMilliseconds(this.plistSeconds);
@@ -4323,7 +4466,7 @@ class PlistDate extends Date {
   }
   equalsExactly(other) {
     const rhs = PlistDate.from(other);
-    return this.#raw.equals(rhs.#raw);
+    return bytesEqual(this.#raw, rhs.#raw);
   }
   equalsValue(other) {
     const rhs = PlistDate.from(other);
@@ -4460,12 +4603,34 @@ class PlistDate extends Date {
   }
 }
 
-// node_modules/.pnpm/bplist-lossless@0.1.1_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/uid.js
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/uid.js
 var UID_BRAND = Symbol.for("plist.UID");
 
 class UID extends Uint8Array {
   static from(bytes) {
     return new UID(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  }
+  static fromNumber(value) {
+    if (!Number.isInteger(value) || value < 0) {
+      throw new TypeError("UID number value must be an unsigned integer.");
+    }
+    let hex = value.toString(16);
+    if (hex.length % 2 !== 0) {
+      hex = `0${hex}`;
+    }
+    const bytes = new Uint8Array(Math.max(1, hex.length / 2));
+    for (let i = 0;i < bytes.length; i++) {
+      bytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+    }
+    let start = 0;
+    while (start < bytes.length - 1 && bytes[start] === 0) {
+      start++;
+    }
+    const raw = bytes.subarray(start);
+    if (raw.length > 16) {
+      throw new RangeError("UID too large for binary plist");
+    }
+    return UID.from(raw);
   }
   constructor(buffer, byteOffset, length) {
     super(buffer, byteOffset, length);
@@ -4478,14 +4643,14 @@ class UID extends Uint8Array {
     return value instanceof Uint8Array && value != null && value[UID_BRAND] === true;
   }
   toHex() {
-    return Array.from(this).map((b) => b.toString(16).padStart(2, "0")).join("");
+    return toHex(this);
   }
   [Symbol.for("nodejs.util.inspect.custom")]() {
     return `UID(${this.toHex()})`;
   }
 }
 
-// node_modules/.pnpm/bplist-lossless@0.1.1_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/utf16-string.js
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/classes/utf16-string.js
 var UTF16_STRING_BRAND = Symbol.for("plist.Utf16String");
 
 class Utf16String extends Uint8Array {
@@ -4503,39 +4668,31 @@ class Utf16String extends Uint8Array {
     return value instanceof Uint8Array && value != null && value[UTF16_STRING_BRAND] === true;
   }
   toString() {
-    const copy = new Uint8Array(this);
-    if (this.length % 2 !== 0) {
-      throw new Error("Invalid UTF-16 byte length");
-    }
-    for (let i = 0;i < copy.length; i += 2) {
-      const a = copy[i];
-      copy[i] = copy[i + 1];
-      copy[i + 1] = a;
-    }
-    return Buffer.from(copy).toString("ucs2");
+    return decodeUtf16BE(this);
   }
   toHex() {
-    return Array.from(this).map((b) => b.toString(16).padStart(2, "0")).join("");
+    return toHex(this);
   }
   [Symbol.for("nodejs.util.inspect.custom")]() {
     return `Utf16String(${this.toString()})`;
   }
 }
 
-// node_modules/.pnpm/bplist-lossless@0.1.1_typescript@5.9.3/node_modules/bplist-lossless/dist/utils/parse.js
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/utils/parse.js
 var maxObjectSize = 100 * 1000 * 1000;
 var maxObjectCount = 32768;
-function parseBplist(buffer) {
-  const header = buffer.slice(0, "bplist".length).toString("utf8");
+function parseBplist(input) {
+  const buffer = toUint8Array(input);
+  const header = decodeUtf8(buffer.subarray(0, "bplist".length));
   if (header !== "bplist") {
     throw new Error("Invalid binary plist. Expected 'bplist' at offset 0.");
   }
   const trailer = buffer.slice(buffer.length - 32, buffer.length);
-  const offsetSize = trailer.readUInt8(6);
-  const objectRefSize = trailer.readUInt8(7);
-  const numObjects = toSafeNumber(trailer.readBigUInt64BE(8));
-  const topObject = toSafeNumber(trailer.readBigUInt64BE(16));
-  const offsetTableOffset = toSafeNumber(trailer.readBigUInt64BE(24));
+  const offsetSize = trailer[6];
+  const objectRefSize = trailer[7];
+  const numObjects = toSafeNumber(readBigUInt64BE(trailer, 8));
+  const topObject = toSafeNumber(readBigUInt64BE(trailer, 16));
+  const offsetTableOffset = toSafeNumber(readBigUInt64BE(trailer, 24));
   if (numObjects > maxObjectCount) {
     throw new Error("maxObjectCount exceeded");
   }
@@ -4587,26 +4744,12 @@ function parseBplist(buffer) {
           throw new Error("Unhandled simple type 0x" + objType.toString(16));
       }
     }
-    function bufferToHexString(buffer2) {
-      let str = "";
-      let i;
-      for (i = 0;i < buffer2.length; i++) {
-        if (buffer2[i] != 0) {
-          break;
-        }
-      }
-      for (;i < buffer2.length; i++) {
-        const part = "00" + buffer2[i].toString(16);
-        str += part.substr(part.length - 2);
-      }
-      return str;
-    }
     function parseInteger() {
       const length = 1 << objInfo;
       if (length > maxObjectSize) {
         throw new Error(`Too little heap space available! Wanted to read ${length} bytes, but only ${maxObjectSize} are available.`);
       }
-      const start = Number(offset) + 1;
+      const start = offset + 1;
       const end = start + length;
       const data = buffer.subarray(start, end);
       let value = 0n;
@@ -4623,7 +4766,7 @@ function parseBplist(buffer) {
     function parseUID() {
       const length = objInfo + 1;
       if (length < maxObjectSize) {
-        return new UID(buffer.buffer, buffer.byteOffset + Number(offset) + 1, length);
+        return new UID(buffer.buffer, buffer.byteOffset + offset + 1, length);
       }
       throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
     }
@@ -4632,10 +4775,10 @@ function parseBplist(buffer) {
       if (length < maxObjectSize) {
         const realBuffer = buffer.slice(offset + 1, offset + 1 + length);
         if (length === 4) {
-          return realBuffer.readFloatBE(0);
+          return readFloat32BE(realBuffer);
         }
         if (length === 8) {
-          return realBuffer.readDoubleBE(0);
+          return readFloat64BE(realBuffer);
         }
       } else {
         throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
@@ -4646,25 +4789,21 @@ function parseBplist(buffer) {
         console.error("Unknown date type: " + objInfo + ". Parsing anyway...");
       }
       const raw = buffer.subarray(offset + 1, offset + 9);
-      return PlistDate.fromBuffer(raw);
+      return PlistDate.fromBytes(raw);
     }
     function parseData() {
       let dataoffset = 1;
       let length = objInfo;
       if (objInfo == 15) {
-        const int_type = buffer[offset + 1];
-        const intType = (int_type & 240) / 16;
+        const intTypeByte = buffer[offset + 1];
+        const intType = (intTypeByte & 240) / 16;
         if (intType != 1) {
           console.error("0x4: UNEXPECTED LENGTH-INT TYPE! " + intType);
         }
-        const intInfo = int_type & 15;
+        const intInfo = intTypeByte & 15;
         const intLength = Math.pow(2, intInfo);
         dataoffset = 2 + intLength;
-        if (intLength < 3) {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        } else {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        }
+        length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
       }
       if (length < maxObjectSize) {
         return buffer.slice(offset + dataoffset, offset + dataoffset + length);
@@ -4672,32 +4811,26 @@ function parseBplist(buffer) {
       throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
     }
     function parsePlistString(isUtf16) {
-      let enc = "utf8";
       let length = objInfo;
       let stroffset = 1;
       if (objInfo == 15) {
-        const int_type = buffer[offset + 1];
-        const intType = (int_type & 240) / 16;
+        const intTypeByte = buffer[offset + 1];
+        const intType = (intTypeByte & 240) / 16;
         if (intType != 1) {
           console.error("UNEXPECTED LENGTH-INT TYPE! " + intType);
         }
-        const intInfo = int_type & 15;
+        const intInfo = intTypeByte & 15;
         const intLength = Math.pow(2, intInfo);
         stroffset = 2 + intLength;
-        if (intLength < 3) {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        } else {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        }
+        length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
       }
       length *= Number(isUtf16) + 1;
       if (length < maxObjectSize) {
-        let plistString = Buffer.from(buffer.slice(offset + stroffset, offset + stroffset + length));
+        const plistString = buffer.slice(offset + stroffset, offset + stroffset + length);
         if (isUtf16) {
           return Utf16String.from(plistString);
-        } else {
-          return plistString.toString("utf8");
         }
+        return decodeUtf8(plistString);
       }
       throw new Error("Too little heap space available! Wanted to read " + length + " bytes, but only " + maxObjectSize + " are available.");
     }
@@ -4705,19 +4838,15 @@ function parseBplist(buffer) {
       let length = objInfo;
       let arrayoffset = 1;
       if (objInfo == 15) {
-        const int_type = buffer[offset + 1];
-        const intType = (int_type & 240) / 16;
+        const intTypeByte = buffer[offset + 1];
+        const intType = (intTypeByte & 240) / 16;
         if (intType != 1) {
           console.error("0xa: UNEXPECTED LENGTH-INT TYPE! " + intType);
         }
-        const intInfo = int_type & 15;
+        const intInfo = intTypeByte & 15;
         const intLength = Math.pow(2, intInfo);
         arrayoffset = 2 + intLength;
-        if (intLength < 3) {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        } else {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        }
+        length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
       }
       if (length * objectRefSize > maxObjectSize) {
         throw new Error("Too little heap space available!");
@@ -4733,19 +4862,15 @@ function parseBplist(buffer) {
       let length = objInfo;
       let dictoffset = 1;
       if (objInfo == 15) {
-        const int_type = buffer[offset + 1];
-        const intType = (int_type & 240) / 16;
+        const intTypeByte = buffer[offset + 1];
+        const intType = (intTypeByte & 240) / 16;
         if (intType != 1) {
           console.error("0xD: UNEXPECTED LENGTH-INT TYPE! " + intType);
         }
-        const intInfo = int_type & 15;
+        const intInfo = intTypeByte & 15;
         const intLength = Math.pow(2, intInfo);
         dictoffset = 2 + intLength;
-        if (intLength < 3) {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        } else {
-          length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
-        }
+        length = toSafeNumber(readUInt(buffer.slice(offset + 2, offset + 2 + intLength)));
       }
       if (length * 2 * objectRefSize > maxObjectSize) {
         throw new Error("Too little heap space available!");
@@ -4780,15 +4905,22 @@ function toSafeNumber(x) {
 function createSafeObject() {
   return Object.create(null);
 }
-// node_modules/.pnpm/bplist-lossless@0.1.1_typescript@5.9.3/node_modules/bplist-lossless/dist/utils/serialize.js
+function readBigUInt64BE(buf, offset) {
+  let value = 0n;
+  for (let i = 0;i < 8; i++) {
+    value = value << 8n | BigInt(buf[offset + i]);
+  }
+  return value;
+}
+// node_modules/.pnpm/bplist-lossless@0.2.0_typescript@5.9.3/node_modules/bplist-lossless/dist/utils/serialize.js
 function serializeBplist(dicts) {
-  var buffer = new WritableStreamBuffer;
-  buffer.write(Buffer.from("bplist00"));
-  var entries = toEntries(dicts);
-  var idSizeInBytes = computeIdSizeInBytes(entries.length);
-  var offsets = [];
-  var offsetSizeInBytes;
-  var offsetTableOffset;
+  const buffer = new WritableStreamBuffer;
+  buffer.write(encodeUtf8("bplist00"));
+  let entries = toEntries(dicts);
+  const idSizeInBytes = computeIdSizeInBytes(entries.length);
+  const offsets = [];
+  let offsetSizeInBytes;
+  let offsetTableOffset;
   updateEntryIds();
   entries.forEach(function(entry, entryIdx) {
     offsets[entryIdx] = buffer.size();
@@ -4802,8 +4934,8 @@ function serializeBplist(dicts) {
   writeTrailer();
   return buffer.getContents();
   function updateEntryIds() {
-    var strings = {};
-    var entryId = 0;
+    const strings = {};
+    let entryId = 0;
     entries.forEach(function(entry) {
       if (entry.id) {
         return;
@@ -4824,7 +4956,7 @@ function serializeBplist(dicts) {
     });
   }
   function writeTrailer() {
-    buffer.write(Buffer.from([0, 0, 0, 0, 0, 0]));
+    buffer.write(new Uint8Array(6));
     writeByte(offsetSizeInBytes);
     writeByte(idSizeInBytes);
     writeLong(entries.length);
@@ -4875,16 +5007,15 @@ function serializeBplist(dicts) {
   }
   function writeDate(entry) {
     writeByte(51);
-    const raw = PlistDate.from(entry.value).toBuffer();
-    buffer.write(raw);
+    buffer.write(PlistDate.from(entry.value).toBytes());
   }
   function writeDict(entry) {
     writeIntHeader(13, entry.entryKeys.length);
-    entry.entryKeys.forEach(function(entry2) {
-      writeID(entry2.id);
+    entry.entryKeys.forEach(function(item) {
+      writeID(item.id);
     });
-    entry.entryValues.forEach(function(entry2) {
-      writeID(entry2.id);
+    entry.entryValues.forEach(function(item) {
+      writeID(item.id);
     });
   }
   function writeNumber(entry) {
@@ -4892,8 +5023,7 @@ function serializeBplist(dicts) {
       const size = getIntSize(entry.value);
       const header = 16 | Math.log2(size);
       writeByte(header);
-      const buf = bigintToBuffer(entry.value, size);
-      buffer.write(buf);
+      buffer.write(bigintToBuffer(entry.value, size));
     } else if (entry.type !== "double" && parseFloat(entry.value).toFixed() == entry.value) {
       if (entry.value < 0) {
         writeByte(19);
@@ -4919,7 +5049,7 @@ function serializeBplist(dicts) {
   function writeUID(entry) {
     let raw;
     if (entry.value instanceof UID) {
-      raw = Buffer.from(entry.value.buffer, entry.value.byteOffset, entry.value.byteLength);
+      raw = copyBytes(entry.value);
     } else if (typeof entry.value === "bigint") {
       if (entry.value < 0n) {
         throw new TypeError("UID must be unsigned");
@@ -4927,13 +5057,13 @@ function serializeBplist(dicts) {
       let hex = entry.value.toString(16);
       if (hex.length % 2 !== 0)
         hex = "0" + hex;
-      raw = hex.length === 0 ? Buffer.from([0]) : Buffer.from(hex || "00", "hex");
+      raw = fromHex(hex || "00");
     } else if (typeof entry.value === "number" && Number.isInteger(entry.value) && entry.value >= 0) {
-      let n = BigInt(entry.value);
+      const n = BigInt(entry.value);
       let hex = n.toString(16);
       if (hex.length % 2 !== 0)
         hex = "0" + hex;
-      raw = Buffer.from(hex || "00", "hex");
+      raw = fromHex(hex || "00");
     } else {
       throw new TypeError("UID value must be a UID, bigint, or unsigned integer number");
     }
@@ -4949,8 +5079,8 @@ function serializeBplist(dicts) {
   }
   function writeArray(entry) {
     writeIntHeader(10, entry.entries.length);
-    entry.entries.forEach(function(e) {
-      writeID(e.id);
+    entry.entries.forEach(function(item) {
+      writeID(item.id);
     });
   }
   function writeBoolean(entry) {
@@ -4961,21 +5091,11 @@ function serializeBplist(dicts) {
   }
   function writeString(entry) {
     if (entry.type === "string-utf16") {
-      let utf16;
-      if (Utf16String.isUtf16String(entry.value)) {
-        utf16 = Buffer.from(entry.value.buffer, entry.value.byteOffset, entry.value.byteLength);
-      } else {
-        const le = Buffer.from(entry.value, "ucs2");
-        utf16 = Buffer.alloc(le.length);
-        for (let i = 0;i < le.length; i += 2) {
-          utf16[i] = le[i + 1];
-          utf16[i + 1] = le[i];
-        }
-      }
+      const utf16 = Utf16String.isUtf16String(entry.value) ? copyBytes(entry.value) : encodeUtf16BE(entry.value);
       writeIntHeader(6, utf16.length / 2);
       buffer.write(utf16);
     } else {
-      const ascii = Buffer.from(entry.value, "latin1");
+      const ascii = encodeLatin1(entry.value);
       writeIntHeader(5, ascii.length);
       buffer.write(ascii);
     }
@@ -4988,12 +5108,10 @@ function serializeBplist(dicts) {
     writeBytes(l, 8);
   }
   function writeByte(b) {
-    buffer.write(Buffer.from([b]));
+    buffer.write(b);
   }
   function writeDouble(v) {
-    var buf = Buffer.alloc(8);
-    buf.writeDoubleBE(v, 0);
-    buffer.write(buf);
+    buffer.write(writeFloat64BE(v));
   }
   function writeIntHeader(kind, value) {
     if (value < 15) {
@@ -5015,14 +5133,14 @@ function serializeBplist(dicts) {
   function writeID(id) {
     writeBytes(id, idSizeInBytes);
   }
-  function writeBytes(value, bytes, is_signedint = false) {
-    var buf = Buffer.alloc(bytes);
-    var z = 0;
+  function writeBytes(value, bytes, isSignedInt = false) {
+    const buf = new Uint8Array(bytes);
+    let z = 0;
     while (bytes > 4) {
-      buf[z++] = is_signedint ? 255 : 0;
+      buf[z++] = isSignedInt ? 255 : 0;
       bytes--;
     }
-    for (var i = bytes - 1;i >= 0; i--) {
+    for (let i = bytes - 1;i >= 0; i--) {
       buf[z++] = value >> 8 * i;
     }
     buffer.write(buf);
@@ -5078,11 +5196,11 @@ function toEntries(dicts) {
         value: dicts
       }
     ];
-  } else if (Buffer.isBuffer(dicts)) {
+  } else if (isByteSource(dicts)) {
     return [
       {
         type: "data",
-        value: dicts
+        value: copyBytes(toUint8Array(dicts))
       }
     ];
   } else if (PlistDate.isPlistDate(dicts) || Object.prototype.toString.call(dicts) === "[object Date]") {
@@ -5101,14 +5219,14 @@ function toEntries(dicts) {
   }
 }
 function toEntriesArray(arr) {
-  var results = [
+  let results = [
     {
       type: "array",
       entries: []
     }
   ];
   arr.forEach(function(v) {
-    var entry = toEntries(v);
+    const entry = toEntries(v);
     results[0].entries.push(entry[0]);
     results = results.concat(entry);
   });
@@ -5172,13 +5290,14 @@ class WritableStreamBuffer {
   write(chunk, encoding) {
     let buf;
     if (typeof chunk === "number") {
-      buf = Buffer.from([chunk & 255]);
-    } else if (Buffer.isBuffer(chunk)) {
-      buf = Buffer.from(chunk);
-    } else if (chunk instanceof Uint8Array) {
-      buf = Buffer.from(chunk);
+      buf = Uint8Array.of(chunk & 255);
+    } else if (isByteSource(chunk)) {
+      buf = copyBytes(chunk);
     } else if (typeof chunk === "string") {
-      buf = Buffer.from(chunk, encoding);
+      if (encoding && encoding !== "utf8") {
+        throw new TypeError(`Unsupported string encoding passed to write(): ${String(encoding)}`);
+      }
+      buf = encodeUtf8(chunk);
     } else {
       throw new TypeError("Unsupported chunk type passed to write()");
     }
@@ -5190,11 +5309,11 @@ class WritableStreamBuffer {
     return this._size;
   }
   getContents() {
-    return Buffer.concat(this._chunks, this._size);
+    return concatBytes(this._chunks, this._size);
   }
 }
 function bigintToBuffer(value, size) {
-  const buf = Buffer.alloc(size);
+  const buf = new Uint8Array(size);
   let temp = value;
   if (value < 0) {
     temp = (1n << BigInt(size * 8)) + value;
@@ -5566,9 +5685,9 @@ function deepEqual(valA, valB, visited) {
 // src/utils/plist.ts
 var import_json_parse_safe = __toESM(require_json_parse_safe(), 1);
 var import_decode_utf8 = __toESM(require_decode_utf8(), 1);
-import { Buffer as Buffer2 } from "buffer";
+import { Buffer } from "buffer";
 function plistValueToString(rawValue) {
-  const valueString = Buffer2.isBuffer(rawValue) ? import_decode_utf8.default(rawValue) : String(rawValue);
+  const valueString = Buffer.isBuffer(rawValue) ? import_decode_utf8.default(rawValue) : String(rawValue);
   return valueString;
 }
 function getPlistShortcutUtils({
@@ -5608,7 +5727,7 @@ function getPlistShortcutUtils({
         continue;
       }
       const stringValue = JSON.stringify(object);
-      const value = propertyType === "string" ? stringValue : Buffer2.from(stringValue, "utf8");
+      const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
       plist[property] = value;
       plistNeedsUpdates = true;
     }

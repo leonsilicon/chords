@@ -21,8 +21,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       bplist-lossless:
-        specifier: ^0.1.1
-        version: 0.1.1(typescript@5.9.3)
+        specifier: ^0.2.0
+        version: 0.2.0(typescript@5.9.3)
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
@@ -284,8 +284,8 @@ packages:
     resolution: {integrity: sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA==}
     engines: {node: 18 || 20 || >=22}
 
-  bplist-lossless@0.1.1:
-    resolution: {integrity: sha512-bRZYu8UqvB4T9Y9N+sd+G/QFyK1ZnBBDM9pMhqojCE1yHenGyGSBuopdaSj1Nt1IeJ4gS047WwkLUFfYAX8Mpg==}
+  bplist-lossless@0.2.0:
+    resolution: {integrity: sha512-NhpK1PaQMAk2GPqzFM2qqulMlzvoe5xKWjKME5Rizi7mf3CiXwseMK7u0hK/f/Mf82TuhErqqRDq1I8tax5cOw==}
     peerDependencies:
       typescript: ^5
 
@@ -739,7 +739,7 @@ snapshots:
 
   balanced-match@4.0.4: {}
 
-  bplist-lossless@0.1.1(typescript@5.9.3):
+  bplist-lossless@0.2.0(typescript@5.9.3):
     dependencies:
       typescript: 5.9.3
 

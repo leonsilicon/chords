@@ -31,7 +31,7 @@
     "nullthrows-es": "^1.0.1",
     "onetime": "^8.0.0",
     "outdent": "^0.8.0",
-    "bplist-lossless": "^0.1.1",
+    "bplist-lossless": "^0.2.0",
     "type-fest": "^5.5.0",
     "untildify": "^6.0.0"
   },

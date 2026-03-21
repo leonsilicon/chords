@@ -9,7 +9,6 @@ import noop from "@stdlib/utils-noop";
 import { serializeBplist } from "bplist-lossless";
 import parseJson from "json-parse-safe";
 import encodeUtf8 from "encode-utf8";
-import { Buffer } from "buffer";
 import fs from "fs";
 
 interface PerItemHotkey {
@@ -85,7 +84,7 @@ export default (function buildBartenderHandler(meta, tildepath: string) {
       perItemHotkeyList.push(item);
     }
 
-    plist["per-item-hotkeys"] = Buffer.from(encodeUtf8(JSON.stringify(perItemHotkeyList)));
+    plist["per-item-hotkeys"] = new Uint8Array(encodeUtf8(JSON.stringify(perItemHotkeyList)));
     fs.writeFileSync(plistPath, serializeBplist(plist));
   }
 

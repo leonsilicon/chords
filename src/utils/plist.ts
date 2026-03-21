@@ -78,7 +78,8 @@ export function getPlistShortcutUtils({
       }
 
       const stringValue = JSON.stringify(object);
-      const value = propertyType === "string" ? stringValue : Buffer.from(stringValue, "utf8");
+      const value =
+        propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
 
       plist[property] = value;
       plistNeedsUpdates = true;
