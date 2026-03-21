@@ -1,26 +1,24 @@
 import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 import type { BuildHandler } from "../types/handler.ts";
-import anyAsciiJson from "any-ascii-json";
+// Can't use because it makes the argument list too long
+// import anyAsciiJson from "any-ascii-json";
 
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
-      (
-        processName: string,
-        menuBarItem: string,
-        menuItems: string[],
-        anyAsciiJson: Record<string, string>,
-      ) => {
+      (processName: string, menuBarItem: string, menuItems: string[]) => {
         const log = (...args: any[]) => {
           console.log("[JXA]", ...args);
         };
 
         const normalize = (s: string) =>
-          [...s]
-            .map((c) => anyAsciiJson[c] ?? "")
-            .join("")
+          s
             .normalize("NFKD")
+            .replace(/[\u0300-\u036f]/g, "")
+            // remove invisible / formatting chars
+            .replace(/[\u200B-\u200D\uFEFF]/g, "") // zero-width
+            .replace(/[\u202A-\u202E]/g, "") // bidi control
             .toLowerCase()
             .trim();
 
@@ -75,7 +73,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
         let current = menuBarItemRef;
 
         for (let i = 0; i < menuItems.length; i++) {
-          const name = menuItems[i];
+          const name = menuItems[i]!;
           log(`Traversing -> "${name}"`);
 
           const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
@@ -95,7 +93,6 @@ export default (async function buildMenuHandler(meta, processName: string) {
       processName,
       menuBarItem,
       menuItems,
-      anyAsciiJson,
     );
   };
 } satisfies BuildHandler);
