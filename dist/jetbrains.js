@@ -173,7 +173,7 @@ var import_outdent = __toESM(require_lib(), 1);
 import fs2 from "fs";
 import path3 from "path";
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/context.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/context.js
 import process2 from "node:process";
 
 // node_modules/.pnpm/ansi-regex@6.2.2/node_modules/ansi-regex/index.js
@@ -197,7 +197,7 @@ function stripAnsi(string) {
   return string.replace(regex, "");
 }
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/context.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/context.js
 var getContext = (raw) => ({
   start: process2.hrtime.bigint(),
   command: raw.map((part) => getCommandPart(stripAnsi(part))).join(" "),
@@ -211,7 +211,7 @@ var getContext = (raw) => ({
 });
 var getCommandPart = (part) => /[^\w./-]/.test(part) ? `'${part.replaceAll("'", "'\\''")}'` : part;
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/options.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/options.js
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import process3 from "node:process";
@@ -243,12 +243,69 @@ var addLocalPath = ({ Path = "", PATH = Path, ...env }, cwd) => {
 };
 var getLocalPaths = (localPaths, localPath) => localPaths.at(-1) === localPath ? localPaths : getLocalPaths([...localPaths, localPath], path.resolve(localPath, ".."));
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/spawn.js
 import { spawn } from "node:child_process";
-import { once as once2 } from "node:events";
-import process6 from "node:process";
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/windows.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/once.js
+function once(emitter, event) {
+  return new Promise((resolve, reject) => {
+    function onEvent(...arguments_) {
+      cleanup();
+      resolve(arguments_);
+    }
+    function onError(error) {
+      cleanup();
+      reject(error);
+    }
+    function cleanup() {
+      if (emitter.off) {
+        emitter.off(event, onEvent);
+        emitter.off("error", onError);
+      }
+      if (emitter.removeListener) {
+        emitter.removeListener(event, onEvent);
+        emitter.removeListener("error", onError);
+      }
+    }
+    emitter.on(event, onEvent);
+    if (event !== "error") {
+      emitter.on("error", onError);
+    }
+  });
+}
+async function* on(emitter, event) {
+  const queue = [];
+  let resolve_;
+  function handler(...arguments_) {
+    if (resolve_) {
+      resolve_(arguments_);
+      resolve_ = null;
+    } else {
+      queue.push(arguments_);
+    }
+  }
+  emitter.on(event, handler);
+  try {
+    while (true) {
+      if (queue.length > 0) {
+        yield queue.shift();
+      } else {
+        yield await new Promise((resolve) => {
+          resolve_ = resolve;
+        });
+      }
+    }
+  } finally {
+    if (emitter.off) {
+      emitter.off(event, handler);
+    }
+    if (emitter.removeListener) {
+      emitter.removeListener(event, handler);
+    }
+  }
+}
+
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/windows.js
 import fs from "node:fs/promises";
 import path2 from "node:path";
 import process4 from "node:process";
@@ -271,8 +328,7 @@ var exeExtensions = [".exe", ".com"];
 var escapeArgument = (argument) => escapeFile(escapeFile(`"${argument.replaceAll(/(\\*)"/g, "$1$1\\\"").replace(/(\\*)$/, "$1$1")}"`));
 var escapeFile = (file) => file.replaceAll(/([()\][%!^"`<>&|;, *?])/g, "^$1");
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/result.js
-import { once, on } from "node:events";
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/result.js
 import process5 from "node:process";
 var getResult = async (nodeChildProcess, { input }, context) => {
   const instance = await nodeChildProcess;
@@ -327,20 +383,16 @@ var getOutputs = ({ state: { stdout, stderr, output }, command, start }) => ({
 var getOutput = (output) => output.at(-1) === `
 ` ? output.slice(0, output.at(-2) === "\r" ? -2 : -1) : output;
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/spawn.js
 var spawnSubprocess = async (file, commandArguments, options, context) => {
   try {
-    if (["node", "node.exe"].includes(file.toLowerCase())) {
-      file = process6.execPath;
-      commandArguments = [...process6.execArgv.filter((flag) => !flag.startsWith("--inspect")), ...commandArguments];
-    }
     [file, commandArguments, options] = await applyForceShell(file, commandArguments, options);
     [file, commandArguments, options] = concatenateShell(file, commandArguments, options);
     const instance = spawn(file, commandArguments, options);
     bufferOutput(instance.stdout, context, "stdout");
     bufferOutput(instance.stderr, context, "stderr");
     instance.once("error", () => {});
-    await once2(instance, "spawn");
+    await once(instance, "spawn");
     return instance;
   } catch (error) {
     throw getResultError(error, {}, context);
@@ -360,7 +412,7 @@ var bufferOutput = (stream, { state }, streamName) => {
   }
 };
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/pipe.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/pipe.js
 import { pipeline } from "node:stream/promises";
 var handlePipe = async (subprocesses) => {
   const [[from, to]] = await Promise.all([Promise.allSettled(subprocesses), pipeStreams(subprocesses)]);
@@ -393,7 +445,7 @@ var closeStdin = async (nodeChildProcess) => {
   stdin.end();
 };
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/iterable.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/iterable.js
 var lineIterator = async function* (subprocess, { state }, streamName, index) {
   if (state.isIterating[streamName] === false) {
     throw new Error(`The subprocess must be iterated right away, for example:
@@ -452,7 +504,7 @@ var getNext = async (iterator, index, { nonIterable }) => {
 };
 var shouldIgnoreError = (nonIterable, index) => nonIterable.every(Boolean) ? index !== nonIterable.length - 1 : nonIterable[index];
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.1/node_modules/nano-spawn-compat/source/index.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.2/node_modules/nano-spawn-compat/source/index.js
 function spawn2(file, second, third, previous) {
   const [commandArguments = [], options = {}] = Array.isArray(second) ? [second, third] : [[], second];
   const context = getContext([file, ...commandArguments]);

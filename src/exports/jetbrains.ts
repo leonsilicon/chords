@@ -1,7 +1,6 @@
 import fs from "fs";
 import { outdent } from "outdent";
 import path from "path";
-import { run } from "#/utils/exec.ts";
 import type { BuildHandler } from "../types/handler.ts";
 import spawn from "nano-spawn-compat";
 

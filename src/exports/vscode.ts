@@ -11,7 +11,7 @@ export default (async function buildVscodeHandler() {
 
   return async function command(cmd: string) {
     const tmp = process.env.TMPDIR ?? "/tmp";
-    const dir = path.join(tmp, `vscode-command-server-${uid}`);
+    const dir = path.join(tmp, `vscode-command-server-${uid.stdout}`);
 
     if (!exists(dir)) {
       return false;
