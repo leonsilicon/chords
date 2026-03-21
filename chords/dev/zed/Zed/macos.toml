@@ -1,9 +1,6 @@
 [config]
-
-
-
 name = "Zed"
-url = 
+
 [chords]
 # Debugger
 da = { name = "Debugger: Start", args = ["debugger::Start"], shortcut = "f4" }
