@@ -142,19 +142,35 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
 ${e}`);
         }
       };
+      const waitFor = (fn, label, timeout = 2) => {
+        const start = Date.now();
+        while (Date.now() - start < timeout * 1000) {
+          try {
+            const result = fn();
+            if (result && result.exists()) {
+              log("OK (wait):", label);
+              return result;
+            }
+          } catch {}
+          delay(0.05);
+        }
+        throw new Error(`❌ Timeout waiting for: ${label}`);
+      };
       const se = Application("System Events");
       const app = Application(processName2);
       log("Activating app:", processName2);
       app.activate();
-      const proc = assertExists(se.processes.byName(processName2), `process "${processName2}"`);
+      delay(0.1);
+      const proc = assertExists(se.processes.whose({ frontmost: true })[0], "frontmost process");
+      log("Frontmost process:", proc.name());
       const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
-      const menuBarItemRef = assertExists(menuBar.menuBarItems.byName(menuBarItem2), `menuBarItem "${menuBarItem2}"`);
+      const menuBarItemRef = waitFor(() => menuBar.menuBarItems.byName(menuBarItem2), `menuBarItem "${menuBarItem2}"`);
       let current = menuBarItemRef;
       for (let i = 0;i < menuItems2.length; i++) {
         const name = menuItems2[i];
         log(`Traversing -> "${name}"`);
         const menu2 = assertExists(current.menus[0], `menus[0] for "${name}"`);
-        const next = assertExists(menu2.menuItems.byName(name), `menuItem "${name}"`);
+        const next = waitFor(() => menu2.menuItems.byName(name), `menuItem "${name}"`);
         if (i === menuItems2.length - 1) {
           log(`Clicking "${name}"`);
           next.click();

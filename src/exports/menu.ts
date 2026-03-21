@@ -22,18 +22,39 @@ export default (async function buildMenuHandler(meta, processName: string) {
           }
         };
 
+        const waitFor = (fn: () => any, label: string, timeout = 2) => {
+          const start = Date.now();
+          while (Date.now() - start < timeout * 1000) {
+            try {
+              const result = fn();
+              if (result && result.exists()) {
+                log("OK (wait):", label);
+                return result;
+              }
+            } catch {}
+            delay(0.05);
+          }
+          throw new Error(`❌ Timeout waiting for: ${label}`);
+        };
+
         const se = Application("System Events");
         const app = Application(processName);
 
         log("Activating app:", processName);
         app.activate();
 
-        const proc = assertExists(se.processes.byName(processName), `process "${processName}"`);
+        // small delay helps ensure focus actually switches
+        delay(0.1);
+
+        // 🔥 CRITICAL: use frontmost process, not byName
+        const proc = assertExists(se.processes.whose({ frontmost: true })[0], "frontmost process");
+
+        log("Frontmost process:", proc.name());
 
         const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
 
-        const menuBarItemRef = assertExists(
-          menuBar.menuBarItems.byName(menuBarItem),
+        const menuBarItemRef = waitFor(
+          () => menuBar.menuBarItems.byName(menuBarItem),
           `menuBarItem "${menuBarItem}"`,
         );
 
@@ -45,7 +66,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
 
           const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
 
-          const next = assertExists(menu.menuItems.byName(name), `menuItem "${name}"`);
+          const next = waitFor(() => menu.menuItems.byName(name), `menuItem "${name}"`);
 
           if (i === menuItems.length - 1) {
             log(`Clicking "${name}"`);
