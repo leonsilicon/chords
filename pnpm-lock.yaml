@@ -63,8 +63,8 @@ importers:
         specifier: ^0.8.0
         version: 0.8.0
       simple-plist-es:
-        specifier: ^2.1.2
-        version: 2.1.2
+        specifier: ^2.1.4
+        version: 2.1.4
       type-fest:
         specifier: ^5.5.0
         version: 5.5.0
@@ -295,8 +295,8 @@ packages:
     resolution: {integrity: sha512-QxD8cf2eVqJOOz63z6JIN9BzvVs/dlySa5HGSBH5xtR8dPteIRQnBxxKqkNTiT6jbDTF6jAfrd4oMcND9RGbQg==}
     engines: {node: '>=0.6'}
 
-  bplist-creator@0.1.1:
-    resolution: {integrity: sha512-Ese7052fdWrxp/vqSJkydgx/1MdBnNOCV2XVfbmdGWD2H6EYza+Q4pyYSuVSnCUD22hfI/BFI4jHaC3NLXLlJQ==}
+  bplist-creator-pure@0.2.3:
+    resolution: {integrity: sha512-UxcM+ePZz1nhlBVzlG7+z5RITmzefnrvu9eb4Q2G8A19YwIoC8Ru/v+wIkZscZpBJlqQwQ0ECR9c7hLQ8ppBDw==}
 
   bplist-universal@1.1.0:
     resolution: {integrity: sha512-u9UfkFVlFI+PkuSX7BET3DDLx89/cH06lTG8TQs3CPzL9ZoaddYETqC6kSrJX4T21DXlSuH7F5+QvOuS4ayxDA==}
@@ -532,12 +532,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  simple-plist-es@2.1.2:
-    resolution: {integrity: sha512-7S63b3+JBJhLu1YLV1NTltun0nIXawXguQKOfubnKdzCL2TdTXJWXMUE6TAvdxjTTtryyzJqmSvm8Jyhyj9oow==}
-
-  stream-buffers@2.2.0:
-    resolution: {integrity: sha512-uyQK/mx5QjHun80FLJTfaWE7JtwfRMKBLkMne6udYOmvH0CawotVa7TfgYHzAnpphn4+TweIx1QKMnRIbipmUg==}
-    engines: {node: '>= 0.10.0'}
+  simple-plist-es@2.1.4:
+    resolution: {integrity: sha512-BAZnlGO9+ThqKpN9xqfvU3f4rORfIywd5G1Fv+4GeT4rC5a2eDjPmHUTx403JRy8eZSc+8ToOYYxa6vwewZFfg==}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -772,9 +768,7 @@ snapshots:
 
   big-integer@1.6.52: {}
 
-  bplist-creator@0.1.1:
-    dependencies:
-      stream-buffers: 2.2.0
+  bplist-creator-pure@0.2.3: {}
 
   bplist-universal@1.1.0:
     dependencies:
@@ -955,13 +949,11 @@ snapshots:
 
   signal-exit@4.1.0: {}
 
-  simple-plist-es@2.1.2:
+  simple-plist-es@2.1.4:
     dependencies:
-      bplist-creator: 0.1.1
+      bplist-creator-pure: 0.2.3
       bplist-universal: 1.1.0
       plist: 3.1.0
-
-  stream-buffers@2.2.0: {}
 
   string-width@4.2.3:
     dependencies:

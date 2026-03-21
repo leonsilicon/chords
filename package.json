@@ -31,7 +31,7 @@
     "nullthrows-es": "^1.0.1",
     "onetime": "^8.0.0",
     "outdent": "^0.8.0",
-    "simple-plist-es": "^2.1.2",
+    "simple-plist-es": "^2.1.4",
     "type-fest": "^5.5.0",
     "untildify": "^6.0.0"
   },

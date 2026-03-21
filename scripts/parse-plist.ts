@@ -4,11 +4,13 @@ import {fastIsEqual} from 'fast-is-equal'
 import { parseBinary } from 'simple-plist-es/parseBinary'
 import { writeBinaryFileSync } from 'simple-plist-es/writeBinaryFileSync'
 import { detailedDiff } from 'deep-object-diff'
+import {Buffer} from 'buffer'
 
 const plist = fs.readFileSync(process.argv[2]!)
 
 const parsed = parseBinary(plist)
 console.log(parsed)
+parsed['test'] = Buffer.alloc(100000)
 writeBinaryFileSync('test.plist', parsed)
 const seralizedParsed = parseBinary(fs.readFileSync('test.plist'))
 
