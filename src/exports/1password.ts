@@ -40,7 +40,7 @@ export default (function build1PasswordHandler(meta) {
       const accelerator = toElectronAccelerator(shortcut);
       const onePasswordAccelerator = accelerator.replace(
         /\+([^+]+)$/,
-        (_match, key) => `[${key.toLowerCase()}]${key}`,
+        (_match, key) => `+[${key.toLowerCase()}]${key}`,
       );
       settings[`keybinds.${hotkeyId}`] = onePasswordAccelerator;
     }

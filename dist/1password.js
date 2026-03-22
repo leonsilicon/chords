@@ -6391,7 +6391,7 @@ var build1PasswordHandler = function build1PasswordHandler(meta) {
     for (const { chord, shortcut } of globalHotkeys) {
       const hotkeyId = nullthrows(chord.args?.[0]);
       const accelerator = toElectronAccelerator(shortcut);
-      const onePasswordAccelerator = accelerator.replace(/\+([^+]+)$/, (_match, key) => `[${key.toLowerCase()}]${key}`);
+      const onePasswordAccelerator = accelerator.replace(/\+([^+]+)$/, (_match, key) => `+[${key.toLowerCase()}]${key}`);
       settings2[`keybinds.${hotkeyId}`] = onePasswordAccelerator;
     }
     fs2.writeFileSync(settingsJsonFilepath, stringify(settings2));
