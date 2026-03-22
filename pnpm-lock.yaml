@@ -50,6 +50,9 @@ importers:
       filter-obj:
         specifier: ^6.1.0
         version: 6.1.0
+      get-port:
+        specifier: ^7.2.0
+        version: 7.2.0
       jquery-as-string:
         specifier: ^0.4.0
         version: 0.4.0
@@ -284,6 +287,10 @@ packages:
   filter-obj@6.1.0:
     resolution: {integrity: sha512-xdMtCAODmPloU9qtmPcdBV9Kd27NtMse+4ayThxqIHUES5Z2S6bGpap5PpdmNM56ub7y3i1eyr+vJJIIgWGKmA==}
     engines: {node: '>=18'}
+
+  get-port@7.2.0:
+    resolution: {integrity: sha512-afP4W205ONCuMoPBqcR6PSXnzX35KTcJygfJfcp+QY+uwm3p20p1YczWXhlICIzGMCxYBQcySEcOgsJcrkyobg==}
+    engines: {node: '>=16'}
 
   glob@13.0.6:
     resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
@@ -632,6 +639,8 @@ snapshots:
   fast-is-equal@1.2.6: {}
 
   filter-obj@6.1.0: {}
+
+  get-port@7.2.0: {}
 
   glob@13.0.6:
     dependencies:

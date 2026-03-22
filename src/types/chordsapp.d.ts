@@ -5,6 +5,9 @@ declare module "chordsapp" {
 
   export function registerGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined;
   export function getGlobalHotkey(bundleId: string, hotkeyId: string): string | undefined;
+
+  export function onAppLaunch(callback: (app: { pid: number; bundleId: string }) => void): void;
+  export function onAppTerminate(callback: () => void): void;
 }
 
 declare module "@chordsapp/types" {

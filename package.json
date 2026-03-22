@@ -27,6 +27,7 @@
     "encode-utf8": "^2.0.0",
     "fast-is-equal": "^1.2.6",
     "filter-obj": "^6.1.0",
+    "get-port": "^7.2.0",
     "jquery-as-string": "^0.4.0",
     "js-yaml": "^4.1.1",
     "json-parse-safe": "^2.0.0",

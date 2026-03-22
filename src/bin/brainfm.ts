@@ -3,7 +3,12 @@
 import CDP from "chrome-remote-interface";
 import jquerySource from "jquery-as-string";
 
-const targets = await CDP.List({ port: 9222 });
+const port = process.argv[2];
+if (!port) {
+  console.error("Usage: brainfm <remote-debugging-port>");
+  process.exit(1);
+}
+const targets = await CDP.List({ port: Number(port) });
 const target = targets.find((t) => t.type === "page" && t.url.includes("index.html"));
 if (!target) throw new Error("No page target found");
 const stdin = await Bun.stdin.text();
