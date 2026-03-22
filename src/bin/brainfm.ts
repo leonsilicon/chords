@@ -27,6 +27,6 @@ if (exceptionDetails) {
   console.error("Evaluation failed:", exceptionDetails);
   process.exit(1);
 } else {
-  Bun.stdout.write(JSON.stringify(result.value));
+  // Bun.stdout.write(JSON.stringify(result.value));
   process.exit(0);
 }
