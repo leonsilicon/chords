@@ -1,7 +1,17 @@
 [config]
 name = "1Password"
 
+[config.js]
+module = '''
+import build1PasswordHandler from "dist/1password.js";
+export default build1PasswordHandler(import.meta);
+'''
+
 [chords]
+'/1' = { name = "1Password: Quick Access", args = ['quickAccess'] }
+'/1s' = { name = "1Password: Show", args = ['open'] }
+'/1l' = { name = "1Password: Lock", args = ['lock'] }
+'/1a' = { name = "1Password: Autofill", args = ['autoFill'] }
 ce = { name = "Copy Email", shortcut = "cmd+c" }
 cu = { name = "Copy Username", shortcut = "cmd+c" }
 cp = { name = "Copy Password", shortcut = "cmd+shift+c" }

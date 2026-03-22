@@ -21,6 +21,7 @@
     "bplist-lossless": "^0.2.0",
     "brace-expansion": "^5.0.4",
     "decode-utf8": "^1.0.1",
+    "doctor-json": "^1.0.0",
     "encode-utf8": "^2.0.0",
     "fast-is-equal": "^1.2.6",
     "filter-obj": "^6.1.0",

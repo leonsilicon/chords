@@ -64,7 +64,7 @@ export default (function buildMenuHandler(meta, processName: string) {
 
         const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
 
-        const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem, "menuBarItem");
+        const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem!, "menuBarItem");
 
         let current = menuBarItemRef;
 
