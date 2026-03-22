@@ -29,6 +29,9 @@ importers:
       brace-expansion:
         specifier: ^5.0.4
         version: 5.0.4
+      chrome-remote-interface:
+        specifier: ^0.34.0
+        version: 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
       decode-utf8:
         specifier: ^1.0.1
         version: 1.0.1
@@ -47,9 +50,6 @@ importers:
       filter-obj:
         specifier: ^6.1.0
         version: 6.1.0
-      get-stdin:
-        specifier: ^10.0.0
-        version: 10.0.0
       jquery-as-string:
         specifier: ^0.4.0
         version: 0.4.0
@@ -102,6 +102,9 @@ importers:
       '@jxa/global-type':
         specifier: ^1.4.0
         version: 1.4.0
+      '@types/chrome-remote-interface':
+        specifier: ^0.33.0
+        version: 0.33.0
       '@types/js-yaml':
         specifier: ^4.0.9
         version: 4.0.9
@@ -111,9 +114,9 @@ importers:
       '@types/websocket':
         specifier: ^1.0.10
         version: 1.0.10
-      chrome-remote-interface:
-        specifier: ^0.34.0
-        version: 0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10)
+      bun-types:
+        specifier: ^1.3.11
+        version: 1.3.11
       deep-object-diff:
         specifier: ^1.1.9
         version: 1.1.9
@@ -154,6 +157,9 @@ packages:
     resolution: {integrity: sha512-kZQWwUwq+RwmKBZZD+6dnRwhjfut5fBgbEappugvVjFGp12wDKXCj6D6Y/xTmBdKFRumO8/gzkj9n6DKNDchpA==}
     engines: {node: '>=0.10.0', npm: '>2.7.0'}
     os: [aix, darwin, freebsd, linux, macos, openbsd, sunos, win32, windows]
+
+  '@types/chrome-remote-interface@0.33.0':
+    resolution: {integrity: sha512-c+VcrTFcgvpwbAF/MgWIuVzagzOSX6hDuZEwkRW3Bk1yu/xMlAh5G4ogYpQGtW7fVydVGSQ9WD/mEwqQehu73w==}
 
   '@types/js-yaml@4.0.9':
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
@@ -206,6 +212,9 @@ packages:
     resolution: {integrity: sha512-ZMANVnAixE6AWWnPzlW2KpUrxhm9woycYvPOo67jWHyFowASTEd9s+QN1EIMsSDtwhIxN4sWE1jotpuDUIgyIw==}
     engines: {node: '>=6.14.2'}
 
+  bun-types@1.3.11:
+    resolution: {integrity: sha512-1KGPpoxQWl9f6wcZh57LvrPIInQMn2TQ7jsgxqpRzg+l0QPOFvJVH7HmvHo/AiPgwXy+/Thf6Ov3EdVn1vOabg==}
+
   chrome-remote-interface@0.34.0:
     resolution: {integrity: sha512-rTTcTZ3zemx8I+nvBii7d8BAF0Ms8LLEroypfvwwZOwSpyNGLE28nStXyCA6VwGp2YSQfmCrQH21F/E+oBFvMw==}
     hasBin: true
@@ -237,6 +246,9 @@ packages:
 
   desm@1.3.1:
     resolution: {integrity: sha512-vgTAOosB1aHrmzjGnzFCbjvXbk8QAOC/36JxJhcBkeAuUy8QwRFxAWBHemiDpUB3cbrBruFUdzpUS21aocvaWg==}
+
+  devtools-protocol@0.0.1173815:
+    resolution: {integrity: sha512-CmsjkudmgCMeae8FSJB4GV8COZwOk6dJKyE9HS2F/ih/sA8uTdbPKHg5F7DsrOYLEET/QKK00LJCU4YoyG+uHg==}
 
   doctor-json@1.0.0:
     resolution: {integrity: sha512-cvfroJH3xsfDYT22UwDXYpvLYMAjS1RB4Aj5Dl4eWbNyYZH0shwGguzrtVDO0swOg86QQdYKhjJwPwLMtWOLeg==}
@@ -272,10 +284,6 @@ packages:
   filter-obj@6.1.0:
     resolution: {integrity: sha512-xdMtCAODmPloU9qtmPcdBV9Kd27NtMse+4ayThxqIHUES5Z2S6bGpap5PpdmNM56ub7y3i1eyr+vJJIIgWGKmA==}
     engines: {node: '>=18'}
-
-  get-stdin@10.0.0:
-    resolution: {integrity: sha512-eWSePJ4zXFdqz+/Lyfopob4rIcoF/U2XfE8nJc7iZV6lnebWc9k7DoQQpX+2a9jc0AOvBsXvbe5YkjXl/MHbpg==}
-    engines: {node: '>=20'}
 
   glob@13.0.6:
     resolution: {integrity: sha512-Wjlyrolmm8uDpm/ogGyXZXb1Z+Ca2B8NbJwqBVg0axK9GbBeoS7yGV6vjXnYdGm6X53iehEuxxbyiKp8QmN4Vw==}
@@ -506,6 +514,10 @@ snapshots:
 
   '@stdlib/utils-noop@0.2.3': {}
 
+  '@types/chrome-remote-interface@0.33.0':
+    dependencies:
+      devtools-protocol: 0.0.1173815
+
   '@types/js-yaml@4.0.9': {}
 
   '@types/json-parse-safe@2.0.3': {}
@@ -544,6 +556,10 @@ snapshots:
     dependencies:
       node-gyp-build: 4.8.4
 
+  bun-types@1.3.11:
+    dependencies:
+      '@types/node': 25.5.0
+
   chrome-remote-interface@0.34.0(bufferutil@4.1.0)(utf-8-validate@5.0.10):
     dependencies:
       commander: 2.11.0
@@ -570,6 +586,8 @@ snapshots:
   deep-object-diff@1.1.9: {}
 
   desm@1.3.1: {}
+
+  devtools-protocol@0.0.1173815: {}
 
   doctor-json@1.0.0:
     dependencies:
@@ -614,8 +632,6 @@ snapshots:
   fast-is-equal@1.2.6: {}
 
   filter-obj@6.1.0: {}
-
-  get-stdin@10.0.0: {}
 
   glob@13.0.6:
     dependencies:
