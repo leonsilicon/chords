@@ -6322,6 +6322,15 @@ function parseElectronAccelerator(accelerator) {
       case "super":
         return KeyMappingCode.MetaLeft;
     }
+    if (/\d+/.test(part)) {
+      return `Digit${part}`;
+    }
+    if (/f\d{1,2}/i.test(part)) {
+      return part.toUpperCase();
+    }
+    if (/[a-z]/i.test(part)) {
+      return `Key${part.toUpperCase()}`;
+    }
     const keymap = getKeyMapByCode(part);
     if (keymap?.code) {
       return keymap.code;
@@ -6351,10 +6360,15 @@ function toElectronAccelerator(shortcut) {
       case KeyMappingCode.ShiftRight:
         return "Shift";
       default: {
-        if (part.startsWith("Key")) {
-          return part.slice(3);
+        if (part.toLowerCase().startsWith("key")) {
+          return part.replace("key", "");
         }
-        throw new Error(`Unsupported key code in shortcut: ${code}`);
+        if (part.toLowerCase().startsWith("digit")) {
+          return part.replace("digit", "");
+        }
+        if (/F\d{1,2}/i.test(part)) {
+          return part.toUpperCase();
+        }
       }
     }
   }).join("+");

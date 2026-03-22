@@ -31,6 +31,18 @@ export function parseElectronAccelerator(accelerator: string): KeyMappingCode[] 
         return KeyMappingCode.MetaLeft;
     }
 
+    if (/\d+/.test(part)) {
+      return `Digit${part}` as KeyMappingCode;
+    }
+
+    if (/f\d{1,2}/i.test(part)) {
+      return part.toUpperCase() as KeyMappingCode;
+    }
+
+    if (/[a-z]/i.test(part)) {
+      return `Key${part.toUpperCase()}` as KeyMappingCode;
+    }
+
     const keymap = getKeyMapByCode(part as KeyMappingCode);
     if (keymap?.code) {
       return keymap.code;
@@ -71,11 +83,17 @@ export function toElectronAccelerator(shortcut: string): string {
           return "Shift";
 
         default: {
-          if (part.startsWith("Key")) {
-            return part.slice(3);
+          if (part.toLowerCase().startsWith("key")) {
+            return part.replace("key", "");
           }
 
-          throw new Error(`Unsupported key code in shortcut: ${code}`);
+          if (part.toLowerCase().startsWith("digit")) {
+            return part.replace("digit", "");
+          }
+
+          if (/F\d{1,2}/i.test(part)) {
+            return part.toUpperCase();
+          }
         }
       }
     })
