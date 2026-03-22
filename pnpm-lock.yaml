@@ -75,8 +75,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       nano-spawn-compat:
-        specifier: ^2.0.4
-        version: 2.0.4
+        specifier: ^2.0.5
+        version: 2.0.5
       nullthrows-es:
         specifier: ^1.0.1
         version: 1.0.1
@@ -399,8 +399,8 @@ packages:
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
 
-  nano-spawn-compat@2.0.4:
-    resolution: {integrity: sha512-CimcgXSpyE9bgDx8pVYCFW0ShhQ282ghjszbxvnrN1sjq6BiWXVnCdYEcd+TSmf09CvOYFhuMImMo9Og76ffbQ==}
+  nano-spawn-compat@2.0.5:
+    resolution: {integrity: sha512-6aRpC3FtCR+doWF/jF9nlCn/1r48DMmply0jbYru9fX1LPz/1cClgTWzNFNcXRXu98hAqzYnv72RrhR82AZF7Q==}
     engines: {node: '>=20.17'}
 
   next-tick@1.1.0:
@@ -723,7 +723,7 @@ snapshots:
 
   ms@2.0.0: {}
 
-  nano-spawn-compat@2.0.4:
+  nano-spawn-compat@2.0.5:
     dependencies:
       strip-ansi: 7.2.0
 

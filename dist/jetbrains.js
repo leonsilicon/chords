@@ -175,7 +175,7 @@ var import_outdent = __toESM(require_lib(), 1);
 import fs2 from "fs";
 import path3 from "path";
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/context.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/context.js
 import process2 from "node:process";
 
 // node_modules/.pnpm/ansi-regex@6.2.2/node_modules/ansi-regex/index.js
@@ -199,7 +199,7 @@ function stripAnsi(string) {
   return string.replace(regex, "");
 }
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/context.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/context.js
 var getContext = (raw) => ({
   start: process2.hrtime.bigint(),
   command: raw.map((part) => getCommandPart(stripAnsi(part))).join(" "),
@@ -213,7 +213,7 @@ var getContext = (raw) => ({
 });
 var getCommandPart = (part) => /[^\w./-]/.test(part) ? `'${part.replaceAll("'", "'\\''")}'` : part;
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/options.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/options.js
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import process3 from "node:process";
@@ -245,10 +245,10 @@ var addLocalPath = ({ Path = "", PATH = Path, ...env }, cwd) => {
 };
 var getLocalPaths = (localPaths, localPath) => localPaths.at(-1) === localPath ? localPaths : getLocalPaths([...localPaths, localPath], path.resolve(localPath, ".."));
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/spawn.js
 import { spawn } from "node:child_process";
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/windows.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/windows.js
 import fs from "node:fs/promises";
 import path2 from "node:path";
 import process4 from "node:process";
@@ -271,10 +271,10 @@ var exeExtensions = [".exe", ".com"];
 var escapeArgument = (argument) => escapeFile(escapeFile(`"${argument.replaceAll(/(\\*)"/g, "$1$1\\\"").replace(/(\\*)$/, "$1$1")}"`));
 var escapeFile = (file) => file.replaceAll(/([()\][%!^"`<>&|;, *?])/g, "^$1");
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/result.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/result.js
 import process5 from "node:process";
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/once.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/once.js
 function once(emitter, event) {
   return new Promise((resolve, reject) => {
     function onEvent(...arguments_) {
@@ -302,7 +302,7 @@ function once(emitter, event) {
   });
 }
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/result.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/result.js
 var getResult = async (nodeChildProcess, { input }, context) => {
   const instance = await nodeChildProcess;
   if (input !== undefined) {
@@ -356,7 +356,7 @@ var getOutputs = ({ state: { stdout, stderr, output }, command, start }) => ({
 var getOutput = (output) => output.at(-1) === `
 ` ? output.slice(0, output.at(-2) === "\r" ? -2 : -1) : output;
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/spawn.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/spawn.js
 var spawnSubprocess = async (file, commandArguments, options, context) => {
   try {
     [file, commandArguments, options] = await applyForceShell(file, commandArguments, options);
@@ -372,16 +372,19 @@ var spawnSubprocess = async (file, commandArguments, options, context) => {
 };
 var concatenateShell = (file, commandArguments, options) => options.shell && commandArguments.length > 0 ? [[file, ...commandArguments].join(" "), [], options] : [file, commandArguments, options];
 var bufferOutput = (stream, { state }, streamName) => {
-  if (stream && !state.isIterating[streamName]) {
-    state.isIterating[streamName] = false;
-    stream.on("data", (chunk) => {
-      state[streamName] += chunk;
-      state.output += chunk;
-    });
+  if (stream) {
+    stream.setEncoding?.("utf8");
+    if (!state.isIterating[streamName]) {
+      state.isIterating[streamName] = false;
+      stream.on("data", (chunk) => {
+        state[streamName] += chunk;
+        state.output += chunk;
+      });
+    }
   }
 };
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/pipe.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/pipe.js
 import { pipeline } from "node:stream/promises";
 var handlePipe = async (subprocesses) => {
   const [[from, to]] = await Promise.all([Promise.allSettled(subprocesses), pipeStreams(subprocesses)]);
@@ -414,7 +417,7 @@ var closeStdin = async (nodeChildProcess) => {
   stdin.end();
 };
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/iterable.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/iterable.js
 var lineIterator = async function* (subprocess, { state }, streamName, index) {
   if (state.isIterating[streamName] === false) {
     throw new Error(`The subprocess must be iterated right away, for example:
@@ -473,7 +476,7 @@ var getNext = async (iterator, index, { nonIterable }) => {
 };
 var shouldIgnoreError = (nonIterable, index) => nonIterable.every(Boolean) ? index !== nonIterable.length - 1 : nonIterable[index];
 
-// node_modules/.pnpm/nano-spawn-compat@2.0.4/node_modules/nano-spawn-compat/source/index.js
+// node_modules/.pnpm/nano-spawn-compat@2.0.5/node_modules/nano-spawn-compat/source/index.js
 function spawn2(file, second, third, previous) {
   const [commandArguments = [], options = {}] = Array.isArray(second) ? [second, third] : [[], second];
   const context = getContext([file, ...commandArguments]);
