@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --root ./src/exports --target node --external chordsapp && bun build ./src/bin/* --outdir dist/bin/ --root ./src/bin --target bun",
+    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --root ./src/exports --target node --external chordsapp && bun build ./src/bin/* --outdir dist/bin/ --root ./src/bin --target bun && for f in dist/bin/*.js; do mv \"$f\" \"${f%.js}\"; done && chmod +x dist/bin/*",
     "prepare": "lefthook install"
   },
   "dependencies": {
