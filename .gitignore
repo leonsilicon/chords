@@ -1,9 +1,6 @@
 # dependencies (bun install)
 node_modules
 
-# playing around with puppeteer
-dist/brainfm.js
-
 # output
 out
 # dist
