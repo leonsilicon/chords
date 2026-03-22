@@ -6322,14 +6322,14 @@ function parseElectronAccelerator(accelerator) {
       case "super":
         return KeyMappingCode.MetaLeft;
     }
-    if (/\d+/.test(part)) {
+    if (/^[a-z]$/.test(part)) {
+      return `Key${part.toUpperCase()}`;
+    }
+    if (/^\d$/.test(part)) {
       return `Digit${part}`;
     }
-    if (/f\d{1,2}/i.test(part)) {
+    if (/^f\d{1,2}$/.test(part)) {
       return part.toUpperCase();
-    }
-    if (/[a-z]/i.test(part)) {
-      return `Key${part.toUpperCase()}`;
     }
     const keymap = getKeyMapByCode(part);
     if (keymap?.code) {

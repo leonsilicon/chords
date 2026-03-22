@@ -31,16 +31,16 @@ export function parseElectronAccelerator(accelerator: string): KeyMappingCode[] 
         return KeyMappingCode.MetaLeft;
     }
 
-    if (/\d+/.test(part)) {
+    if (/^[a-z]$/.test(part)) {
+      return `Key${part.toUpperCase()}` as KeyMappingCode;
+    }
+
+    if (/^\d$/.test(part)) {
       return `Digit${part}` as KeyMappingCode;
     }
 
-    if (/f\d{1,2}/i.test(part)) {
+    if (/^f\d{1,2}$/.test(part)) {
       return part.toUpperCase() as KeyMappingCode;
-    }
-
-    if (/[a-z]/i.test(part)) {
-      return `Key${part.toUpperCase()}` as KeyMappingCode;
     }
 
     const keymap = getKeyMapByCode(part as KeyMappingCode);
