@@ -357,7 +357,7 @@ var __dirname = "/Users/leonsilicon/Developer/github/leonsilicon/chords/src/expo
 var createBrainfmHandler = function createBrainfmHandler() {
   const brainfmBinpath = path3.join(__dirname, "bin/brainfm");
   return async function(code) {
-    await spawn2(brainfmBinpath, [code]);
+    await spawn2(brainfmBinpath, { stdin: { string: code } });
   };
 };
 export {

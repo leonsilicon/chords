@@ -6,6 +6,6 @@ import path from "path";
 export default (function createBrainfmHandler() {
   const brainfmBinpath = path.join(__dirname, "bin/brainfm");
   return async function (code: string) {
-    await spawn(brainfmBinpath, [code]);
+    await spawn(brainfmBinpath, { stdin: { string: code } });
   };
 } satisfies BuildHandler);
