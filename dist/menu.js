@@ -125,9 +125,9 @@ JSON.stringify({ result: out });
 // src/exports/menu.ts
 var import_jxa_run_compat = __toESM(require_run(), 1);
 var buildMenuHandler = function buildMenuHandler(meta, processName) {
-  return function menu(menuBarItem, menuItems) {
-    return import_jxa_run_compat.run((processName2, menuBarItem2, menuItemsCommaJoined) => {
-      const menuItems2 = menuItemsCommaJoined.split(",");
+  return function menu(...menuItems) {
+    return import_jxa_run_compat.run((processName2, menuItemsArg) => {
+      const [menuBarItem, ...menuItems2] = menuItemsArg;
       const log = (...args) => {
         console.log("[JXA]", ...args);
       };
@@ -171,7 +171,7 @@ var buildMenuHandler = function buildMenuHandler(meta, processName) {
       const proc = assertExists(se.processes.whose({ frontmost: true })[0], "frontmost process");
       log("Frontmost process:", proc.name());
       const menuBar = assertExists(proc.menuBars[0], "menuBars[0]");
-      const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem2, "menuBarItem");
+      const menuBarItemRef = findByName(menuBar.menuBarItems, menuBarItem, "menuBarItem");
       let current = menuBarItemRef;
       for (let i = 0;i < menuItems2.length; i++) {
         const name = menuItems2[i];
@@ -186,7 +186,7 @@ var buildMenuHandler = function buildMenuHandler(meta, processName) {
         }
       }
       log("Done");
-    }, processName, menuBarItem, menuItems.join(","));
+    }, menuItems);
   };
 };
 export {
