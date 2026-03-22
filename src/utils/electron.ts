@@ -83,17 +83,19 @@ export function toElectronAccelerator(shortcut: string): string {
           return "Shift";
 
         default: {
-          if (part.toLowerCase().startsWith("key")) {
-            return part.replace("key", "");
+          if (code.toLowerCase().startsWith("key")) {
+            return code.replace("key", "");
           }
 
-          if (part.toLowerCase().startsWith("digit")) {
-            return part.replace("digit", "");
+          if (code.toLowerCase().startsWith("digit")) {
+            return code.replace("digit", "");
           }
 
-          if (/F\d{1,2}/i.test(part)) {
-            return part.toUpperCase();
+          if (/^F\d{1,2}$/i.test(code)) {
+            return code.toUpperCase();
           }
+
+          throw new Error(`Unsupported key code: ${code}`);
         }
       }
     })
