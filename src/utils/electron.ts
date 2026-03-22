@@ -83,12 +83,12 @@ export function toElectronAccelerator(shortcut: string): string {
           return "Shift";
 
         default: {
-          if (code.toLowerCase().startsWith("key")) {
-            return code.replace("key", "");
+          if (code.startsWith("Key")) {
+            return code.replace("Key", "");
           }
 
-          if (code.toLowerCase().startsWith("digit")) {
-            return code.replace("digit", "");
+          if (code.startsWith("Digit")) {
+            return code.replace("Digit", "");
           }
 
           if (/^F\d{1,2}$/i.test(code)) {
