@@ -41,14 +41,18 @@ export function getPlistShortcutUtils({
     return plist;
   }
 
-  function writeShortcuts(writes: ShortcutWrite[]) {
+  function createUpdatedPlist(writes: ShortcutWrite[], options?: { overwrite?: boolean }) {
+    const overwrite = options?.overwrite ?? false;
+
     let plistNeedsUpdates = false;
     const plist = readPlist();
     if (!plist) {
       throw new Error("plist root is not an object");
     }
 
-    for (const { shortcut, property, propertyType } of writes) {
+    let appliedWrites: ShortcutWrite[] = [];
+    for (const write of writes) {
+      const { shortcut, property, propertyType } = write;
       const parts = shortcut.split("+");
       const key = parts.at(-1)!;
       const modifiers = parts.slice(0, -1);
@@ -77,19 +81,26 @@ export function getPlistShortcutUtils({
         continue;
       }
 
+      if (plist[property] && !overwrite) {
+        console.warn(
+          'Skipping write for property "%s" because it already exists and overwrite is false',
+          property,
+        );
+        continue;
+      }
+
       const stringValue = JSON.stringify(object);
       const value =
         propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
 
       plist[property] = value;
-      plistNeedsUpdates = true;
+      appliedWrites.push({ property, propertyType, shortcut });
     }
 
-    if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serializeBplist(plist));
-    }
-
-    return plistNeedsUpdates;
+    return {
+      updatedPlist: plist,
+      appliedWrites,
+    };
   }
 
   function buildHandler() {
@@ -128,7 +139,7 @@ export function getPlistShortcutUtils({
   }
 
   return {
-    writeShortcuts,
+    createUpdatedPlist,
     buildHandler,
     readPlist,
   };

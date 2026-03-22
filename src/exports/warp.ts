@@ -20,6 +20,7 @@ function extractCommands(chords: ImportMeta["chords"]): string[] {
   return result;
 }
 
+// TODO: call `setAppNeedsRelaunch` if we updated the keybindings
 export default (function buildWarpHandler(meta) {
   const commands = extractCommands(meta.chords);
 

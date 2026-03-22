@@ -6,6 +6,9 @@ import { includeKeys } from "filter-obj";
 import type { BuildHandler } from "../types/handler.ts";
 import { exists } from "../utils/file.ts";
 import noop from "@stdlib/utils-noop";
+import { serializeBplist } from "bplist-lossless";
+import fs from "fs";
+import { onAppTerminate, setAppNeedsRelaunch } from "chordsapp";
 
 export default (function buildMakethewebHandler(meta, tildepath: string) {
   const plistPath = untildify(tildepath);
@@ -20,21 +23,28 @@ export default (function buildMakethewebHandler(meta, tildepath: string) {
       getHotkeyId: (chord) => nullthrows(chord.args?.[0]),
     },
   );
+  const writes = globalHotkeys.map(({ chord, shortcut }) => ({
+    property: nullthrows(chord.args?.[0]),
+    // _PixelSnap_ and _CleanShot X_ stores shortcuts as bytes
+    propertyType: "bytes" as const,
+    shortcut,
+  }));
 
-  const { buildHandler, writeShortcuts } = getPlistShortcutUtils({
+  const { buildHandler, createUpdatedPlist } = getPlistShortcutUtils({
     plistPath,
     modifierType: "carbon",
     modifierMaskKey: "carbonModifiers",
     keycodeKey: "carbonKey",
   });
-  writeShortcuts(
-    globalHotkeys.map(({ chord, shortcut }) => ({
-      property: nullthrows(chord.args?.[0]),
-      // _PixelSnap_ and _CleanShot X_ stores shortcuts as bytes
-      propertyType: "bytes",
-      shortcut,
-    })),
-  );
+  const needsRelaunch = createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0;
+  if (needsRelaunch) {
+    setAppNeedsRelaunch(meta.bundleId, true);
+    const unregister = onAppTerminate(meta.bundleId, () => {
+      const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
+      fs.writeFileSync(plistPath, serializeBplist(updatedPlist));
+      unregister();
+    });
+  }
 
   return buildHandler();
 } satisfies BuildHandler);

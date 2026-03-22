@@ -5742,13 +5742,16 @@ function getPlistShortcutUtils({
     const plist = parseBplist(fs.readFileSync(plistPath));
     return plist;
   }
-  function writeShortcuts(writes) {
+  function createUpdatedPlist(writes, options) {
+    const overwrite = options?.overwrite ?? false;
     let plistNeedsUpdates = false;
     const plist = readPlist();
     if (!plist) {
       throw new Error("plist root is not an object");
     }
-    for (const { shortcut, property, propertyType } of writes) {
+    let appliedWrites = [];
+    for (const write of writes) {
+      const { shortcut, property, propertyType } = write;
       const parts = shortcut.split("+");
       const key = parts.at(-1);
       const modifiers = parts.slice(0, -1);
@@ -5768,15 +5771,19 @@ function getPlistShortcutUtils({
       if (fastIsEqual(plist[property], object)) {
         continue;
       }
+      if (plist[property] && !overwrite) {
+        console.warn('Skipping write for property "%s" because it already exists and overwrite is false', property);
+        continue;
+      }
       const stringValue = JSON.stringify(object);
       const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
       plist[property] = value;
-      plistNeedsUpdates = true;
+      appliedWrites.push({ property, propertyType, shortcut });
     }
-    if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serializeBplist(plist));
-    }
-    return plistNeedsUpdates;
+    return {
+      updatedPlist: plist,
+      appliedWrites
+    };
   }
   function buildHandler() {
     const plist = readPlist();
@@ -5804,7 +5811,7 @@ function getPlistShortcutUtils({
     };
   }
   return {
-    writeShortcuts,
+    createUpdatedPlist,
     buildHandler,
     readPlist
   };
@@ -5850,6 +5857,8 @@ function exists(path) {
 
 // src/exports/maketheweb.ts
 var import_utils_noop = __toESM(require_lib(), 1);
+import fs3 from "fs";
+import { onAppTerminate, setAppNeedsRelaunch } from "chordsapp";
 var buildMakethewebHandler = function buildMakethewebHandler(meta, tildepath) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
@@ -5859,17 +5868,26 @@ var buildMakethewebHandler = function buildMakethewebHandler(meta, tildepath) {
     bundleId: meta.bundleId,
     getHotkeyId: (chord) => nullthrows(chord.args?.[0])
   });
-  const { buildHandler, writeShortcuts } = getPlistShortcutUtils({
+  const writes = globalHotkeys.map(({ chord, shortcut }) => ({
+    property: nullthrows(chord.args?.[0]),
+    propertyType: "bytes",
+    shortcut
+  }));
+  const { buildHandler, createUpdatedPlist } = getPlistShortcutUtils({
     plistPath,
     modifierType: "carbon",
     modifierMaskKey: "carbonModifiers",
     keycodeKey: "carbonKey"
   });
-  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => ({
-    property: nullthrows(chord.args?.[0]),
-    propertyType: "bytes",
-    shortcut
-  })));
+  const needsRelaunch = createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0;
+  if (needsRelaunch) {
+    setAppNeedsRelaunch(meta.bundleId, true);
+    const unregister = onAppTerminate(meta.bundleId, () => {
+      const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
+      fs3.writeFileSync(plistPath, serializeBplist(updatedPlist));
+      unregister();
+    });
+  }
   return buildHandler();
 };
 export {

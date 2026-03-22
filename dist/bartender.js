@@ -5702,13 +5702,16 @@ function getPlistShortcutUtils({
     const plist = parseBplist(fs.readFileSync(plistPath));
     return plist;
   }
-  function writeShortcuts(writes) {
+  function createUpdatedPlist(writes, options) {
+    const overwrite = options?.overwrite ?? false;
     let plistNeedsUpdates = false;
     const plist = readPlist();
     if (!plist) {
       throw new Error("plist root is not an object");
     }
-    for (const { shortcut, property, propertyType } of writes) {
+    let appliedWrites = [];
+    for (const write of writes) {
+      const { shortcut, property, propertyType } = write;
       const parts = shortcut.split("+");
       const key = parts.at(-1);
       const modifiers = parts.slice(0, -1);
@@ -5728,15 +5731,19 @@ function getPlistShortcutUtils({
       if (fastIsEqual(plist[property], object)) {
         continue;
       }
+      if (plist[property] && !overwrite) {
+        console.warn('Skipping write for property "%s" because it already exists and overwrite is false', property);
+        continue;
+      }
       const stringValue = JSON.stringify(object);
       const value = propertyType === "string" ? stringValue : new Uint8Array(Buffer.from(stringValue, "utf8"));
       plist[property] = value;
-      plistNeedsUpdates = true;
+      appliedWrites.push({ property, propertyType, shortcut });
     }
-    if (plistNeedsUpdates) {
-      fs.writeFileSync(plistPath, serializeBplist(plist));
-    }
-    return plistNeedsUpdates;
+    return {
+      updatedPlist: plist,
+      appliedWrites
+    };
   }
   function buildHandler() {
     const plist = readPlist();
@@ -5764,7 +5771,7 @@ function getPlistShortcutUtils({
     };
   }
   return {
-    writeShortcuts,
+    createUpdatedPlist,
     buildHandler,
     readPlist
   };
@@ -5894,6 +5901,7 @@ function encodeUtf82(input) {
 
 // src/exports/bartender.ts
 import fs3 from "fs";
+import { onAppTerminate, setAppNeedsRelaunch } from "chordsapp";
 var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
@@ -5903,49 +5911,53 @@ var buildBartenderHandler = function buildBartenderHandler(meta, tildepath) {
     bundleId: meta.bundleId,
     getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
   });
-  const { writeShortcuts, buildHandler, readPlist } = getPlistShortcutUtils({
-    plistPath,
-    modifierType: "carbon",
-    modifierMaskKey: "carbonModifiers",
-    keycodeKey: "carbonKeyCode"
-  });
-  writeShortcuts(globalHotkeys.map(({ chord, shortcut }) => {
+  const writes = globalHotkeys.map(({ chord, shortcut }) => {
     const property = chord.args?.[2] ? `KeyboardShortcuts_${chord.args[2]}` : nullthrows(chord.args?.[1]);
     return {
       property,
       propertyType: "string",
       shortcut
     };
-  }));
-  {
-    const plist = readPlist();
-    const rawValue = plistValueToString(plist["per-item-hotkeys"]);
-    const result = import_json_parse_safe2.default(rawValue);
-    let perItemHotkeyList = [];
-    if ("error" in result) {
-      perItemHotkeyList = [];
-    } else {
-      perItemHotkeyList = result.value;
-    }
-    for (const { chord } of globalHotkeys) {
-      const appBundleIdentifier = chord.args?.[1];
-      const keyName = chord.args?.[2];
-      const appName = chord.args?.[3];
-      if (!appBundleIdentifier || !keyName || !appName) {
-        continue;
+  });
+  const { createUpdatedPlist, buildHandler } = getPlistShortcutUtils({
+    plistPath,
+    modifierType: "carbon",
+    modifierMaskKey: "carbonModifiers",
+    keycodeKey: "carbonKeyCode"
+  });
+  const needsRelaunch = createUpdatedPlist(writes).appliedWrites.length > 0;
+  if (needsRelaunch) {
+    setAppNeedsRelaunch(meta.bundleId, true);
+    onAppTerminate(meta.bundleId, () => {
+      const { updatedPlist: plist } = createUpdatedPlist(writes, { overwrite: false });
+      const rawValue = plistValueToString(plist["per-item-hotkeys"]);
+      const result = import_json_parse_safe2.default(rawValue);
+      let perItemHotkeyList = [];
+      if ("error" in result) {
+        perItemHotkeyList = [];
+      } else {
+        perItemHotkeyList = result.value;
       }
-      if (perItemHotkeyList.some((item2) => item2.keyName === keyName)) {
-        continue;
+      for (const { chord } of globalHotkeys) {
+        const appBundleIdentifier = chord.args?.[1];
+        const keyName = chord.args?.[2];
+        const appName = chord.args?.[3];
+        if (!appBundleIdentifier || !keyName || !appName) {
+          continue;
+        }
+        if (perItemHotkeyList.some((item2) => item2.keyName === keyName)) {
+          continue;
+        }
+        const item = {
+          appName,
+          appBundleIdentifier,
+          keyName
+        };
+        perItemHotkeyList.push(item);
       }
-      const item = {
-        appName,
-        appBundleIdentifier,
-        keyName
-      };
-      perItemHotkeyList.push(item);
-    }
-    plist["per-item-hotkeys"] = new Uint8Array(encodeUtf82(JSON.stringify(perItemHotkeyList)));
-    fs3.writeFileSync(plistPath, serializeBplist(plist));
+      plist["per-item-hotkeys"] = new Uint8Array(encodeUtf82(JSON.stringify(perItemHotkeyList)));
+      fs3.writeFileSync(plistPath, serializeBplist(plist));
+    });
   }
   const plistHandler = buildHandler();
   function itemHandler(itemId, keyName, appName) {

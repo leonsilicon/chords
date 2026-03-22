@@ -17,6 +17,7 @@ const keybindsSettings = [
   "keybinds.open",
 ];
 
+// TODO: call `setAppNeedsRelaunch`
 export default (function build1PasswordHandler(meta) {
   const settingsJsonFilepath = untildify(
     "~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json",
@@ -46,8 +47,8 @@ export default (function build1PasswordHandler(meta) {
     }
     fs.writeFileSync(settingsJsonFilepath, stringify(settings));
   }
-
   const settings = parse(fs.readFileSync(settingsJsonFilepath, "utf8"));
+
   return function handler(shortcutSlug: string) {
     const electronAccelerator = settings[`keybinds.${shortcutSlug}`];
     // Handles empty string
