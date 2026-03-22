@@ -186,7 +186,7 @@ var buildMenuHandler = function buildMenuHandler(meta, processName) {
         }
       }
       log("Done");
-    }, menuItems);
+    }, processName, menuItems);
   };
 };
 export {
