@@ -5,7 +5,7 @@ import type { BuildHandler } from "../types/handler.ts";
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
-      (processName: string, menuBarItem: string, menuItemsJson: string) => {
+      (processName: string, menuBarItem: string, ...menuItems: string[]) => {
         const log = (...args: any[]) => {
           console.log("[JXA]", ...args);
         };
@@ -45,7 +45,6 @@ export default (async function buildMenuHandler(meta, processName: string) {
           return obj;
         };
 
-        const menuItems = JSON.parse(menuItemsJson);
         if (!Array.isArray(menuItems)) {
           throw new Error(`Expected menuItems to be an array, got: ${typeof menuItems}`);
         }
@@ -68,7 +67,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
         let current = menuBarItemRef;
 
         for (let i = 0; i < menuItems.length; i++) {
-          const name = menuItems[i];
+          const name = menuItems[i]!;
           log(`Traversing -> "${name}"`);
 
           const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
@@ -86,7 +85,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
       },
       processName,
       menuBarItem,
-      JSON.stringify(menuItems),
+      ...menuItems,
     );
   };
 } satisfies BuildHandler);

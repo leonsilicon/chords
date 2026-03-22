@@ -126,7 +126,7 @@ JSON.stringify({ result: out });
 var import_jxa_run_compat = __toESM(require_run(), 1);
 var buildMenuHandler = async function buildMenuHandler(meta, processName) {
   return function menu(menuBarItem, menuItems) {
-    return import_jxa_run_compat.run((processName2, menuBarItem2, menuItemsJson) => {
+    return import_jxa_run_compat.run((processName2, menuBarItem2, ...menuItems2) => {
       const log = (...args) => {
         console.log("[JXA]", ...args);
       };
@@ -158,7 +158,6 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
         log("OK:", label);
         return obj;
       };
-      const menuItems2 = JSON.parse(menuItemsJson);
       if (!Array.isArray(menuItems2)) {
         throw new Error(`Expected menuItems to be an array, got: ${typeof menuItems2}`);
       }
@@ -185,7 +184,7 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
         }
       }
       log("Done");
-    }, processName, menuBarItem, JSON.stringify(menuItems));
+    }, processName, menuBarItem, ...menuItems);
   };
 };
 export {
