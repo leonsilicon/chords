@@ -351,13 +351,25 @@ function spawn2(file, second, third, previous) {
   });
 }
 
+// node_modules/.pnpm/desm@1.3.1/node_modules/desm/index.js
+import { fileURLToPath as fileURLToPath2 } from "url";
+import { dirname, join } from "path";
+function urlDirname(url) {
+  return dirname(fileURLToPath2(url));
+}
+function urlJoin(url, ...str) {
+  return join(urlDirname(url), ...str);
+}
+
 // src/exports/brainfm.ts
-import path3 from "path";
-var __dirname = "/Users/leonsilicon/Developer/github/leonsilicon/chords/src/exports";
 var createBrainfmHandler = function createBrainfmHandler() {
-  const brainfmBinpath = path3.join(__dirname, "bin/brainfm");
+  const brainfmBinpath = urlJoin(import.meta.url, "bin/brainfm");
   return async function(code) {
-    await spawn2(brainfmBinpath, { stdin: { string: code } });
+    await spawn2(brainfmBinpath, {
+      stdout: "inherit",
+      stderr: "inherit",
+      stdin: { string: code }
+    });
   };
 };
 export {
