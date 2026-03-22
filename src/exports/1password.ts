@@ -37,7 +37,12 @@ export default (function build1PasswordHandler(meta) {
     const settings = parse(fs.readFileSync(settingsJsonFilepath, "utf8"));
     for (const { chord, shortcut } of globalHotkeys) {
       const hotkeyId = nullthrows(chord.args?.[0]);
-      settings[`keybinds.${hotkeyId}`] = toElectronAccelerator(shortcut);
+      const accelerator = toElectronAccelerator(shortcut);
+      const onePasswordAccelerator = accelerator.replace(
+        /\+(.*?)$/,
+        (_match, key) => `[${key.toLowerCase()}]${key}`,
+      );
+      settings[`keybinds.${hotkeyId}`] = onePasswordAccelerator;
     }
     fs.writeFileSync(settingsJsonFilepath, stringify(settings));
   }

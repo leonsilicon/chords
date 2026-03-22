@@ -66,7 +66,7 @@ export function toElectronAccelerator(shortcut: string): string {
       switch (code) {
         case KeyMappingCode.MetaLeft:
         case KeyMappingCode.MetaRight:
-          return "Command";
+          return "CommandOrControl";
 
         case KeyMappingCode.ControlLeft:
         case KeyMappingCode.ControlRight:
