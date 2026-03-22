@@ -31,6 +31,26 @@ export function parseElectronAccelerator(accelerator: string): KeyMappingCode[] 
         return KeyMappingCode.MetaLeft;
     }
 
+    // 1Password accelerators are cursed: "Alt+Control+CommandOrControl+Shift+[s]S"
+    function parseKeyPart(part: string) {
+      const match = part.match(/\[([^\]]+)\](.*)/);
+
+      if (match) {
+        return {
+          key: match[1]!, // inside []
+          output: match[2]!, // after []
+        };
+      }
+
+      // fallback
+      return {
+        key: part,
+        output: part,
+      };
+    }
+
+    part = parseKeyPart(part).key;
+
     if (/^[a-z]$/.test(part)) {
       return `Key${part.toUpperCase()}` as KeyMappingCode;
     }

@@ -6322,6 +6322,20 @@ function parseElectronAccelerator(accelerator) {
       case "super":
         return KeyMappingCode.MetaLeft;
     }
+    function parseKeyPart(part2) {
+      const match = part2.match(/\[([^\]]+)\](.*)/);
+      if (match) {
+        return {
+          key: match[1],
+          output: match[2]
+        };
+      }
+      return {
+        key: part2,
+        output: part2
+      };
+    }
+    part = parseKeyPart(part).key;
     if (/^[a-z]$/.test(part)) {
       return `Key${part.toUpperCase()}`;
     }
