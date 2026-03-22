@@ -6,10 +6,14 @@ import { join } from "desm";
 export default (function createBrainfmHandler() {
   const brainfmBinpath = join(import.meta.url, "bin/brainfm");
   return async function (code: string) {
-    await spawn(brainfmBinpath, {
+    const subprocess = spawn(brainfmBinpath, {
       stdout: "inherit",
       stderr: "inherit",
-      stdin: { string: code },
+      stdin: "pipe",
     });
+    const nodeSubprocess = await subprocess.nodeChildProcess;
+    nodeSubprocess.stdin?.write(code);
+    nodeSubprocess.stdin?.end();
+    await subprocess;
   };
 } satisfies BuildHandler);

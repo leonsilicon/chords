@@ -368,11 +368,15 @@ function urlJoin(url, ...str) {
 var createBrainfmHandler = function createBrainfmHandler() {
   const brainfmBinpath = urlJoin(import.meta.url, "bin/brainfm");
   return async function(code) {
-    await spawn2(brainfmBinpath, {
+    const subprocess = spawn2(brainfmBinpath, {
       stdout: "inherit",
       stderr: "inherit",
-      stdin: { string: code }
+      stdin: "pipe"
     });
+    const nodeSubprocess = await subprocess.nodeChildProcess;
+    nodeSubprocess.stdin?.write(code);
+    nodeSubprocess.stdin?.end();
+    await subprocess;
   };
 };
 export {
