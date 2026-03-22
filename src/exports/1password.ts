@@ -1,25 +1,26 @@
-import untildify from "untildify"
+import untildify from "untildify";
 import type { BuildHandler } from "../types/handler.ts";
 import noop from "@stdlib/utils-noop";
 import { exists } from "../utils/file.ts";
 import { ensureGlobalHotkeys } from "../utils/global.ts";
 import { includeKeys } from "filter-obj";
 import nullthrows from "nullthrows-es";
-import { parse, stringify } from 'doctor-json'
+import { parse, stringify } from "doctor-json";
 import fs from "fs";
 import { parseElectronAccelerator, toElectronAccelerator } from "../utils/electron.ts";
-import { tap } from 'chordsapp'
+import { tap } from "chordsapp";
 
 const keybindsSettings = [
-  'keybinds.quickAccess',
-  'keybinds.lock',
-  'keybinds.autoFill',
-  'keybinds.open'
-]
+  "keybinds.quickAccess",
+  "keybinds.lock",
+  "keybinds.autoFill",
+  "keybinds.open",
+];
 
 export default (function build1PasswordHandler(meta) {
-  const settingsJsonFilepath =
-  untildify('~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json');
+  const settingsJsonFilepath = untildify(
+    "~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json",
+  );
   if (!exists(settingsJsonFilepath)) {
     return noop;
   }
@@ -49,8 +50,7 @@ export default (function build1PasswordHandler(meta) {
       return false;
     }
 
-    const codes = parseElectronAccelerator(electronAccelerator)
-    tap(codes.join('+'))
-  }
-
-} satisfies BuildHandler)
+    const codes = parseElectronAccelerator(electronAccelerator);
+    tap(codes.join("+"));
+  };
+} satisfies BuildHandler);

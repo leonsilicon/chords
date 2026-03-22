@@ -32,6 +32,9 @@ importers:
       decode-utf8:
         specifier: ^1.0.1
         version: 1.0.1
+      doctor-json:
+        specifier: ^1.0.0
+        version: 1.0.0
       encode-utf8:
         specifier: ^2.0.0
         version: 2.0.0
@@ -108,6 +111,10 @@ importers:
 
 packages:
 
+  '@humanwhocodes/momoa@3.3.10':
+    resolution: {integrity: sha512-KWiFQpSAqEIyrTXko3hFNLeQvSK8zXlJQzhhxsyVn58WFRYXST99b3Nqnu+ttOtjds2Pl2grUHGpe2NzhPynuQ==}
+    engines: {node: '>=18'}
+
   '@jxa/global-type@1.4.0':
     resolution: {integrity: sha512-3Gg632we69oelbanFFQ1XbKTfqEYzwQxg00O13XG2an6IJzP829XLKjv0EDy/UtublyZbZFCk1CmDXq9ku4oGw==}
 
@@ -164,6 +171,9 @@ packages:
 
   deep-object-diff@1.1.9:
     resolution: {integrity: sha512-Rn+RuwkmkDwCi2/oXOFS9Gsr5lJZu/yTGpK7wAaAIE75CC+LCGEZHpY6VQJa/RoJcrmaA/docWJZvYohlNkWPA==}
+
+  doctor-json@1.0.0:
+    resolution: {integrity: sha512-cvfroJH3xsfDYT22UwDXYpvLYMAjS1RB4Aj5Dl4eWbNyYZH0shwGguzrtVDO0swOg86QQdYKhjJwPwLMtWOLeg==}
 
   encode-utf8@2.0.0:
     resolution: {integrity: sha512-3EyMFxZj1/7oMotElDQUEQcP7N4TIe1aJ0m1uBDoyQ8I2LBHhBsXx8P3KsPbqNlGzG+NYxFwEauUwMPHZg3YDQ==}
@@ -331,6 +341,8 @@ packages:
 
 snapshots:
 
+  '@humanwhocodes/momoa@3.3.10': {}
+
   '@jxa/global-type@1.4.0':
     dependencies:
       '@jxa/types': 1.4.0
@@ -370,6 +382,10 @@ snapshots:
   decode-utf8@1.0.1: {}
 
   deep-object-diff@1.1.9: {}
+
+  doctor-json@1.0.0:
+    dependencies:
+      '@humanwhocodes/momoa': 3.3.10
 
   encode-utf8@2.0.0: {}
 
