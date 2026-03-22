@@ -1,13 +1,11 @@
 import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 import type { BuildHandler } from "../types/handler.ts";
-// Can't use because it makes the argument list too long
-// import anyAsciiJson from "any-ascii-json";
 
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
-      (processName: string, menuBarItem: string, menuItems: string[]) => {
+      (processName: string, menuBarItem: string, menuItemsJson: string) => {
         const log = (...args: any[]) => {
           console.log("[JXA]", ...args);
         };
@@ -31,7 +29,6 @@ export default (async function buildMenuHandler(meta, processName: string) {
             } catch {}
           }
 
-          // debug dump if not found
           log(`❌ Available ${label}s:`);
           for (let i = 0; i < items.length; i++) {
             try {
@@ -47,6 +44,11 @@ export default (async function buildMenuHandler(meta, processName: string) {
           log("OK:", label);
           return obj;
         };
+
+        const menuItems = JSON.parse(menuItemsJson);
+        if (!Array.isArray(menuItems)) {
+          throw new Error(`Expected menuItems to be an array, got: ${typeof menuItems}`);
+        }
 
         const se = Application("System Events");
         const app = Application(processName);
@@ -66,11 +68,10 @@ export default (async function buildMenuHandler(meta, processName: string) {
         let current = menuBarItemRef;
 
         for (let i = 0; i < menuItems.length; i++) {
-          const name = menuItems[i]!;
+          const name = menuItems[i];
           log(`Traversing -> "${name}"`);
 
           const menu = assertExists(current.menus[0], `menus[0] for "${name}"`);
-
           const next = findByName(menu.menuItems, name, "menuItem");
 
           if (i === menuItems.length - 1) {
@@ -85,7 +86,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
       },
       processName,
       menuBarItem,
-      menuItems,
+      JSON.stringify(menuItems),
     );
   };
 } satisfies BuildHandler);
