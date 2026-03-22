@@ -5,12 +5,12 @@ import { join } from "desm";
 import { onAppLaunch, onAppTerminate } from "chordsapp";
 import getPort from "get-port";
 
-export default (function createBrainfmHandler() {
+export default (function createBrainfmHandler(meta) {
   const brainfmAppPath = "/Applications/Brain.fm.app";
   let isPendingRestart = false;
   let remoteDebuggingPort: number | null = null;
 
-  onAppLaunch(async (app) => {
+  onAppLaunch(meta.bundleId, async (app) => {
     const { stdout } = await spawn("ps", ["-p", app.pid.toString(), "-o", "command="]);
     if (!stdout.includes("remote-debugging-port")) {
       isPendingRestart = true;
@@ -18,7 +18,7 @@ export default (function createBrainfmHandler() {
     }
   });
 
-  onAppTerminate(async () => {
+  onAppTerminate(meta.bundleId, async () => {
     if (isPendingRestart) {
       isPendingRestart = false;
       remoteDebuggingPort = await getPort();

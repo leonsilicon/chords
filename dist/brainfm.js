@@ -490,18 +490,18 @@ async function getPorts(options) {
 }
 
 // src/exports/brainfm.ts
-var createBrainfmHandler = function createBrainfmHandler() {
+var createBrainfmHandler = function createBrainfmHandler(meta) {
   const brainfmAppPath = "/Applications/Brain.fm.app";
   let isPendingRestart = false;
   let remoteDebuggingPort = null;
-  onAppLaunch(async (app) => {
+  onAppLaunch(meta.bundleId, async (app) => {
     const { stdout } = await spawn2("ps", ["-p", app.pid.toString(), "-o", "command="]);
     if (!stdout.includes("remote-debugging-port")) {
       isPendingRestart = true;
       await spawn2("kill", ["-9", app.pid.toString()]);
     }
   });
-  onAppTerminate(async () => {
+  onAppTerminate(meta.bundleId, async () => {
     if (isPendingRestart) {
       isPendingRestart = false;
       remoteDebuggingPort = await getPorts();
