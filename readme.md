@@ -37,6 +37,7 @@ These chords are my personal chords for the (unreleased) Chords app, which suppo
 
 ## Playback
 
+`p` = Play/Pause
 `y` = Play
 `u` = Pause
 `o` = Stop
