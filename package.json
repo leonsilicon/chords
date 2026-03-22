@@ -35,11 +35,10 @@
     "jxa-run-compat": "^1.5.0",
     "keycode-ts2": "^0.1.0",
     "map-obj": "^6.0.0",
-    "nano-spawn-compat": "^2.0.5",
+    "nano-spawn-compat": "^2.0.6",
     "nullthrows-es": "^1.0.1",
     "onetime": "^8.0.0",
     "outdent": "^0.8.0",
-    "tinyspawn": "^1.5.6",
     "type-fest": "^5.5.0",
     "untildify": "^6.0.0",
     "websocket": "^1.0.35"

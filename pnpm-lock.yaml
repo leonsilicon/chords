@@ -75,8 +75,8 @@ importers:
         specifier: ^6.0.0
         version: 6.0.0
       nano-spawn-compat:
-        specifier: ^2.0.5
-        version: 2.0.5
+        specifier: ^2.0.6
+        version: 2.0.6
       nullthrows-es:
         specifier: ^1.0.1
         version: 1.0.1
@@ -86,9 +86,6 @@ importers:
       outdent:
         specifier: ^0.8.0
         version: 0.8.0
-      tinyspawn:
-        specifier: ^1.5.6
-        version: 1.5.6
       type-fest:
         specifier: ^5.5.0
         version: 5.5.0
@@ -399,8 +396,8 @@ packages:
   ms@2.0.0:
     resolution: {integrity: sha512-Tpp60P6IUJDTuOq/5Z8cdskzJujfwqfOTkrwIwj7IRISpnkJnT6SyJ4PCPnGMoFjC9ddhal5KVIYtAt97ix05A==}
 
-  nano-spawn-compat@2.0.5:
-    resolution: {integrity: sha512-6aRpC3FtCR+doWF/jF9nlCn/1r48DMmply0jbYru9fX1LPz/1cClgTWzNFNcXRXu98hAqzYnv72RrhR82AZF7Q==}
+  nano-spawn-compat@2.0.6:
+    resolution: {integrity: sha512-oy4yzPlwTs8Pfy5QsLf9dFxdRWXVB8BYApVFZCFkmh7oJkreJXLASj4RjGUbz5Nxd+0fY/fDRqco4MzYsK2rrQ==}
     engines: {node: '>=20.17'}
 
   next-tick@1.1.0:
@@ -444,10 +441,6 @@ packages:
   tagged-tag@1.0.0:
     resolution: {integrity: sha512-yEFYrVhod+hdNyx7g5Bnkkb0G6si8HJurOoOEgC8B/O0uXLHlaey/65KRv6cuWBNhBgHKAROVpc7QyYqE5gFng==}
     engines: {node: '>=20'}
-
-  tinyspawn@1.5.6:
-    resolution: {integrity: sha512-BKTzT5bfCP+P5I4lQlb7XJsWqRh0lNaZViiS/T3fXVjpGuT7PtaFl1w7fRAYFSUzlL9BHjJWQA9GNhdnF9EOhQ==}
-    engines: {node: '>= 18'}
 
   type-fest@5.5.0:
     resolution: {integrity: sha512-PlBfpQwiUvGViBNX84Yxwjsdhd1TUlXr6zjX7eoirtCPIr08NAmxwa+fcYBTeRQxHo9YC9wwF3m9i700sHma8g==}
@@ -723,7 +716,7 @@ snapshots:
 
   ms@2.0.0: {}
 
-  nano-spawn-compat@2.0.5:
+  nano-spawn-compat@2.0.6:
     dependencies:
       strip-ansi: 7.2.0
 
@@ -762,8 +755,6 @@ snapshots:
       ansi-regex: 6.2.2
 
   tagged-tag@1.0.0: {}
-
-  tinyspawn@1.5.6: {}
 
   type-fest@5.5.0:
     dependencies:
