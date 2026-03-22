@@ -21,6 +21,9 @@ export function parseElectronAccelerator(accelerator: string): KeyMappingCode[] 
       case "altgr":
         return KeyMappingCode.AltRight;
 
+      case 'shift':
+        return KeyMappingCode.ShiftLeft;
+
       case "command":
       case "cmd":
       case "meta":
@@ -62,6 +65,10 @@ export function toElectronAccelerator(shortcut: string): string {
 
         case KeyMappingCode.AltRight:
           return "AltGr";
+
+        case KeyMappingCode.ShiftLeft:
+        case KeyMappingCode.ShiftRight:
+          return "Shift";
 
         default: {
           if (part.startsWith("Key")) {
