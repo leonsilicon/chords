@@ -6314,6 +6314,8 @@ function parseElectronAccelerator(accelerator) {
         return KeyMappingCode.AltLeft;
       case "altgr":
         return KeyMappingCode.AltRight;
+      case "shift":
+        return KeyMappingCode.ShiftLeft;
       case "command":
       case "cmd":
       case "meta":
@@ -6345,6 +6347,9 @@ function toElectronAccelerator(shortcut) {
         return "Alt";
       case KeyMappingCode.AltRight:
         return "AltGr";
+      case KeyMappingCode.ShiftLeft:
+      case KeyMappingCode.ShiftRight:
+        return "Shift";
       default: {
         if (part.startsWith("Key")) {
           return part.slice(3);

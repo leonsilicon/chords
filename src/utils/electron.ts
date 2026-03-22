@@ -21,7 +21,7 @@ export function parseElectronAccelerator(accelerator: string): KeyMappingCode[] 
       case "altgr":
         return KeyMappingCode.AltRight;
 
-      case 'shift':
+      case "shift":
         return KeyMappingCode.ShiftLeft;
 
       case "command":
