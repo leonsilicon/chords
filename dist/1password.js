@@ -30,6 +30,20 @@ var __toESM = (mod, isNodeMode, target) => {
   return to;
 };
 var __commonJS = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __returnValue = (v) => v;
+function __exportSetter(name, newValue) {
+  this[name] = __returnValue.bind(null, newValue);
+}
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, {
+      get: all[name],
+      enumerable: true,
+      configurable: true,
+      set: __exportSetter.bind(all, name)
+    });
+};
+var __esm = (fn, res) => () => (fn && (res = fn(fn = 0)), res);
 var __require = /* @__PURE__ */ createRequire(import.meta.url);
 
 // node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
@@ -99,7 +113,12 @@ function ensureGlobalHotkeys(globalChords, {
       return [];
     }
     const hotkeyId = getHotkeyId(chord);
-    const shortcut = getGlobalHotkey(bundleId, hotkeyId) ?? registerGlobalHotkey(bundleId, hotkeyId);
+    let isNew = true;
+    let shortcut = getGlobalHotkey(bundleId, hotkeyId);
+    if (!shortcut) {
+      isNew = false;
+      shortcut = registerGlobalHotkey(bundleId, hotkeyId);
+    }
     if (shortcut === undefined) {
       console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
       return [];
@@ -108,7 +127,8 @@ function ensureGlobalHotkeys(globalChords, {
       {
         chord,
         sequence,
-        shortcut
+        shortcut,
+        isNew
       }
     ];
   });

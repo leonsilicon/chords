@@ -16,15 +16,19 @@ export function ensureGlobalHotkeys(
     bundleId: string;
     getHotkeyId: (chord: Chord) => string;
   },
-): Array<{ sequence: string; chord: Chord; shortcut: string }> {
+): Array<{ sequence: string; chord: Chord; shortcut: string; isNew: boolean }> {
   return Object.entries(globalChords).flatMap(([sequence, chord]) => {
     if (!chord) {
       return [];
     }
 
     const hotkeyId = getHotkeyId(chord);
-    const shortcut =
-      getGlobalHotkey(bundleId, hotkeyId) ?? registerGlobalHotkey(bundleId, hotkeyId);
+    let isNew = true;
+    let shortcut = getGlobalHotkey(bundleId, hotkeyId);
+    if (!shortcut) {
+      isNew = false;
+      shortcut = registerGlobalHotkey(bundleId, hotkeyId);
+    }
 
     if (shortcut === undefined) {
       console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
@@ -36,6 +40,7 @@ export function ensureGlobalHotkeys(
         chord,
         sequence,
         shortcut,
+        isNew,
       },
     ];
   });

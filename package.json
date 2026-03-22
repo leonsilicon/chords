@@ -9,7 +9,7 @@
     "./*": "./dist/*"
   },
   "scripts": {
-    "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --target node --external chordsapp",
+  "build": "vp fmt src/ && vp check src/ && rimraf dist/ && bun build ./src/exports/* --outdir dist/ --root ./src/exports --target node --external chordsapp",
     "prepare": "lefthook install"
   },
   "dependencies": {
@@ -36,10 +36,12 @@
     "nullthrows-es": "^1.0.1",
     "onetime": "^8.0.0",
     "outdent": "^0.8.0",
+    "puppeteer-core": "^24.40.0",
     "type-fest": "^5.5.0",
     "untildify": "^6.0.0"
   },
   "devDependencies": {
+    "@electron/asar": "^4.1.0",
     "@jxa/global-type": "^1.4.0",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^25.5.0",
