@@ -3,55 +3,55 @@ name = "Brain.fm"
 
 [config.js]
 module = '''
-import buildBrainfmHandler from 'dist/brainfm.js';
+import buildHandler from 'dist/brainfm.js';
 export default buildHandler(import.meta);
 '''
 
 [chords]
 # Start
-"s," = { name = "Start: Menu", args = '''
-  $('[alt=Gear]').click()
-''' }
-"sf" = { name = "Start: Focus", args = '''
-  $("div:contains('Focus')").click()
-'''  }
-"sr" = { name = "Start: Relax", args = '''
-  $("div:contains('Relax')").click()
-'''  }
-"ss" = { name = "Start: Sleep", args = '''
-  $("div:contains('Sleep')").click()
-'''  }
-"sm" = { name = "Start: Meditate", args = '''
-  $("div:contains('Meditate')").click()
-'''  }
+"s," = { name = "Start: Menu", args = ['''
+  $(`[alt=Gear]`).click()
+'''] }
+"sf" = { name = "Start: Focus", args = ['''
+  $(`div:contains('Focus')`).click()
+'''] }
+"sr" = { name = "Start: Relax", args = ['''
+  $(`div:contains('Relax')`).click()
+'''] }
+"ss" = { name = "Start: Sleep", args = ['''
+  $(`div:contains('Sleep')`).click()
+'''] }
+"sm" = { name = "Start: Meditate", args = ['''
+  $(`div:contains('Meditate')`).click()
+'''] }
 
 # Player
-"pp" = { name = "Player: Play/Pause", args = '''
-  $('[alt=Pause],[alt=Play]').click()
-''' }
-"p[" = { name = "Player: Previous", args = '''
-  $('[alt=Previous]').click()
-''' }
-"p]" = { name = "Player: Next", args = '''
-  $('[alt=Next]').click()
-''' }
+"pp" = { name = "Player: Play/Pause", args = ['''
+  $(`[alt=Pause],[alt=Play]`).click()
+'''] }
+"p[" = { name = "Player: Previous", args = ['''
+  $(`[alt=Previous]`).click()
+'''] }
+"p]" = { name = "Player: Next", args = ['''
+  $(`[alt=Next]`).click()
+'''] }
 
 # Activities
-"a," = { name = "Activities: Menu", args = '''
-  $('[alt=ChevronDown]').click()
-''' }
-"a1" = { name = "Activities: 1", args = '''
-  $('div:contains("ACTIVITIES")').parent().next().children().eq(0).click()
-''' }
-"a2" = { name = "Activities: 2", args = '''
-  $('div:contains("ACTIVITIES")').parent().next().children().eq(1).click()
-''' }
-"a3" = { name = "Activities: 3", args = '''
-  $('div:contains("ACTIVITIES")').parent().next().children().eq(2).click()
-''' }
-"a4" = { name = "Activities: 4", args = '''
-  $('div:contains("ACTIVITIES")').parent().next().children().eq(3).click()
-''' }
-"a5" = { name = "Activities: 5", args = '''
-  $('div:contains("ACTIVITIES")').parent().next().children().eq(4).click()
-''' }
+"a," = { name = "Activities: Menu", args = ['''
+  $(`[alt=ChevronDown]`).click()
+'''] }
+"a1" = { name = "Activities: 1", args = ['''
+  $(`div:contains("ACTIVITIES")`).parent().next().children().eq(0).click()
+'''] }
+"a2" = { name = "Activities: 2", args = ['''
+  $(`div:contains("ACTIVITIES")`).parent().next().children().eq(1).click()
+'''] }
+"a3" = { name = "Activities: 3", args = ['''
+  $(`div:contains("ACTIVITIES")`).parent().next().children().eq(2).click()
+'''] }
+"a4" = { name = "Activities: 4", args = ['''
+  $(`div:contains("ACTIVITIES")`).parent().next().children().eq(3).click()
+'''] }
+"a5" = { name = "Activities: 5", args = ['''
+  $(`div:contains("ACTIVITIES")`).parent().next().children().eq(4).click()
+'''] }
