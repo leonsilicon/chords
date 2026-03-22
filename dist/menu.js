@@ -124,7 +124,7 @@ JSON.stringify({ result: out });
 
 // src/exports/menu.ts
 var import_jxa_run_compat = __toESM(require_run(), 1);
-var buildMenuHandler = async function buildMenuHandler(meta, processName) {
+var buildMenuHandler = function buildMenuHandler(meta, processName) {
   return function menu(menuBarItem, menuItems) {
     return import_jxa_run_compat.run((processName2, menuBarItem2, menuItemsCommaJoined) => {
       const menuItems2 = menuItemsCommaJoined.split(",");

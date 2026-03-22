@@ -2,7 +2,7 @@ import "@jxa/global-type";
 import { run } from "jxa-run-compat";
 import type { BuildHandler } from "../types/handler.ts";
 
-export default (async function buildMenuHandler(meta, processName: string) {
+export default (function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
       (processName: string, menuBarItem: string, menuItemsCommaJoined: string) => {
