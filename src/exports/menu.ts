@@ -5,7 +5,9 @@ import type { BuildHandler } from "../types/handler.ts";
 export default (async function buildMenuHandler(meta, processName: string) {
   return function menu(menuBarItem: string, menuItems: string[]) {
     return run(
-      (processName: string, menuBarItem: string, ...menuItems: string[]) => {
+      (processName: string, menuBarItem: string, menuItemsCommaJoined: string) => {
+        const menuItems = menuItemsCommaJoined.split(",");
+
         const log = (...args: any[]) => {
           console.log("[JXA]", ...args);
         };
@@ -49,6 +51,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
           throw new Error(`Expected menuItems to be an array, got: ${typeof menuItems}`);
         }
 
+        console.log(menuItems);
         const se = Application("System Events");
         const app = Application(processName);
 
@@ -85,7 +88,7 @@ export default (async function buildMenuHandler(meta, processName: string) {
       },
       processName,
       menuBarItem,
-      ...menuItems,
+      menuItems.join(","),
     );
   };
 } satisfies BuildHandler);

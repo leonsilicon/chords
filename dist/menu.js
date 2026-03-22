@@ -126,7 +126,8 @@ JSON.stringify({ result: out });
 var import_jxa_run_compat = __toESM(require_run(), 1);
 var buildMenuHandler = async function buildMenuHandler(meta, processName) {
   return function menu(menuBarItem, menuItems) {
-    return import_jxa_run_compat.run((processName2, menuBarItem2, ...menuItems2) => {
+    return import_jxa_run_compat.run((processName2, menuBarItem2, menuItemsCommaJoined) => {
+      const menuItems2 = menuItemsCommaJoined.split(",");
       const log = (...args) => {
         console.log("[JXA]", ...args);
       };
@@ -161,6 +162,7 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
       if (!Array.isArray(menuItems2)) {
         throw new Error(`Expected menuItems to be an array, got: ${typeof menuItems2}`);
       }
+      console.log(menuItems2);
       const se = Application("System Events");
       const app = Application(processName2);
       log("Activating app:", processName2);
@@ -184,7 +186,7 @@ var buildMenuHandler = async function buildMenuHandler(meta, processName) {
         }
       }
       log("Done");
-    }, processName, menuBarItem, ...menuItems);
+    }, processName, menuBarItem, menuItems.join(","));
   };
 };
 export {
