@@ -1,17 +1,13 @@
-import { t as exists } from "./file-BC3LWRm1.js";
-import { t as ensureGlobalHotkeys } from "./global-y2zS14hM.js";
-import { t as getPlistShortcutUtils } from "./plist-CjEIorO7.js";
-import untildify from "untildify";
-import noop from "@stdlib/utils-noop";
+import { r as __toESM, t as require_lib } from "./lib-BcpI7GUj.js";
+import { a as includeKeys, c as untildify, i as nullthrows, o as ensureGlobalHotkeys, s as exists } from "./dist-DhGxq6nI.js";
+import { i as serializeBplist, t as getPlistShortcutUtils } from "./plist-DwWwaE8N.js";
 import fs from "fs";
 import { onAppTerminate, setAppNeedsRelaunch } from "chord";
-import { includeKeys } from "filter-obj";
-import nullthrows from "nullthrows-es";
-import { serializeBplist } from "bplist-lossless";
 //#region src/js/wiheads.ts
+var import_lib = /* @__PURE__ */ __toESM(require_lib(), 1);
 function buildWiheadsHandler(tildepath) {
 	const plistPath = untildify(tildepath);
-	if (!exists(plistPath)) return noop;
+	if (!exists(plistPath)) return import_lib.default;
 	const writes = ensureGlobalHotkeys(includeKeys(this.chords, (sequence) => sequence.startsWith("/")), {
 		bundleId: this.bundleId,
 		getHotkeyId: (chord) => nullthrows(chord.args?.[0])

@@ -1,7 +1,6 @@
 name = "1Password"
 
 [handler.hotkey]
-type = "js"
 file = "1password.js"
 args = []
 

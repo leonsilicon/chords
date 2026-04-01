@@ -1,7 +1,6 @@
 name = "Brain.fm"
 
 [handler]
-type = "js"
 file = "brainfm.js"
 args = []
 

@@ -1,7 +1,6 @@
 name = "Supercharge (Setapp)"
 
 [handler.hotkey]
-type = "js"
 file = "supercharge.js"
 args = ["~/Library/Preferences/com.sindresorhus.Supercharge-setapp.plist"]
 

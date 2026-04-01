@@ -5,8 +5,8 @@
     "#/*": "./src/js/*"
   },
   "dependencies": {
-    "@keychord/chords-menu": "github:KeyChord/chords-menu",
-    "@keychord/chords-chromium": "github:KeyChord/chords-chromium",
+    "@keychord/chords-menu": "github:KeyChord/chords-menu#d17435f29fbcae83fcc372fccbbbb3189011f72d",
+    "@keychord/chords-chromium": "github:KeyChord/chords-chromium#bd12096440a086c81c612fdf5aa9dd0b39737aae",
     "@kayahr/text-encoding": "^2.1.0",
     "@stdlib/utils-noop": "^0.2.3",
     "@types/json-parse-safe": "^2.0.3",
@@ -41,7 +41,7 @@
   "devDependencies": {
     "@electron/asar": "^4.1.0",
     "@jxa/global-type": "^1.4.0",
-    "@keychord/config": "^0.0.2",
+    "@keychord/config": "latest",
     "@keychord/tsconfig": "^0.0.5",
     "@types/chrome-remote-interface": "^0.33.0",
     "@types/js-yaml": "^4.0.9",

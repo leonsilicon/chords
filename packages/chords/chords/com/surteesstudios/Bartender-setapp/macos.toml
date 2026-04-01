@@ -1,12 +1,10 @@
 name = "Bartender"
 
 [handlers.hotkey]
-type = "js"
 file = "bartender.js"
 args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
 
 [handlers.item-hotkey]
-type = "js"
 file = "bartender.js"
 args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
 
