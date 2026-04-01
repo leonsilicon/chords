@@ -4,20 +4,15 @@
 
 ## Apps
 
-1Password
-Brain.fm
-CleanShot X
-PixelSnap
-Chrome
-JetBrain IDEs
-VSCode
-Raycast
-Lungo
-Supercharge
-Paste
-Bartender
-Warp
-Dwmac
+1Password\
+Brain.fm\
+CleanShot X\
+PixelSnap\
+Raycast\
+Lungo\
+Supercharge\
+Paste\
+Bartender\
 WhatsApp
 
 ## Global Keys
