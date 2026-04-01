@@ -1,0 +1,57 @@
+name = "Supercharge (Setapp)"
+
+[handler.hotkey]
+type = "js"
+file = "supercharge.js"
+args = ["~/Library/Preferences/com.sindresorhus.Supercharge-setapp.plist"]
+
+[chords]
+'\d' = { name = "Toggle Dark Mode", 'emit:hotkey' = ['KeyboardShortcuts_toggleDarkMode'] }
+'\g' = { name = "Toggle Grayscale Mode", 'emit:hotkey' = ['KeyboardShortcuts_toggleGrayscaleMode'] }
+'\te' = { name = "Trash: Empty", 'emit:hotkey' = ['KeyboardShortcuts_emptyTrash'] }
+'\td' = { name = "Toggle Desktop Icons", 'emit:hotkey' = ['KeyboardShortcuts_toggleDesktopIcons'] }
+'\<Sleep Displays>' = { name = "Sleep Displays", 'emit:hotkey' = ['KeyboardShortcuts_sleepDisplays'] }
+'\<Toggle Mute Sound>' = { name = "Toggle Mute Sound", 'emit:hotkey' = ['KeyboardShortcuts_toggleMuteSound'] }
+'\<Toggle Spotlight Files>' = { name = "Toggle Spotlight Files", 'emit:hotkey' = ['KeyboardShortcuts_toggleSpotlightFiles'] }
+'\<Toggle Desktop Icons and Widgets>' = { name = "Toggle Desktop Icons and Widgets", 'emit:hotkey' = ['KeyboardShortcuts_toggleDesktopIconsAndWidgets'] }
+'\<Start Cleaning Mode>' = { name = "Start Cleaning Mode", 'emit:hotkey' = ['KeyboardShortcuts_startCleaningMode'] }
+'\<Toggle Now Playing>' = { name = "Toggle Now Playing", 'emit:hotkey' = ['KeyboardShortcuts_toggleNowPlaying'] }
+'\<Scan QR Code>' = { name = "Scan QR Code", 'emit:hotkey' = ['KeyboardShortcuts_scanQRCode'] }
+'\<Toggle Passwords App>' = { name = "Toggle Passwords App", 'emit:hotkey' = ['KeyboardShortcuts_togglePasswordsApp'] }
+'\<Toggle Desktop Widgets>' = { name = "Toggle Desktop Widgets", 'emit:hotkey' = ['KeyboardShortcuts_toggleDesktopWidgets'] }
+'\<Toggle True Tone>' = { name = "Toggle True Tone", 'emit:hotkey' = ['KeyboardShortcuts_toggleTrueTone'] }
+'\<Toggle Hot Corners>' = { name = "Toggle Hot Corners", 'emit:hotkey' = ['KeyboardShortcuts_toggleHotCorners'] }
+'\<Hide All Windows>' = { name = "Hide All Windows", 'emit:hotkey' = ['KeyboardShortcuts_hideAllWindows'] }
+'\<Scan QR Code From Pasteboard>' = { name = "Scan QR Code From Pasteboard", 'emit:hotkey' = ['KeyboardShortcuts_scanQRCodeFromPasteboard'] }
+'\<Toggle Night Shift>' = { name = "Toggle Night Shift", 'emit:hotkey' = ['KeyboardShortcuts_toggleNightShift'] }
+'\<Quit All Apps>' = { name = "Quit All Apps", 'emit:hotkey' = ['KeyboardShortcuts_quitAllApps'] }
+'\<Toggle Finder>' = { name = "Toggle Finder", 'emit:hotkey' = ['KeyboardShortcuts_toggleFinder'] }
+'\e' = { name = "Eject All Disks", 'emit:hotkey' = ['KeyboardShortcuts_ejectAllDisks'] }
+'\<Isolate Window>' = { name = "Isolate Window", 'emit:hotkey' = ['KeyboardShortcuts_isolateWindow'] }
+'\<Increase Keyboard Brightness>' = { name = "Increase Keyboard Brightness", 'emit:hotkey' = ['KeyboardShortcuts_increaseKeyboardBrightness'] }
+'\<Center Mouse Pointer>' = { name = "Center Mouse Pointer", 'emit:hotkey' = ['KeyboardShortcuts_centerMousePointer'] }
+'\<Capture Text>' = { name = "Capture Text", 'emit:hotkey' = ['KeyboardShortcuts_captureText'] }
+'\<Toggle Spotlight Clipboard>' = { name = "Toggle Spotlight Clipboard", 'emit:hotkey' = ['KeyboardShortcuts_toggleSpotlightClipboard'] }
+'\<Toggle Low Power Mode>' = { name = "Toggle Low Power Mode", 'emit:hotkey' = ['KeyboardShortcuts_toggleLowPowerMode'] }
+'\<Clear Visible Notifications>' = { name = "Clear Visible Notifications", 'emit:hotkey' = ['KeyboardShortcuts_clearVisibleNotifications'] }
+'\<Clear Clipboard>' = { name = "Clear Clipboard", 'emit:hotkey' = ['KeyboardShortcuts_clearClipboard'] }
+'\<Start Cat Mode>' = { name = "Start Cat Mode", 'emit:hotkey' = ['KeyboardShortcuts_startCatMode'] }
+'\<Toggle Mouse Pointer>' = { name = "Toggle Mouse Pointer", 'emit:hotkey' = ['KeyboardShortcuts_toggleMousePointer'] }
+'\<Toggle Spotlight Actions>' = { name = "Toggle Spotlight Actions", 'emit:hotkey' = ['KeyboardShortcuts_toggleSpotlightActions'] }
+'\<Toggle Menu>' = { name = "Toggle Menu", 'emit:hotkey' = ['KeyboardShortcuts_toggleMenu'] }
+'\<Unminimize All Windows Of Active App>' = { name = "Unminimize All Windows Of Active App", 'emit:hotkey' = ['KeyboardShortcuts_unminimizeAllWindowsOfActiveApp'] }
+'\<Toggle Function Keys>' = { name = "Toggle Function Keys", 'emit:hotkey' = ['KeyboardShortcuts_toggleFunctionKeys'] }
+'\<Click Top Visible Notification>' = { name = "Click Top Visible Notification", 'emit:hotkey' = ['KeyboardShortcuts_clickTopVisibleNotification'] }
+'\<Toggle Mute Microphone>' = { name = "Toggle Mute Microphone", 'emit:hotkey' = ['KeyboardShortcuts_toggleMuteMicrophone'] }
+'\<Clear All Notifications>' = { name = "Clear All Notifications", 'emit:hotkey' = ['KeyboardShortcuts_clearAllNotifications'] }
+'\<Minimize All Windows>' = { name = "Minimize All Windows", 'emit:hotkey' = ['KeyboardShortcuts_minimizeAllWindows'] }
+'\<Keep Awake>' = { name = "Keep Awake", 'emit:hotkey' = ['KeyboardShortcuts_keepAwake'] }
+'\<Toggle Terminal App>' = { name = "Toggle Terminal App", 'emit:hotkey' = ['KeyboardShortcuts_toggleTerminalApp'] }
+'\<Unminimize Window Of Active App>' = { name = "Unminimize Window Of Active App", 'emit:hotkey' = ['KeyboardShortcuts_unminimizeWindowOfActiveApp'] }
+'\<Quit All Apps Except Frontmost>' = { name = "Quit All Apps Except Frontmost", 'emit:hotkey' = ['KeyboardShortcuts_quitAllAppsExceptFrontmost'] }
+'\<Decrease Keyboard Brightness>' = { name = "Decrease Keyboard Brightness", 'emit:hotkey' = ['KeyboardShortcuts_decreaseKeyboardBrightness'] }
+'\<Capture and Translate>' = { name = "Capture and Translate", 'emit:hotkey' = ['KeyboardShortcuts_captureAndTranslate'] }
+'\<Pick Color>' = { name = "Pick Color", 'emit:hotkey' = ['KeyboardShortcuts_pickColor'] }
+'\<Minimize All Windows Except Frontmost>' = { name = "Minimize All Windows Except Frontmost", 'emit:hotkey' = ['KeyboardShortcuts_minimizeAllWindowsExceptFrontmost'] }
+'\<Minimize App Windows Except Frontmost>' = { name = "Minimize App Windows Except Frontmost", 'emit:hotkey' = ['KeyboardShortcuts_minimizeAppWindowsExceptFrontmost'] }
+'\<Toggle Weather App>' = { name = "Toggle Weather App", 'emit:hotkey' = ['KeyboardShortcuts_toggleWeatherApp'] }

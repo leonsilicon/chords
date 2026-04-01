@@ -1,0 +1,6 @@
+[config]
+name = "Google Chrome Canary"
+extends = "@keychord/chords-chromium/chords/com/google/Chrome/canary.toml"
+
+[config.js]
+default = ['chrome.js', "/Applications/Google Chrome Canary.app"]

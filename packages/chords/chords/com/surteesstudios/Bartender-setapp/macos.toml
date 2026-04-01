@@ -1,0 +1,76 @@
+name = "Bartender"
+
+[handlers.hotkey]
+type = "js"
+file = "bartender.js"
+args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
+
+[handlers.item-hotkey]
+type = "js"
+file = "bartender.js"
+args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
+
+[chords]
+'?/-' = { name = "Bartender" }
+'/-t' = { name = "Bartender: Toggle Hidden Items", 'emit:hotkey' = [
+  "KeyboardShortcuts_showHiddenItems",
+] }
+'/-s' = { name = "Bartender: Search", 'emit:hotkey' = ["KeyboardShortcuts_quickSearch"] }
+'/-h' = { name = "Bartender: Hide Left Application Menu", 'emit:hotkey' = [
+  "KeyboardShortcuts_hideLeftApplicationMenu",
+] }
+'/-a' = { name = "Bartender: Show All Items", 'emit:hotkey' = [
+  "KeyboardShortcuts_showAllItems",
+] }
+
+'?-' = { name = "Bar" }
+'-b' = { name = "Bar: Battery", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-Battery',
+  'Battery',
+] }
+'-s' = { name = "Bar: Spotlight", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.Spotlight-Item-0',
+  'Spotlight',
+] }
+'-c' = { name = "Bar: Clock", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-Clock',
+  'Clock',
+] }
+'-cc' = { name = "Bar: Control Center", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-BentoBox-0',
+  'Control Center',
+] }
+'-i' = { name = "Bar: Input", 'emit:item-hotkey' = [
+  'com.apple.TextInputMenuAgent',
+  'com.apple.TextInputMenuAgent-Item-0',
+  'Text Input',
+] }
+'-w' = { name = "Bar: Wi-Fi", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-WiFi',
+  'Wi-Fi',
+] }
+'-u' = { name = "Bar: User", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-UserSwitcher',
+  'User',
+] }
+'-f' = { name = "Bar: Focus", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-FocusModes',
+  'Focus',
+] }
+'-p' = { name = "Bar: Playing", 'emit:item-hotkey' = [
+  'com.apple.controlcenter',
+  'com.apple.controlcenter-NowPlaying',
+  'Now Playing',
+] }
+'-j' = { name = "Bar: JoyTap", 'emit:item-hotkey' = [
+  'com.joytap.app-setapp',
+  'com.joytap.app-setapp-Item-0',
+  'JoyTap',
+] }

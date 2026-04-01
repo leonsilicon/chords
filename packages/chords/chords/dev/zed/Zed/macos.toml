@@ -1,0 +1,69 @@
+name = "Zed"
+
+[handlers.command]
+type = 'js'
+file = 'zed.js'
+args = []
+
+[chords]
+'?d' = { name = "Debugger" }
+da = { name = "Debugger: Start", 'emit:command' = ["debugger::Start"], shortcut = "f4" }
+do = { name = "Debugger: Stop", 'emit:command' = ["debugger::Stop"], shortcut = "shift+f5" }
+drr = { name = "Debugger: Rerun", 'emit:command' = ["debugger::RerunSession"], shortcut = "shift+cmd+f5" }
+du = { name = "Debugger: Pause", 'emit:command' = ["debugger::Pause"] }
+dsv = { name = "Debugger: Step Over", 'emit:command' = ["debugger::StepOver"] }
+dsi = { name = "Debugger: Step Into", 'emit:command' = ["debugger::StepInto"] }
+dso = { name = "Debugger: Step Out", 'emit:command' = ["debugger::StepOut"] }
+
+'?m' = { name = "Menu" }
+mf = { name = "Menu: First", 'emit:command' = ["debugger::StepOut"] }
+ml = { name = "Menu: Last", 'emit:command' = ["debugger::StepOut"] }
+'m]' = { name = "Menu: Next", 'emit:command' = ["debugger::StepOut"] }
+'m[' = { name = "Menu: Previous", 'emit:command' = ["debugger::StepOut"] }
+mc = { name = "Menu: Confirm", 'emit:command' = ["debugger::StepOut"] }
+mq = { name = "Menu: Quit/Cancel", 'emit:command' = ["debugger::StepOut"] }
+mr = { name = "Menu: Restart", 'emit:command' = ["debugger::StepOut"] }
+
+'?w' = { name = "Window" }
+wq = { name = "Window: Quit", 'emit:command' = ["zed::Quit"] }
+wx = { name = "Window: Exit", 'emit:command' = ["workspace::CloseWindow"] }
+wh = { name = "Window: Hide", 'emit:command' = ["zed::Hide"] }
+who = { name = "Window: Hide Others", 'emit:command' = ["zed::Hide"] }
+wm = { name = "Window: Minimize", 'emit:command' = ["zed::Hide"] }
+wf = { name = "Window: Fullscreen", 'emit:command' = ["zed::ToggleFullScreen"] }
+
+'?z' = { name = "Zoom" }
+zi = { name = "Zoom: In", 'emit:command' = ["zed::IncreaseBufferFontSize"] }
+zo = { name = "Zoom: Out", 'emit:command' = ["zed::DecreaseBufferFontSize"] }
+zr = { name = "Zoom: Reset", 'emit:command' = ["zed::ResetBufferFontSize"] }
+zt = { name = "Zoom: Toggle", 'emit:command' = ["zed::ToggleZoom"] }
+
+'?s' = { name = "Select / Split" }
+'s[' = { name = "Select: Previous", 'emit:command' = ["editor::SelectPrevious"] }
+'s]' = { name = "Select: Next", 'emit:command' = ["editor::SelectNext"] }
+'sa' = { name = "Select: All", 'emit:command' = ["editor::SelectNext"] }
+sr = { name = "Split: Right", 'emit:command' = ['pane::SplitRight'], shortcut = "cmd+backspace" }
+
+'?ff' = { name = "Folding" }
+ff = { name = "Folding: Fold", 'emit:command' = ['editor::Fold'], shortcut = "alt+cmd+[" }
+ft = { name = "Folding: Toggle", 'emit:command' = ['editor::ToggleFold'], shortcut = "alt+cmd+[" }
+ffa = { name = "Folding: Fold All", 'emit:command' = ['editor::FoldAll'], shortcut = "cmd+k cmd+0" }
+ffr = { name = "Folding: Fold Recursively", 'emit:command' = [
+  'editor::FoldRecursive',
+], shortcut = "cmd+k cmd+[" }
+
+'?fu' = { name = "Folding: Unfold" }
+fu = { name = "Folding: Unfold", 'emit:command' = ['editor::UnfoldLines'], shortcut = "alt+cmd+]" }
+fua = { name = "Folding: Unfold All", 'emit:command' = ['editor::UnfoldAll'], shortcut = "cmd+k cmd+j" }
+fur = { name = "Folding: Unfold Recursively", 'emit:command' = [
+  'editor::UnfoldRecursive',
+], shortcut = "cmd+k cmd+]" }
+
+'?f{1..9}' = { name = "Fold Level" }
+f1 = { name = "Fold Level 1", 'emit:command' = ['editor::FoldAtLevel_1'], shortcut = "cmd+k cmd+1" }
+f2 = { name = "Fold Level 2", 'emit:command' = ['editor::FoldAtLevel_2'], shortcut = "cmd+k cmd+2" }
+f3 = { name = "Fold Level 3", 'emit:command' = ['editor::FoldAtLevel_3'], shortcut = "cmd+k cmd+3" }
+f4 = { name = "Fold Level 4", 'emit:command' = ['editor::FoldAtLevel_4'], shortcut = "cmd+k cmd+4" }
+f5 = { name = "Fold Level 5", 'emit:command' = ['editor::FoldAtLevel_5'], shortcut = "cmd+k cmd+5" }
+f6 = { name = "Fold Level 6", 'emit:command' = ['editor::FoldAtLevel_6'], shortcut = "cmd+k cmd+6" }
+f7 = { name = "Fold Level 7", 'emit:command' = ['editor::FoldAtLevel_7'], shortcut = "cmd+k cmd+7" }

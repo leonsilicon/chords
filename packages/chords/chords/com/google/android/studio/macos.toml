@@ -1,0 +1,5 @@
+name = "Android Studio"
+
+[handlers.'@keychord/chords-jetbrains:command']
+file = "@keychord/chords-jetbrains/js/jetbrains.js"
+args = ["/Applications/Android Studio.app/Contents/MacOS/studio"]

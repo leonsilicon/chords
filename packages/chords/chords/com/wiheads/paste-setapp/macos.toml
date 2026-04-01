@@ -1,0 +1,11 @@
+[config]
+name = "Paste (Setapp)"
+
+[handlers.hotkey]
+type = "js"
+file = "wiheads.js"
+args = ["~/Library/Preferences/com.wiheads.paste-setapp.plist"]
+
+[chords]
+'/v' = { name = "Paste", 'emit:hotkey' = ['kPSTPreferencesActivationShortcut'] }
+'/vs' = { name = "Paste Stack", 'emit:hotkey' = ['paste-stack-shortcut'] }

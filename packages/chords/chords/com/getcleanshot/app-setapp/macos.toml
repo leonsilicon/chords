@@ -1,0 +1,19 @@
+name = "CleanShot X (Setapp)"
+
+[handlers.hotkey]
+type = "js"
+file = "maketheweb.js"
+args = ["~/Library/Preferences/com.getcleanshot.app-setapp.plist"]
+
+[chords]
+'?/c' = { name = "Cleanshot X" }
+'/c' = { name = "CleanShotX: All-In-One", 'emit:hotkey' = ['LAVAtakeAllInOne'] }
+'/cf' = { name = "CleanShotX: Fullscreen", 'emit:hotkey' = ['LAVAtakeFullscreen'] }
+'/co' = { name = "CleanShotX: OCR", 'emit:hotkey' = ['LAVAtakeOCR'] }
+'/col' = { name = "CleanShotX: OCR w/ Line Breaks", 'emit:hotkey' = ['LAVAtakeOCR'] }
+'/con' = { name = "CleanShotX: OCR No Line Breaks", 'emit:hotkey' = ['LAVAtakeOCR'] }
+# "/ca" = { name = "CleanShotX: Area", 'emit:hotkey' = ['LAVAstartGIFRecording'] }
+# "/ca[" = { name = "CleanShotX: Area Previous", 'emit:hotkey' = ['LAVAstartGIFRecording'] }
+'/cs' = { name = "CleanShotX: Scrolling", 'emit:hotkey' = ['LAVAscrollingCapture'] }
+'/cv' = { name = "CleanShotX: Video Recording", 'emit:hotkey' = ['LAVAstartVideoRecording'] }
+'/cg' = { name = "CleanShotX: GIF Recording", 'emit:hotkey' = ['LAVAstartGIFRecording'] }

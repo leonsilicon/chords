@@ -1,0 +1,5 @@
+# TODO: Some shortcuts are probably Firefox-specific
+name = "Firefox"
+
+[[import]]
+file = "@keychord/chords-chromium/chords/base.toml"

@@ -1,0 +1,101 @@
+[config]
+name = "dwmac"
+
+[chords]
+'?.' = { name = "Window Manager"}
+'.q' = { name = "Quit", shell = "dwmac close" }
+'.c' = { name = "Close All Windows But Current", shell = "dwmac close-all-windows-but-current" }
+'.l' = { name = "Resize Left", shell = "dwmac mfact +0.05" }
+'.r' = { name = "Resize Right", shell = "dwmac mfact -0.05" }
+'.m' = { name = "Focus master", shell = "dwmac focus-master-or-back" }
+'.p' = { name = "Promote to master", shell = "dwmac move-node-to-master" }
+# '.e' = { name = "Swap master", shell = "dwmac swap master" }
+'.u' = { name = "Unmanaged (Float) Layout", shell = "dwmac layout floating" }
+'.t' = { name = "Tiling Layout", shell = "dwmac layout tiling" }
+'.e' = { name = "Enable", shell = "dwmac enable" }
+'.[' = { name = "Previous", shell = "dwmac focus prev" }
+'.]' = { name = "Next", shell = "dwmac focus next" }
+'.n' = { name = "North", shell = "dwmac focus next" }
+'.s' = { name = "South", shell = "dwmac focus next" }
+'.w' = { name = "Forward the window", shell = "dwmac swap prev" }
+'.k' = { name = "Back the window", shell = "dwmac swap next" }
+
+'?.w(.)' = { name = "Workspace"}
+'.w1' = { name = "Workspace 1", shell = "dwmac workspace 1" }
+'.w2' = { name = "Workspace 2", shell = "dwmac workspace 2" }
+'.w3' = { name = "Workspace 3", shell = "dwmac workspace 3" }
+'.w4' = { name = "Workspace 4", shell = "dwmac workspace 4" }
+'.w5' = { name = "Workspace 5", shell = "dwmac workspace 5" }
+'.w6' = { name = "Workspace 6", shell = "dwmac workspace 6" }
+'.w7' = { name = "Workspace 7", shell = "dwmac workspace 7" }
+'.w8' = { name = "Workspace 8", shell = "dwmac workspace 8" }
+'.w9' = { name = "Workspace 9", shell = "dwmac workspace 9" }
+'.wa' = { name = "Workspace A", shell = "dwmac workspace a" }
+'.wb' = { name = "Workspace B", shell = "dwmac workspace b" }
+'.wc' = { name = "Workspace C", shell = "dwmac workspace c" }
+'.wd' = { name = "Workspace D", shell = "dwmac workspace d" }
+'.we' = { name = "Workspace E", shell = "dwmac workspace e" }
+'.wf' = { name = "Workspace F", shell = "dwmac workspace f" }
+'.wg' = { name = "Workspace G", shell = "dwmac workspace g" }
+'.wh' = { name = "Workspace H", shell = "dwmac workspace h" }
+'.wi' = { name = "Workspace I", shell = "dwmac workspace i" }
+'.wj' = { name = "Workspace J", shell = "dwmac workspace j" }
+'.wk' = { name = "Workspace K", shell = "dwmac workspace k" }
+'.wl' = { name = "Workspace L", shell = "dwmac workspace l" }
+'.wm' = { name = "Workspace M", shell = "dwmac workspace m" }
+'.wn' = { name = "Workspace N", shell = "dwmac workspace n" }
+'.wo' = { name = "Workspace O", shell = "dwmac workspace o" }
+'.wp' = { name = "Workspace P", shell = "dwmac workspace p" }
+'.wq' = { name = "Workspace Q", shell = "dwmac workspace q" }
+'.wr' = { name = "Workspace R", shell = "dwmac workspace r" }
+'.ws' = { name = "Workspace S", shell = "dwmac workspace s" }
+'.wt' = { name = "Workspace T", shell = "dwmac workspace t" }
+'.wu' = { name = "Workspace U", shell = "dwmac workspace u" }
+'.wv' = { name = "Workspace V", shell = "dwmac workspace v" }
+'.ww' = { name = "Workspace W", shell = "dwmac workspace w" }
+'.wx' = { name = "Workspace X", shell = "dwmac workspace x" }
+'.wy' = { name = "Workspace Y", shell = "dwmac workspace y" }
+'.wz' = { name = "Workspace Z", shell = "dwmac workspace z" }
+'.w[' = { name = "Workspace Previous", shell = "dwmac workspace prev" }
+'.w]' = { name = "Workspace Next", shell = "dwmac workspace next" }
+'.w.' = { name = "Workspace Back and Forth", shell = "dwmac workspace-back-and-forth" }
+
+'?.m(.)' = { name = "Move to Workspace" }
+'.m1' = { name = "Move to Workspace 1", shell = "dwmac move-node-to-workspace 1" }
+'.m2' = { name = "Move to Workspace 2", shell = "dwmac move-node-to-workspace 2" }
+'.m3' = { name = "Move to Workspace 3", shell = "dwmac move-node-to-workspace 3" }
+'.m4' = { name = "Move to Workspace 4", shell = "dwmac move-node-to-workspace 4" }
+'.m5' = { name = "Move to Workspace 5", shell = "dwmac move-node-to-workspace 5" }
+'.m6' = { name = "Move to Workspace 6", shell = "dwmac move-node-to-workspace 6" }
+'.m7' = { name = "Move to Workspace 7", shell = "dwmac move-node-to-workspace 7" }
+'.m8' = { name = "Move to Workspace 8", shell = "dwmac move-node-to-workspace 8" }
+'.m9' = { name = "Move to Workspace 9", shell = "dwmac move-node-to-workspace 9" }
+'.ma' = { name = "Move to Workspace A", shell = "dwmac move-node-to-workspace a" }
+'.mb' = { name = "Move to Workspace B", shell = "dwmac move-node-to-workspace b" }
+'.mc' = { name = "Move to Workspace C", shell = "dwmac move-node-to-workspace c" }
+'.md' = { name = "Move to Workspace D", shell = "dwmac move-node-to-workspace d" }
+'.me' = { name = "Move to Workspace E", shell = "dwmac move-node-to-workspace e" }
+'.mf' = { name = "Move to Workspace F", shell = "dwmac move-node-to-workspace f" }
+'.mg' = { name = "Move to Workspace G", shell = "dwmac move-node-to-workspace g" }
+'.mh' = { name = "Move to Workspace H", shell = "dwmac move-node-to-workspace h" }
+'.mi' = { name = "Move to Workspace I", shell = "dwmac move-node-to-workspace i" }
+'.mj' = { name = "Move to Workspace J", shell = "dwmac move-node-to-workspace j" }
+'.mk' = { name = "Move to Workspace K", shell = "dwmac move-node-to-workspace k" }
+'.ml' = { name = "Move to Workspace L", shell = "dwmac move-node-to-workspace l" }
+'.mm' = { name = "Move to Workspace M", shell = "dwmac move-node-to-workspace m" }
+'.mn' = { name = "Move to Workspace N", shell = "dwmac move-node-to-workspace n" }
+'.mo' = { name = "Move to Workspace O", shell = "dwmac move-node-to-workspace o" }
+'.mp' = { name = "Move to Workspace P", shell = "dwmac move-node-to-workspace p" }
+'.mq' = { name = "Move to Workspace Q", shell = "dwmac move-node-to-workspace q" }
+'.mr' = { name = "Move to Workspace R", shell = "dwmac move-node-to-workspace r" }
+'.ms' = { name = "Move to Workspace S", shell = "dwmac move-node-to-workspace s" }
+'.mt' = { name = "Move to Workspace T", shell = "dwmac move-node-to-workspace t" }
+'.mu' = { name = "Move to Workspace U", shell = "dwmac move-node-to-workspace u" }
+'.mv' = { name = "Move to Workspace V", shell = "dwmac move-node-to-workspace v" }
+'.mw' = { name = "Move to Workspace W", shell = "dwmac move-node-to-workspace w" }
+'.mx' = { name = "Move to Workspace X", shell = "dwmac move-node-to-workspace x" }
+'.my' = { name = "Move to Workspace Y", shell = "dwmac move-node-to-workspace y" }
+'.mz' = { name = "Move to Workspace Z", shell = "dwmac move-node-to-workspace z" }
+
+'?.d' = { name = "Display" }
+'.dn' = { name = "Move Workspace to Display", shell = "dwmac move-workspace-to-monitor --wrap-around next" }

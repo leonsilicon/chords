@@ -1,0 +1,6 @@
+[config]
+name = "Google Chrome Beta"
+extends = "@keychord/chords-chromium/chords/com/google/Chrome/macos.toml"
+
+[config.js]
+default = ['chrome.js', "/Applications/Google Chrome Beta.app"]

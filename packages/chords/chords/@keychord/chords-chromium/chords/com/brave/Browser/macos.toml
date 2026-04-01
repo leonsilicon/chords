@@ -1,0 +1,6 @@
+[config]
+name = "Brave"
+extends = "@keychord/chords-chromium/chords/base.toml"
+
+[config.js]
+default = ['chrome.js', "/Applications/Brave.app"]

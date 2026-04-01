@@ -1,0 +1,4 @@
+name = "Raycast"
+
+[chords]
+'/r' = { name = "Raycast", shell = "open -a 'Raycast'" }
