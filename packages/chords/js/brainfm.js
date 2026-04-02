@@ -1,5 +1,3 @@
-import os from "node:os";
-import { onAppLaunch, onAppTerminate, setAppNeedsRelaunch } from "chord";
 import process from "node:process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -8,7 +6,9 @@ import fs from "node:fs/promises";
 import { pipeline } from "node:stream/promises";
 import { fileURLToPath as fileURLToPath$1 } from "url";
 import { dirname, join } from "path";
+import { onAppLaunch, onAppTerminate, setAppNeedsRelaunch } from "chord";
 import net from "node:net";
+import os from "node:os";
 //#region node_modules/.pnpm/node_modules/ansi-regex/index.js
 function ansiRegex({ onlyFirst = false } = {}) {
 	return new RegExp(`(?:\\u001B\\][\\s\\S]*?(?:\\u0007|\\u001B\\u005C|\\u009C))|[\\u001B\\u009B][[\\]()#;?]*(?:\\d{1,4}(?:[;:]\\d{0,4})*)?[\\dA-PR-TZcf-nq-uy=><~]`, onlyFirst ? void 0 : "g");

@@ -1,9 +1,154 @@
-import { r as __toESM, t as require_lib } from "./lib-BcpI7GUj.js";
-import { a as includeKeys, c as untildify, i as nullthrows, o as ensureGlobalHotkeys, r as getKeyMapByCode, s as exists, t as KeyMappingCode } from "./dist-DhGxq6nI.js";
+import os from "node:os";
 import fs from "fs";
-import { tap } from "chord";
+import { getGlobalHotkey, registerGlobalHotkey, tap } from "chord";
+//#region \0rolldown/runtime.js
+var __create = Object.create;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __getProtoOf = Object.getPrototypeOf;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __commonJSMin = (cb, mod) => () => (mod || cb((mod = { exports: {} }).exports, mod), mod.exports);
+var __copyProps = (to, from, except, desc) => {
+	if (from && typeof from === "object" || typeof from === "function") for (var keys = __getOwnPropNames(from), i = 0, n = keys.length, key; i < n; i++) {
+		key = keys[i];
+		if (!__hasOwnProp.call(to, key) && key !== except) __defProp(to, key, {
+			get: ((k) => from[k]).bind(null, key),
+			enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+		});
+	}
+	return to;
+};
+var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(isNodeMode || !mod || !mod.__esModule ? __defProp(target, "default", {
+	value: mod,
+	enumerable: true
+}) : target, mod));
+//#endregion
+//#region node_modules/.pnpm/untildify@6.0.0/node_modules/untildify/index.js
+let homeDirectory;
+let currentUser;
+function untildify(pathWithTilde) {
+	if (typeof pathWithTilde !== "string") throw new TypeError(`Expected a string, got ${typeof pathWithTilde}`);
+	if (homeDirectory === void 0) homeDirectory = os.homedir();
+	if (homeDirectory && /^~(?=$|\/|\\)/.test(pathWithTilde)) return pathWithTilde.replace(/^~/, homeDirectory);
+	const userMatch = pathWithTilde.match(/^~([^/\\]+)(.*)/);
+	if (userMatch) {
+		if (currentUser === void 0) currentUser = os.userInfo().username;
+		if (currentUser) {
+			const username = userMatch[1];
+			const rest = userMatch[2];
+			if (username === currentUser) return homeDirectory + rest;
+		}
+	}
+	return pathWithTilde;
+}
+//#endregion
+//#region node_modules/.pnpm/@stdlib+utils-noop@0.2.3/node_modules/@stdlib/utils-noop/lib/main.js
+/**
+* @license Apache-2.0
+*
+* Copyright (c) 2018 The Stdlib Authors.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*    http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+var require_main = /* @__PURE__ */ __commonJSMin(((exports, module) => {
+	/**
+	* No operation.
+	*
+	* @example
+	* noop();
+	* // ...does nothing.
+	*/
+	function noop() {}
+	module.exports = noop;
+}));
+//#endregion
+//#region src/js/utils/file.ts
+var import_lib = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
+	module.exports = require_main();
+})))(), 1);
+function exists(path) {
+	try {
+		fs.statSync(path);
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
+//#endregion
+//#region src/js/utils/global.ts
+/**
+Ensures that global hotkeys are registered.
+
+Returns a list of global hotkeys.
+*/
+function ensureGlobalHotkeys(globalChords, { bundleId, getHotkeyId }) {
+	return Object.entries(globalChords).flatMap(([sequence, chord]) => {
+		if (!chord) return [];
+		const hotkeyId = getHotkeyId(chord);
+		let isNew = true;
+		let shortcut = getGlobalHotkey(bundleId, hotkeyId);
+		if (!shortcut) {
+			isNew = false;
+			shortcut = registerGlobalHotkey(bundleId, hotkeyId);
+		}
+		if (shortcut === void 0) {
+			console.warn(`Failed to register global hotkey for ${bundleId} ${hotkeyId}`);
+			return [];
+		}
+		return [{
+			chord,
+			sequence,
+			shortcut,
+			isNew
+		}];
+	});
+}
+//#endregion
+//#region node_modules/.pnpm/filter-obj@6.1.0/node_modules/filter-obj/index.js
+const isSet = (input) => Object.prototype.toString.call(input) === "[object Set]";
+function includeKeys(object, predicate) {
+	const result = {};
+	if (Array.isArray(predicate) || isSet(predicate)) for (const key of predicate) {
+		const descriptor = Object.getOwnPropertyDescriptor(object, key);
+		if (!descriptor?.enumerable) continue;
+		Object.defineProperty(result, key, descriptor);
+	}
+	else for (const key of Reflect.ownKeys(object)) {
+		const descriptor = Object.getOwnPropertyDescriptor(object, key);
+		if (!descriptor?.enumerable) continue;
+		const value = object[key];
+		if (predicate(key, value, object)) Object.defineProperty(result, key, descriptor);
+	}
+	return result;
+}
+//#endregion
+//#region node_modules/.pnpm/nullthrows-es@1.0.1/node_modules/nullthrows-es/build/nullthrows.js
+/**
+* Enforces the given value to be neither `null` nor `undefined` and throws a {@link TypeError}
+* otherwise.
+* @param value the value to enforce not to be `null` or `undefined`
+* @param message an optional error message to use in the thrown `TypeError` if the given value is
+* `null` or `undefined`
+* @returns the given value if it is neither `null` nor `undefined`
+* @throws {@link TypeError} if the given value is `null` or `undefined`
+*/
+function nullthrows(value, message) {
+	if (value != null) return value;
+	throw new TypeError(message !== null && message !== void 0 ? message : `Expected value not to be null or undefined but got ${value}`);
+}
+//#endregion
 //#region node_modules/.pnpm/doctor-json@1.0.0/node_modules/@humanwhocodes/momoa/dist/momoa.js
-var import_lib = /* @__PURE__ */ __toESM(require_lib(), 1);
 /**
 * @fileoverview Character codes.
 * @author Nicholas C. Zakas
@@ -2196,6 +2341,3002 @@ const stringify = (object) => {
 	walkTree(object, object);
 	return orig.doc.text;
 };
+//#endregion
+//#region node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
+const KeyMappingCode = {
+	Hyper: "Hyper",
+	Super: "Super",
+	Fn: "Fn",
+	FnLock: "FnLock",
+	Suspend: "Suspend",
+	Resume: "Resume",
+	Turbo: "Turbo",
+	Sleep: "Sleep",
+	WakeUp: "WakeUp",
+	DisplayToggleIntExt: "DisplayToggleIntExt",
+	KeyA: "KeyA",
+	KeyB: "KeyB",
+	KeyC: "KeyC",
+	KeyD: "KeyD",
+	KeyE: "KeyE",
+	KeyF: "KeyF",
+	KeyG: "KeyG",
+	KeyH: "KeyH",
+	KeyI: "KeyI",
+	KeyJ: "KeyJ",
+	KeyK: "KeyK",
+	KeyL: "KeyL",
+	KeyM: "KeyM",
+	KeyN: "KeyN",
+	KeyO: "KeyO",
+	KeyP: "KeyP",
+	KeyQ: "KeyQ",
+	KeyR: "KeyR",
+	KeyS: "KeyS",
+	KeyT: "KeyT",
+	KeyU: "KeyU",
+	KeyV: "KeyV",
+	KeyW: "KeyW",
+	KeyX: "KeyX",
+	KeyY: "KeyY",
+	KeyZ: "KeyZ",
+	Digit1: "Digit1",
+	Digit2: "Digit2",
+	Digit3: "Digit3",
+	Digit4: "Digit4",
+	Digit5: "Digit5",
+	Digit6: "Digit6",
+	Digit7: "Digit7",
+	Digit8: "Digit8",
+	Digit9: "Digit9",
+	Digit0: "Digit0",
+	Enter: "Enter",
+	Escape: "Escape",
+	Backspace: "Backspace",
+	Tab: "Tab",
+	Space: "Space",
+	Minus: "Minus",
+	Equal: "Equal",
+	BracketLeft: "BracketLeft",
+	BracketRight: "BracketRight",
+	Backslash: "Backslash",
+	IntlHash: "IntlHash",
+	Semicolon: "Semicolon",
+	Quote: "Quote",
+	Backquote: "Backquote",
+	Comma: "Comma",
+	Period: "Period",
+	Slash: "Slash",
+	CapsLock: "CapsLock",
+	F1: "F1",
+	F2: "F2",
+	F3: "F3",
+	F4: "F4",
+	F5: "F5",
+	F6: "F6",
+	F7: "F7",
+	F8: "F8",
+	F9: "F9",
+	F10: "F10",
+	F11: "F11",
+	F12: "F12",
+	PrintScreen: "PrintScreen",
+	ScrollLock: "ScrollLock",
+	Pause: "Pause",
+	Insert: "Insert",
+	Home: "Home",
+	PageUp: "PageUp",
+	Delete: "Delete",
+	End: "End",
+	PageDown: "PageDown",
+	ArrowRight: "ArrowRight",
+	ArrowLeft: "ArrowLeft",
+	ArrowDown: "ArrowDown",
+	ArrowUp: "ArrowUp",
+	NumLock: "NumLock",
+	NumpadDivide: "NumpadDivide",
+	NumpadMultiply: "NumpadMultiply",
+	NumpadSubtract: "NumpadSubtract",
+	NumpadAdd: "NumpadAdd",
+	NumpadEnter: "NumpadEnter",
+	Numpad1: "Numpad1",
+	Numpad2: "Numpad2",
+	Numpad3: "Numpad3",
+	Numpad4: "Numpad4",
+	Numpad5: "Numpad5",
+	Numpad6: "Numpad6",
+	Numpad7: "Numpad7",
+	Numpad8: "Numpad8",
+	Numpad9: "Numpad9",
+	Numpad0: "Numpad0",
+	NumpadDecimal: "NumpadDecimal",
+	IntlBackslash: "IntlBackslash",
+	ContextMenu: "ContextMenu",
+	Power: "Power",
+	NumpadEqual: "NumpadEqual",
+	F13: "F13",
+	F14: "F14",
+	F15: "F15",
+	F16: "F16",
+	F17: "F17",
+	F18: "F18",
+	F19: "F19",
+	F20: "F20",
+	F21: "F21",
+	F22: "F22",
+	F23: "F23",
+	F24: "F24",
+	Open: "Open",
+	Help: "Help",
+	Select: "Select",
+	Again: "Again",
+	Undo: "Undo",
+	Cut: "Cut",
+	Copy: "Copy",
+	Paste: "Paste",
+	Find: "Find",
+	AudioVolumeMute: "AudioVolumeMute",
+	AudioVolumeUp: "AudioVolumeUp",
+	AudioVolumeDown: "AudioVolumeDown",
+	NumpadComma: "NumpadComma",
+	IntlRo: "IntlRo",
+	KanaMode: "KanaMode",
+	IntlYen: "IntlYen",
+	Convert: "Convert",
+	NonConvert: "NonConvert",
+	Lang1: "Lang1",
+	Lang2: "Lang2",
+	Lang3: "Lang3",
+	Lang4: "Lang4",
+	Lang5: "Lang5",
+	Abort: "Abort",
+	Props: "Props",
+	NumpadParenLeft: "NumpadParenLeft",
+	NumpadParenRight: "NumpadParenRight",
+	NumpadBackspace: "NumpadBackspace",
+	NumpadMemoryStore: "NumpadMemoryStore",
+	NumpadMemoryRecall: "NumpadMemoryRecall",
+	NumpadMemoryClear: "NumpadMemoryClear",
+	NumpadMemoryAdd: "NumpadMemoryAdd",
+	NumpadMemorySubtract: "NumpadMemorySubtract",
+	NumpadClear: "NumpadClear",
+	NumpadClearEntry: "NumpadClearEntry",
+	ControlLeft: "ControlLeft",
+	ShiftLeft: "ShiftLeft",
+	AltLeft: "AltLeft",
+	MetaLeft: "MetaLeft",
+	ControlRight: "ControlRight",
+	ShiftRight: "ShiftRight",
+	AltRight: "AltRight",
+	MetaRight: "MetaRight",
+	BrightnessUp: "BrightnessUp",
+	BrightnessDown: "BrightnessDown",
+	MediaPlay: "MediaPlay",
+	MediaRecord: "MediaRecord",
+	MediaFastForward: "MediaFastForward",
+	MediaRewind: "MediaRewind",
+	MediaTrackNext: "MediaTrackNext",
+	MediaTrackPrevious: "MediaTrackPrevious",
+	MediaStop: "MediaStop",
+	Eject: "Eject",
+	MediaPlayPause: "MediaPlayPause",
+	MediaSelect: "MediaSelect",
+	LaunchMail: "LaunchMail",
+	LaunchApp2: "LaunchApp2",
+	LaunchApp1: "LaunchApp1",
+	LaunchControlPanel: "LaunchControlPanel",
+	SelectTask: "SelectTask",
+	LaunchScreenSaver: "LaunchScreenSaver",
+	LaunchAssistant: "LaunchAssistant",
+	BrowserSearch: "BrowserSearch",
+	BrowserHome: "BrowserHome",
+	BrowserBack: "BrowserBack",
+	BrowserForward: "BrowserForward",
+	BrowserStop: "BrowserStop",
+	BrowserRefresh: "BrowserRefresh",
+	BrowserFavorites: "BrowserFavorites",
+	ZoomToggle: "ZoomToggle",
+	MailReply: "MailReply",
+	MailForward: "MailForward",
+	MailSend: "MailSend",
+	KeyboardLayoutSelect: "KeyboardLayoutSelect",
+	ShowAllWindows: "ShowAllWindows"
+};
+const keyMaps = {
+	None: {
+		usbPage: 0,
+		usb: 0,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "None",
+		modifier: null
+	},
+	Hyper: {
+		usbPage: 0,
+		usb: 16,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Hyper",
+		id: "Hyper",
+		modifier: null
+	},
+	Super: {
+		usbPage: 0,
+		usb: 17,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Super",
+		id: "Super",
+		modifier: null
+	},
+	Fn: {
+		usbPage: 0,
+		usb: 18,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Fn",
+		id: "Fn",
+		modifier: null
+	},
+	FnLock: {
+		usbPage: 0,
+		usb: 19,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "FnLock",
+		id: "FnLock",
+		modifier: null
+	},
+	Suspend: {
+		usbPage: 0,
+		usb: 20,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Suspend",
+		id: "Suspend",
+		modifier: null
+	},
+	Resume: {
+		usbPage: 0,
+		usb: 21,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Resume",
+		id: "Resume",
+		modifier: null
+	},
+	Turbo: {
+		usbPage: 0,
+		usb: 22,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Turbo",
+		id: "Turbo",
+		modifier: null
+	},
+	Sleep: {
+		usbPage: 1,
+		usb: 130,
+		evdev: 142,
+		xkb: 150,
+		win: 57439,
+		mac: 65535,
+		code: "Sleep",
+		id: "Sleep",
+		modifier: null
+	},
+	WakeUp: {
+		usbPage: 1,
+		usb: 131,
+		evdev: 143,
+		xkb: 151,
+		win: 57443,
+		mac: 65535,
+		code: "WakeUp",
+		id: "WakeUp",
+		modifier: null
+	},
+	DisplayToggleIntExt: {
+		usbPage: 1,
+		usb: 181,
+		evdev: 227,
+		xkb: 235,
+		win: 0,
+		mac: 65535,
+		code: "DisplayToggleIntExt",
+		id: "DisplayToggleIntExt",
+		modifier: null
+	},
+	UsbReserved: {
+		usbPage: 7,
+		usb: 0,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "UsbReserved",
+		modifier: null
+	},
+	UsbErrorRollOver: {
+		usbPage: 7,
+		usb: 1,
+		evdev: 0,
+		xkb: 0,
+		win: 255,
+		mac: 65535,
+		code: null,
+		id: "UsbErrorRollOver",
+		modifier: null
+	},
+	UsbPostFail: {
+		usbPage: 7,
+		usb: 2,
+		evdev: 0,
+		xkb: 0,
+		win: 252,
+		mac: 65535,
+		code: null,
+		id: "UsbPostFail",
+		modifier: null
+	},
+	UsbErrorUndefined: {
+		usbPage: 7,
+		usb: 3,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "UsbErrorUndefined",
+		modifier: null
+	},
+	UsA: {
+		usbPage: 7,
+		usb: 4,
+		evdev: 30,
+		xkb: 38,
+		win: 30,
+		mac: 0,
+		code: "KeyA",
+		id: "UsA",
+		modifier: null
+	},
+	UsB: {
+		usbPage: 7,
+		usb: 5,
+		evdev: 48,
+		xkb: 56,
+		win: 48,
+		mac: 11,
+		code: "KeyB",
+		id: "UsB",
+		modifier: null
+	},
+	UsC: {
+		usbPage: 7,
+		usb: 6,
+		evdev: 46,
+		xkb: 54,
+		win: 46,
+		mac: 8,
+		code: "KeyC",
+		id: "UsC",
+		modifier: null
+	},
+	UsD: {
+		usbPage: 7,
+		usb: 7,
+		evdev: 32,
+		xkb: 40,
+		win: 32,
+		mac: 2,
+		code: "KeyD",
+		id: "UsD",
+		modifier: null
+	},
+	UsE: {
+		usbPage: 7,
+		usb: 8,
+		evdev: 18,
+		xkb: 26,
+		win: 18,
+		mac: 14,
+		code: "KeyE",
+		id: "UsE",
+		modifier: null
+	},
+	UsF: {
+		usbPage: 7,
+		usb: 9,
+		evdev: 33,
+		xkb: 41,
+		win: 33,
+		mac: 3,
+		code: "KeyF",
+		id: "UsF",
+		modifier: null
+	},
+	UsG: {
+		usbPage: 7,
+		usb: 10,
+		evdev: 34,
+		xkb: 42,
+		win: 34,
+		mac: 5,
+		code: "KeyG",
+		id: "UsG",
+		modifier: null
+	},
+	UsH: {
+		usbPage: 7,
+		usb: 11,
+		evdev: 35,
+		xkb: 43,
+		win: 35,
+		mac: 4,
+		code: "KeyH",
+		id: "UsH",
+		modifier: null
+	},
+	UsI: {
+		usbPage: 7,
+		usb: 12,
+		evdev: 23,
+		xkb: 31,
+		win: 23,
+		mac: 34,
+		code: "KeyI",
+		id: "UsI",
+		modifier: null
+	},
+	UsJ: {
+		usbPage: 7,
+		usb: 13,
+		evdev: 36,
+		xkb: 44,
+		win: 36,
+		mac: 38,
+		code: "KeyJ",
+		id: "UsJ",
+		modifier: null
+	},
+	UsK: {
+		usbPage: 7,
+		usb: 14,
+		evdev: 37,
+		xkb: 45,
+		win: 37,
+		mac: 40,
+		code: "KeyK",
+		id: "UsK",
+		modifier: null
+	},
+	UsL: {
+		usbPage: 7,
+		usb: 15,
+		evdev: 38,
+		xkb: 46,
+		win: 38,
+		mac: 37,
+		code: "KeyL",
+		id: "UsL",
+		modifier: null
+	},
+	UsM: {
+		usbPage: 7,
+		usb: 16,
+		evdev: 50,
+		xkb: 58,
+		win: 50,
+		mac: 46,
+		code: "KeyM",
+		id: "UsM",
+		modifier: null
+	},
+	UsN: {
+		usbPage: 7,
+		usb: 17,
+		evdev: 49,
+		xkb: 57,
+		win: 49,
+		mac: 45,
+		code: "KeyN",
+		id: "UsN",
+		modifier: null
+	},
+	UsO: {
+		usbPage: 7,
+		usb: 18,
+		evdev: 24,
+		xkb: 32,
+		win: 24,
+		mac: 31,
+		code: "KeyO",
+		id: "UsO",
+		modifier: null
+	},
+	UsP: {
+		usbPage: 7,
+		usb: 19,
+		evdev: 25,
+		xkb: 33,
+		win: 25,
+		mac: 35,
+		code: "KeyP",
+		id: "UsP",
+		modifier: null
+	},
+	UsQ: {
+		usbPage: 7,
+		usb: 20,
+		evdev: 16,
+		xkb: 24,
+		win: 16,
+		mac: 12,
+		code: "KeyQ",
+		id: "UsQ",
+		modifier: null
+	},
+	UsR: {
+		usbPage: 7,
+		usb: 21,
+		evdev: 19,
+		xkb: 27,
+		win: 19,
+		mac: 15,
+		code: "KeyR",
+		id: "UsR",
+		modifier: null
+	},
+	UsS: {
+		usbPage: 7,
+		usb: 22,
+		evdev: 31,
+		xkb: 39,
+		win: 31,
+		mac: 1,
+		code: "KeyS",
+		id: "UsS",
+		modifier: null
+	},
+	UsT: {
+		usbPage: 7,
+		usb: 23,
+		evdev: 20,
+		xkb: 28,
+		win: 20,
+		mac: 17,
+		code: "KeyT",
+		id: "UsT",
+		modifier: null
+	},
+	UsU: {
+		usbPage: 7,
+		usb: 24,
+		evdev: 22,
+		xkb: 30,
+		win: 22,
+		mac: 32,
+		code: "KeyU",
+		id: "UsU",
+		modifier: null
+	},
+	UsV: {
+		usbPage: 7,
+		usb: 25,
+		evdev: 47,
+		xkb: 55,
+		win: 47,
+		mac: 9,
+		code: "KeyV",
+		id: "UsV",
+		modifier: null
+	},
+	UsW: {
+		usbPage: 7,
+		usb: 26,
+		evdev: 17,
+		xkb: 25,
+		win: 17,
+		mac: 13,
+		code: "KeyW",
+		id: "UsW",
+		modifier: null
+	},
+	UsX: {
+		usbPage: 7,
+		usb: 27,
+		evdev: 45,
+		xkb: 53,
+		win: 45,
+		mac: 7,
+		code: "KeyX",
+		id: "UsX",
+		modifier: null
+	},
+	UsY: {
+		usbPage: 7,
+		usb: 28,
+		evdev: 21,
+		xkb: 29,
+		win: 21,
+		mac: 16,
+		code: "KeyY",
+		id: "UsY",
+		modifier: null
+	},
+	UsZ: {
+		usbPage: 7,
+		usb: 29,
+		evdev: 44,
+		xkb: 52,
+		win: 44,
+		mac: 6,
+		code: "KeyZ",
+		id: "UsZ",
+		modifier: null
+	},
+	Digit1: {
+		usbPage: 7,
+		usb: 30,
+		evdev: 2,
+		xkb: 10,
+		win: 2,
+		mac: 18,
+		code: "Digit1",
+		id: "Digit1",
+		modifier: null
+	},
+	Digit2: {
+		usbPage: 7,
+		usb: 31,
+		evdev: 3,
+		xkb: 11,
+		win: 3,
+		mac: 19,
+		code: "Digit2",
+		id: "Digit2",
+		modifier: null
+	},
+	Digit3: {
+		usbPage: 7,
+		usb: 32,
+		evdev: 4,
+		xkb: 12,
+		win: 4,
+		mac: 20,
+		code: "Digit3",
+		id: "Digit3",
+		modifier: null
+	},
+	Digit4: {
+		usbPage: 7,
+		usb: 33,
+		evdev: 5,
+		xkb: 13,
+		win: 5,
+		mac: 21,
+		code: "Digit4",
+		id: "Digit4",
+		modifier: null
+	},
+	Digit5: {
+		usbPage: 7,
+		usb: 34,
+		evdev: 6,
+		xkb: 14,
+		win: 6,
+		mac: 23,
+		code: "Digit5",
+		id: "Digit5",
+		modifier: null
+	},
+	Digit6: {
+		usbPage: 7,
+		usb: 35,
+		evdev: 7,
+		xkb: 15,
+		win: 7,
+		mac: 22,
+		code: "Digit6",
+		id: "Digit6",
+		modifier: null
+	},
+	Digit7: {
+		usbPage: 7,
+		usb: 36,
+		evdev: 8,
+		xkb: 16,
+		win: 8,
+		mac: 26,
+		code: "Digit7",
+		id: "Digit7",
+		modifier: null
+	},
+	Digit8: {
+		usbPage: 7,
+		usb: 37,
+		evdev: 9,
+		xkb: 17,
+		win: 9,
+		mac: 28,
+		code: "Digit8",
+		id: "Digit8",
+		modifier: null
+	},
+	Digit9: {
+		usbPage: 7,
+		usb: 38,
+		evdev: 10,
+		xkb: 18,
+		win: 10,
+		mac: 25,
+		code: "Digit9",
+		id: "Digit9",
+		modifier: null
+	},
+	Digit0: {
+		usbPage: 7,
+		usb: 39,
+		evdev: 11,
+		xkb: 19,
+		win: 11,
+		mac: 29,
+		code: "Digit0",
+		id: "Digit0",
+		modifier: null
+	},
+	Enter: {
+		usbPage: 7,
+		usb: 40,
+		evdev: 28,
+		xkb: 36,
+		win: 28,
+		mac: 36,
+		code: "Enter",
+		id: "Enter",
+		modifier: null
+	},
+	Escape: {
+		usbPage: 7,
+		usb: 41,
+		evdev: 1,
+		xkb: 9,
+		win: 1,
+		mac: 53,
+		code: "Escape",
+		id: "Escape",
+		modifier: null
+	},
+	Backspace: {
+		usbPage: 7,
+		usb: 42,
+		evdev: 14,
+		xkb: 22,
+		win: 14,
+		mac: 51,
+		code: "Backspace",
+		id: "Backspace",
+		modifier: null
+	},
+	Tab: {
+		usbPage: 7,
+		usb: 43,
+		evdev: 15,
+		xkb: 23,
+		win: 15,
+		mac: 48,
+		code: "Tab",
+		id: "Tab",
+		modifier: null
+	},
+	Space: {
+		usbPage: 7,
+		usb: 44,
+		evdev: 57,
+		xkb: 65,
+		win: 57,
+		mac: 49,
+		code: "Space",
+		id: "Space",
+		modifier: null
+	},
+	Minus: {
+		usbPage: 7,
+		usb: 45,
+		evdev: 12,
+		xkb: 20,
+		win: 12,
+		mac: 27,
+		code: "Minus",
+		id: "Minus",
+		modifier: null
+	},
+	Equal: {
+		usbPage: 7,
+		usb: 46,
+		evdev: 13,
+		xkb: 21,
+		win: 13,
+		mac: 24,
+		code: "Equal",
+		id: "Equal",
+		modifier: null
+	},
+	BracketLeft: {
+		usbPage: 7,
+		usb: 47,
+		evdev: 26,
+		xkb: 34,
+		win: 26,
+		mac: 33,
+		code: "BracketLeft",
+		id: "BracketLeft",
+		modifier: null
+	},
+	BracketRight: {
+		usbPage: 7,
+		usb: 48,
+		evdev: 27,
+		xkb: 35,
+		win: 27,
+		mac: 30,
+		code: "BracketRight",
+		id: "BracketRight",
+		modifier: null
+	},
+	Backslash: {
+		usbPage: 7,
+		usb: 49,
+		evdev: 43,
+		xkb: 51,
+		win: 43,
+		mac: 42,
+		code: "Backslash",
+		id: "Backslash",
+		modifier: null
+	},
+	IntlHash: {
+		usbPage: 7,
+		usb: 50,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "IntlHash",
+		id: "IntlHash",
+		modifier: null
+	},
+	Semicolon: {
+		usbPage: 7,
+		usb: 51,
+		evdev: 39,
+		xkb: 47,
+		win: 39,
+		mac: 41,
+		code: "Semicolon",
+		id: "Semicolon",
+		modifier: null
+	},
+	Quote: {
+		usbPage: 7,
+		usb: 52,
+		evdev: 40,
+		xkb: 48,
+		win: 40,
+		mac: 39,
+		code: "Quote",
+		id: "Quote",
+		modifier: null
+	},
+	Backquote: {
+		usbPage: 7,
+		usb: 53,
+		evdev: 41,
+		xkb: 49,
+		win: 41,
+		mac: 50,
+		code: "Backquote",
+		id: "Backquote",
+		modifier: null
+	},
+	Comma: {
+		usbPage: 7,
+		usb: 54,
+		evdev: 51,
+		xkb: 59,
+		win: 51,
+		mac: 43,
+		code: "Comma",
+		id: "Comma",
+		modifier: null
+	},
+	Period: {
+		usbPage: 7,
+		usb: 55,
+		evdev: 52,
+		xkb: 60,
+		win: 52,
+		mac: 47,
+		code: "Period",
+		id: "Period",
+		modifier: null
+	},
+	Slash: {
+		usbPage: 7,
+		usb: 56,
+		evdev: 53,
+		xkb: 61,
+		win: 53,
+		mac: 44,
+		code: "Slash",
+		id: "Slash",
+		modifier: null
+	},
+	CapsLock: {
+		usbPage: 7,
+		usb: 57,
+		evdev: 58,
+		xkb: 66,
+		win: 58,
+		mac: 57,
+		code: "CapsLock",
+		id: "CapsLock",
+		modifier: null
+	},
+	F1: {
+		usbPage: 7,
+		usb: 58,
+		evdev: 59,
+		xkb: 67,
+		win: 59,
+		mac: 122,
+		code: "F1",
+		id: "F1",
+		modifier: null
+	},
+	F2: {
+		usbPage: 7,
+		usb: 59,
+		evdev: 60,
+		xkb: 68,
+		win: 60,
+		mac: 120,
+		code: "F2",
+		id: "F2",
+		modifier: null
+	},
+	F3: {
+		usbPage: 7,
+		usb: 60,
+		evdev: 61,
+		xkb: 69,
+		win: 61,
+		mac: 99,
+		code: "F3",
+		id: "F3",
+		modifier: null
+	},
+	F4: {
+		usbPage: 7,
+		usb: 61,
+		evdev: 62,
+		xkb: 70,
+		win: 62,
+		mac: 118,
+		code: "F4",
+		id: "F4",
+		modifier: null
+	},
+	F5: {
+		usbPage: 7,
+		usb: 62,
+		evdev: 63,
+		xkb: 71,
+		win: 63,
+		mac: 96,
+		code: "F5",
+		id: "F5",
+		modifier: null
+	},
+	F6: {
+		usbPage: 7,
+		usb: 63,
+		evdev: 64,
+		xkb: 72,
+		win: 64,
+		mac: 97,
+		code: "F6",
+		id: "F6",
+		modifier: null
+	},
+	F7: {
+		usbPage: 7,
+		usb: 64,
+		evdev: 65,
+		xkb: 73,
+		win: 65,
+		mac: 98,
+		code: "F7",
+		id: "F7",
+		modifier: null
+	},
+	F8: {
+		usbPage: 7,
+		usb: 65,
+		evdev: 66,
+		xkb: 74,
+		win: 66,
+		mac: 100,
+		code: "F8",
+		id: "F8",
+		modifier: null
+	},
+	F9: {
+		usbPage: 7,
+		usb: 66,
+		evdev: 67,
+		xkb: 75,
+		win: 67,
+		mac: 101,
+		code: "F9",
+		id: "F9",
+		modifier: null
+	},
+	F10: {
+		usbPage: 7,
+		usb: 67,
+		evdev: 68,
+		xkb: 76,
+		win: 68,
+		mac: 109,
+		code: "F10",
+		id: "F10",
+		modifier: null
+	},
+	F11: {
+		usbPage: 7,
+		usb: 68,
+		evdev: 87,
+		xkb: 95,
+		win: 87,
+		mac: 103,
+		code: "F11",
+		id: "F11",
+		modifier: null
+	},
+	F12: {
+		usbPage: 7,
+		usb: 69,
+		evdev: 88,
+		xkb: 96,
+		win: 88,
+		mac: 111,
+		code: "F12",
+		id: "F12",
+		modifier: null
+	},
+	PrintScreen: {
+		usbPage: 7,
+		usb: 70,
+		evdev: 99,
+		xkb: 107,
+		win: 57399,
+		mac: 65535,
+		code: "PrintScreen",
+		id: "PrintScreen",
+		modifier: null
+	},
+	ScrollLock: {
+		usbPage: 7,
+		usb: 71,
+		evdev: 70,
+		xkb: 78,
+		win: 70,
+		mac: 65535,
+		code: "ScrollLock",
+		id: "ScrollLock",
+		modifier: null
+	},
+	Pause: {
+		usbPage: 7,
+		usb: 72,
+		evdev: 119,
+		xkb: 127,
+		win: 69,
+		mac: 65535,
+		code: "Pause",
+		id: "Pause",
+		modifier: null
+	},
+	Insert: {
+		usbPage: 7,
+		usb: 73,
+		evdev: 110,
+		xkb: 118,
+		win: 57426,
+		mac: 114,
+		code: "Insert",
+		id: "Insert",
+		modifier: null
+	},
+	Home: {
+		usbPage: 7,
+		usb: 74,
+		evdev: 102,
+		xkb: 110,
+		win: 57415,
+		mac: 115,
+		code: "Home",
+		id: "Home",
+		modifier: null
+	},
+	PageUp: {
+		usbPage: 7,
+		usb: 75,
+		evdev: 104,
+		xkb: 112,
+		win: 57417,
+		mac: 116,
+		code: "PageUp",
+		id: "PageUp",
+		modifier: null
+	},
+	Del: {
+		usbPage: 7,
+		usb: 76,
+		evdev: 111,
+		xkb: 119,
+		win: 57427,
+		mac: 117,
+		code: "Delete",
+		id: "Del",
+		modifier: null
+	},
+	End: {
+		usbPage: 7,
+		usb: 77,
+		evdev: 107,
+		xkb: 115,
+		win: 57423,
+		mac: 119,
+		code: "End",
+		id: "End",
+		modifier: null
+	},
+	PageDown: {
+		usbPage: 7,
+		usb: 78,
+		evdev: 109,
+		xkb: 117,
+		win: 57425,
+		mac: 121,
+		code: "PageDown",
+		id: "PageDown",
+		modifier: null
+	},
+	ArrowRight: {
+		usbPage: 7,
+		usb: 79,
+		evdev: 106,
+		xkb: 114,
+		win: 57421,
+		mac: 124,
+		code: "ArrowRight",
+		id: "ArrowRight",
+		modifier: null
+	},
+	ArrowLeft: {
+		usbPage: 7,
+		usb: 80,
+		evdev: 105,
+		xkb: 113,
+		win: 57419,
+		mac: 123,
+		code: "ArrowLeft",
+		id: "ArrowLeft",
+		modifier: null
+	},
+	ArrowDown: {
+		usbPage: 7,
+		usb: 81,
+		evdev: 108,
+		xkb: 116,
+		win: 57424,
+		mac: 125,
+		code: "ArrowDown",
+		id: "ArrowDown",
+		modifier: null
+	},
+	ArrowUp: {
+		usbPage: 7,
+		usb: 82,
+		evdev: 103,
+		xkb: 111,
+		win: 57416,
+		mac: 126,
+		code: "ArrowUp",
+		id: "ArrowUp",
+		modifier: null
+	},
+	NumLock: {
+		usbPage: 7,
+		usb: 83,
+		evdev: 69,
+		xkb: 77,
+		win: 57413,
+		mac: 71,
+		code: "NumLock",
+		id: "NumLock",
+		modifier: null
+	},
+	NumpadDivide: {
+		usbPage: 7,
+		usb: 84,
+		evdev: 98,
+		xkb: 106,
+		win: 57397,
+		mac: 75,
+		code: "NumpadDivide",
+		id: "NumpadDivide",
+		modifier: null
+	},
+	NumpadMultiply: {
+		usbPage: 7,
+		usb: 85,
+		evdev: 55,
+		xkb: 63,
+		win: 55,
+		mac: 67,
+		code: "NumpadMultiply",
+		id: "NumpadMultiply",
+		modifier: null
+	},
+	NumpadSubtract: {
+		usbPage: 7,
+		usb: 86,
+		evdev: 74,
+		xkb: 82,
+		win: 74,
+		mac: 78,
+		code: "NumpadSubtract",
+		id: "NumpadSubtract",
+		modifier: null
+	},
+	NumpadAdd: {
+		usbPage: 7,
+		usb: 87,
+		evdev: 78,
+		xkb: 86,
+		win: 78,
+		mac: 69,
+		code: "NumpadAdd",
+		id: "NumpadAdd",
+		modifier: null
+	},
+	NumpadEnter: {
+		usbPage: 7,
+		usb: 88,
+		evdev: 96,
+		xkb: 104,
+		win: 57372,
+		mac: 76,
+		code: "NumpadEnter",
+		id: "NumpadEnter",
+		modifier: null
+	},
+	Numpad1: {
+		usbPage: 7,
+		usb: 89,
+		evdev: 79,
+		xkb: 87,
+		win: 79,
+		mac: 83,
+		code: "Numpad1",
+		id: "Numpad1",
+		modifier: null
+	},
+	Numpad2: {
+		usbPage: 7,
+		usb: 90,
+		evdev: 80,
+		xkb: 88,
+		win: 80,
+		mac: 84,
+		code: "Numpad2",
+		id: "Numpad2",
+		modifier: null
+	},
+	Numpad3: {
+		usbPage: 7,
+		usb: 91,
+		evdev: 81,
+		xkb: 89,
+		win: 81,
+		mac: 85,
+		code: "Numpad3",
+		id: "Numpad3",
+		modifier: null
+	},
+	Numpad4: {
+		usbPage: 7,
+		usb: 92,
+		evdev: 75,
+		xkb: 83,
+		win: 75,
+		mac: 86,
+		code: "Numpad4",
+		id: "Numpad4",
+		modifier: null
+	},
+	Numpad5: {
+		usbPage: 7,
+		usb: 93,
+		evdev: 76,
+		xkb: 84,
+		win: 76,
+		mac: 87,
+		code: "Numpad5",
+		id: "Numpad5",
+		modifier: null
+	},
+	Numpad6: {
+		usbPage: 7,
+		usb: 94,
+		evdev: 77,
+		xkb: 85,
+		win: 77,
+		mac: 88,
+		code: "Numpad6",
+		id: "Numpad6",
+		modifier: null
+	},
+	Numpad7: {
+		usbPage: 7,
+		usb: 95,
+		evdev: 71,
+		xkb: 79,
+		win: 71,
+		mac: 89,
+		code: "Numpad7",
+		id: "Numpad7",
+		modifier: null
+	},
+	Numpad8: {
+		usbPage: 7,
+		usb: 96,
+		evdev: 72,
+		xkb: 80,
+		win: 72,
+		mac: 91,
+		code: "Numpad8",
+		id: "Numpad8",
+		modifier: null
+	},
+	Numpad9: {
+		usbPage: 7,
+		usb: 97,
+		evdev: 73,
+		xkb: 81,
+		win: 73,
+		mac: 92,
+		code: "Numpad9",
+		id: "Numpad9",
+		modifier: null
+	},
+	Numpad0: {
+		usbPage: 7,
+		usb: 98,
+		evdev: 82,
+		xkb: 90,
+		win: 82,
+		mac: 82,
+		code: "Numpad0",
+		id: "Numpad0",
+		modifier: null
+	},
+	NumpadDecimal: {
+		usbPage: 7,
+		usb: 99,
+		evdev: 83,
+		xkb: 91,
+		win: 83,
+		mac: 65,
+		code: "NumpadDecimal",
+		id: "NumpadDecimal",
+		modifier: null
+	},
+	IntlBackslash: {
+		usbPage: 7,
+		usb: 100,
+		evdev: 86,
+		xkb: 94,
+		win: 86,
+		mac: 10,
+		code: "IntlBackslash",
+		id: "IntlBackslash",
+		modifier: null
+	},
+	ContextMenu: {
+		usbPage: 7,
+		usb: 101,
+		evdev: 127,
+		xkb: 135,
+		win: 57437,
+		mac: 110,
+		code: "ContextMenu",
+		id: "ContextMenu",
+		modifier: null
+	},
+	Power: {
+		usbPage: 7,
+		usb: 102,
+		evdev: 116,
+		xkb: 124,
+		win: 57438,
+		mac: 65535,
+		code: "Power",
+		id: "Power",
+		modifier: null
+	},
+	NumpadEqual: {
+		usbPage: 7,
+		usb: 103,
+		evdev: 117,
+		xkb: 125,
+		win: 89,
+		mac: 81,
+		code: "NumpadEqual",
+		id: "NumpadEqual",
+		modifier: null
+	},
+	F13: {
+		usbPage: 7,
+		usb: 104,
+		evdev: 183,
+		xkb: 191,
+		win: 100,
+		mac: 105,
+		code: "F13",
+		id: "F13",
+		modifier: null
+	},
+	F14: {
+		usbPage: 7,
+		usb: 105,
+		evdev: 184,
+		xkb: 192,
+		win: 101,
+		mac: 107,
+		code: "F14",
+		id: "F14",
+		modifier: null
+	},
+	F15: {
+		usbPage: 7,
+		usb: 106,
+		evdev: 185,
+		xkb: 193,
+		win: 102,
+		mac: 113,
+		code: "F15",
+		id: "F15",
+		modifier: null
+	},
+	F16: {
+		usbPage: 7,
+		usb: 107,
+		evdev: 186,
+		xkb: 194,
+		win: 103,
+		mac: 106,
+		code: "F16",
+		id: "F16",
+		modifier: null
+	},
+	F17: {
+		usbPage: 7,
+		usb: 108,
+		evdev: 187,
+		xkb: 195,
+		win: 104,
+		mac: 64,
+		code: "F17",
+		id: "F17",
+		modifier: null
+	},
+	F18: {
+		usbPage: 7,
+		usb: 109,
+		evdev: 188,
+		xkb: 196,
+		win: 105,
+		mac: 79,
+		code: "F18",
+		id: "F18",
+		modifier: null
+	},
+	F19: {
+		usbPage: 7,
+		usb: 110,
+		evdev: 189,
+		xkb: 197,
+		win: 106,
+		mac: 80,
+		code: "F19",
+		id: "F19",
+		modifier: null
+	},
+	F20: {
+		usbPage: 7,
+		usb: 111,
+		evdev: 190,
+		xkb: 198,
+		win: 107,
+		mac: 90,
+		code: "F20",
+		id: "F20",
+		modifier: null
+	},
+	F21: {
+		usbPage: 7,
+		usb: 112,
+		evdev: 191,
+		xkb: 199,
+		win: 108,
+		mac: 65535,
+		code: "F21",
+		id: "F21",
+		modifier: null
+	},
+	F22: {
+		usbPage: 7,
+		usb: 113,
+		evdev: 192,
+		xkb: 200,
+		win: 109,
+		mac: 65535,
+		code: "F22",
+		id: "F22",
+		modifier: null
+	},
+	F23: {
+		usbPage: 7,
+		usb: 114,
+		evdev: 193,
+		xkb: 201,
+		win: 110,
+		mac: 65535,
+		code: "F23",
+		id: "F23",
+		modifier: null
+	},
+	F24: {
+		usbPage: 7,
+		usb: 115,
+		evdev: 194,
+		xkb: 202,
+		win: 118,
+		mac: 65535,
+		code: "F24",
+		id: "F24",
+		modifier: null
+	},
+	Open: {
+		usbPage: 7,
+		usb: 116,
+		evdev: 134,
+		xkb: 142,
+		win: 0,
+		mac: 65535,
+		code: "Open",
+		id: "Open",
+		modifier: null
+	},
+	Help: {
+		usbPage: 7,
+		usb: 117,
+		evdev: 138,
+		xkb: 146,
+		win: 57403,
+		mac: 65535,
+		code: "Help",
+		id: "Help",
+		modifier: null
+	},
+	Select: {
+		usbPage: 7,
+		usb: 119,
+		evdev: 132,
+		xkb: 140,
+		win: 0,
+		mac: 65535,
+		code: "Select",
+		id: "Select",
+		modifier: null
+	},
+	Again: {
+		usbPage: 7,
+		usb: 121,
+		evdev: 129,
+		xkb: 137,
+		win: 0,
+		mac: 65535,
+		code: "Again",
+		id: "Again",
+		modifier: null
+	},
+	Undo: {
+		usbPage: 7,
+		usb: 122,
+		evdev: 131,
+		xkb: 139,
+		win: 57352,
+		mac: 65535,
+		code: "Undo",
+		id: "Undo",
+		modifier: null
+	},
+	Cut: {
+		usbPage: 7,
+		usb: 123,
+		evdev: 137,
+		xkb: 145,
+		win: 57367,
+		mac: 65535,
+		code: "Cut",
+		id: "Cut",
+		modifier: null
+	},
+	Copy: {
+		usbPage: 7,
+		usb: 124,
+		evdev: 133,
+		xkb: 141,
+		win: 57368,
+		mac: 65535,
+		code: "Copy",
+		id: "Copy",
+		modifier: null
+	},
+	Paste: {
+		usbPage: 7,
+		usb: 125,
+		evdev: 135,
+		xkb: 143,
+		win: 57354,
+		mac: 65535,
+		code: "Paste",
+		id: "Paste",
+		modifier: null
+	},
+	Find: {
+		usbPage: 7,
+		usb: 126,
+		evdev: 136,
+		xkb: 144,
+		win: 0,
+		mac: 65535,
+		code: "Find",
+		id: "Find",
+		modifier: null
+	},
+	VolumeMute: {
+		usbPage: 7,
+		usb: 127,
+		evdev: 113,
+		xkb: 121,
+		win: 57376,
+		mac: 74,
+		code: "AudioVolumeMute",
+		id: "VolumeMute",
+		modifier: null
+	},
+	VolumeUp: {
+		usbPage: 7,
+		usb: 128,
+		evdev: 115,
+		xkb: 123,
+		win: 57392,
+		mac: 72,
+		code: "AudioVolumeUp",
+		id: "VolumeUp",
+		modifier: null
+	},
+	VolumeDown: {
+		usbPage: 7,
+		usb: 129,
+		evdev: 114,
+		xkb: 122,
+		win: 57390,
+		mac: 73,
+		code: "AudioVolumeDown",
+		id: "VolumeDown",
+		modifier: null
+	},
+	NumpadComma: {
+		usbPage: 7,
+		usb: 133,
+		evdev: 121,
+		xkb: 129,
+		win: 126,
+		mac: 95,
+		code: "NumpadComma",
+		id: "NumpadComma",
+		modifier: null
+	},
+	IntlRo: {
+		usbPage: 7,
+		usb: 135,
+		evdev: 89,
+		xkb: 97,
+		win: 115,
+		mac: 94,
+		code: "IntlRo",
+		id: "IntlRo",
+		modifier: null
+	},
+	KanaMode: {
+		usbPage: 7,
+		usb: 136,
+		evdev: 93,
+		xkb: 101,
+		win: 112,
+		mac: 104,
+		code: "KanaMode",
+		id: "KanaMode",
+		modifier: null
+	},
+	IntlYen: {
+		usbPage: 7,
+		usb: 137,
+		evdev: 124,
+		xkb: 132,
+		win: 125,
+		mac: 93,
+		code: "IntlYen",
+		id: "IntlYen",
+		modifier: null
+	},
+	Convert: {
+		usbPage: 7,
+		usb: 138,
+		evdev: 92,
+		xkb: 100,
+		win: 121,
+		mac: 65535,
+		code: "Convert",
+		id: "Convert",
+		modifier: null
+	},
+	NonConvert: {
+		usbPage: 7,
+		usb: 139,
+		evdev: 94,
+		xkb: 102,
+		win: 123,
+		mac: 65535,
+		code: "NonConvert",
+		id: "NonConvert",
+		modifier: null
+	},
+	Lang1: {
+		usbPage: 7,
+		usb: 144,
+		evdev: 122,
+		xkb: 130,
+		win: 114,
+		mac: 65535,
+		code: "Lang1",
+		id: "Lang1",
+		modifier: null
+	},
+	Lang2: {
+		usbPage: 7,
+		usb: 145,
+		evdev: 123,
+		xkb: 131,
+		win: 113,
+		mac: 65535,
+		code: "Lang2",
+		id: "Lang2",
+		modifier: null
+	},
+	Lang3: {
+		usbPage: 7,
+		usb: 146,
+		evdev: 90,
+		xkb: 98,
+		win: 120,
+		mac: 65535,
+		code: "Lang3",
+		id: "Lang3",
+		modifier: null
+	},
+	Lang4: {
+		usbPage: 7,
+		usb: 147,
+		evdev: 91,
+		xkb: 99,
+		win: 119,
+		mac: 65535,
+		code: "Lang4",
+		id: "Lang4",
+		modifier: null
+	},
+	Lang5: {
+		usbPage: 7,
+		usb: 148,
+		evdev: 85,
+		xkb: 93,
+		win: 0,
+		mac: 65535,
+		code: "Lang5",
+		id: "Lang5",
+		modifier: null
+	},
+	Abort: {
+		usbPage: 7,
+		usb: 155,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Abort",
+		id: "Abort",
+		modifier: null
+	},
+	Props: {
+		usbPage: 7,
+		usb: 163,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "Props",
+		id: "Props",
+		modifier: null
+	},
+	NumpadParenLeft: {
+		usbPage: 7,
+		usb: 182,
+		evdev: 179,
+		xkb: 187,
+		win: 0,
+		mac: 65535,
+		code: "NumpadParenLeft",
+		id: "NumpadParenLeft",
+		modifier: null
+	},
+	NumpadParenRight: {
+		usbPage: 7,
+		usb: 183,
+		evdev: 180,
+		xkb: 188,
+		win: 0,
+		mac: 65535,
+		code: "NumpadParenRight",
+		id: "NumpadParenRight",
+		modifier: null
+	},
+	NumpadBackspace: {
+		usbPage: 7,
+		usb: 187,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadBackspace",
+		id: "NumpadBackspace",
+		modifier: null
+	},
+	NumpadMemoryStore: {
+		usbPage: 7,
+		usb: 208,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadMemoryStore",
+		id: "NumpadMemoryStore",
+		modifier: null
+	},
+	NumpadMemoryRecall: {
+		usbPage: 7,
+		usb: 209,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadMemoryRecall",
+		id: "NumpadMemoryRecall",
+		modifier: null
+	},
+	NumpadMemoryClear: {
+		usbPage: 7,
+		usb: 210,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadMemoryClear",
+		id: "NumpadMemoryClear",
+		modifier: null
+	},
+	NumpadMemoryAdd: {
+		usbPage: 7,
+		usb: 211,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadMemoryAdd",
+		id: "NumpadMemoryAdd",
+		modifier: null
+	},
+	NumpadMemorySubtract: {
+		usbPage: 7,
+		usb: 212,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadMemorySubtract",
+		id: "NumpadMemorySubtract",
+		modifier: null
+	},
+	NumpadSignChange: {
+		usbPage: 7,
+		usb: 215,
+		evdev: 118,
+		xkb: 126,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "NumpadSignChange",
+		modifier: null
+	},
+	NumpadClear: {
+		usbPage: 7,
+		usb: 216,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadClear",
+		id: "NumpadClear",
+		modifier: null
+	},
+	NumpadClearEntry: {
+		usbPage: 7,
+		usb: 217,
+		evdev: 0,
+		xkb: 0,
+		win: 0,
+		mac: 65535,
+		code: "NumpadClearEntry",
+		id: "NumpadClearEntry",
+		modifier: null
+	},
+	ControlLeft: {
+		usbPage: 7,
+		usb: 224,
+		evdev: 29,
+		xkb: 37,
+		win: 29,
+		mac: 59,
+		code: "ControlLeft",
+		id: "ControlLeft",
+		modifier: 1
+	},
+	ShiftLeft: {
+		usbPage: 7,
+		usb: 225,
+		evdev: 42,
+		xkb: 50,
+		win: 42,
+		mac: 56,
+		code: "ShiftLeft",
+		id: "ShiftLeft",
+		modifier: 2
+	},
+	AltLeft: {
+		usbPage: 7,
+		usb: 226,
+		evdev: 56,
+		xkb: 64,
+		win: 56,
+		mac: 58,
+		code: "AltLeft",
+		id: "AltLeft",
+		modifier: 4
+	},
+	MetaLeft: {
+		usbPage: 7,
+		usb: 227,
+		evdev: 125,
+		xkb: 133,
+		win: 57435,
+		mac: 55,
+		code: "MetaLeft",
+		id: "MetaLeft",
+		modifier: 8
+	},
+	ControlRight: {
+		usbPage: 7,
+		usb: 228,
+		evdev: 97,
+		xkb: 105,
+		win: 57373,
+		mac: 62,
+		code: "ControlRight",
+		id: "ControlRight",
+		modifier: 16
+	},
+	ShiftRight: {
+		usbPage: 7,
+		usb: 229,
+		evdev: 54,
+		xkb: 62,
+		win: 54,
+		mac: 60,
+		code: "ShiftRight",
+		id: "ShiftRight",
+		modifier: 32
+	},
+	AltRight: {
+		usbPage: 7,
+		usb: 230,
+		evdev: 100,
+		xkb: 108,
+		win: 57400,
+		mac: 61,
+		code: "AltRight",
+		id: "AltRight",
+		modifier: 64
+	},
+	MetaRight: {
+		usbPage: 7,
+		usb: 231,
+		evdev: 126,
+		xkb: 134,
+		win: 57436,
+		mac: 54,
+		code: "MetaRight",
+		id: "MetaRight",
+		modifier: 128
+	},
+	Info: {
+		usbPage: 12,
+		usb: 96,
+		evdev: 358,
+		xkb: 366,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Info",
+		modifier: null
+	},
+	ClosedCaptionToggle: {
+		usbPage: 12,
+		usb: 97,
+		evdev: 370,
+		xkb: 378,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ClosedCaptionToggle",
+		modifier: null
+	},
+	BrightnessUp: {
+		usbPage: 12,
+		usb: 111,
+		evdev: 225,
+		xkb: 233,
+		win: 0,
+		mac: 65535,
+		code: "BrightnessUp",
+		id: "BrightnessUp",
+		modifier: null
+	},
+	BrightnessDown: {
+		usbPage: 12,
+		usb: 112,
+		evdev: 224,
+		xkb: 232,
+		win: 0,
+		mac: 65535,
+		code: "BrightnessDown",
+		id: "BrightnessDown",
+		modifier: null
+	},
+	BrightnessToggle: {
+		usbPage: 12,
+		usb: 114,
+		evdev: 431,
+		xkb: 439,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "BrightnessToggle",
+		modifier: null
+	},
+	BrightnessMinimium: {
+		usbPage: 12,
+		usb: 115,
+		evdev: 592,
+		xkb: 600,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "BrightnessMinimium",
+		modifier: null
+	},
+	BrightnessMaximum: {
+		usbPage: 12,
+		usb: 116,
+		evdev: 593,
+		xkb: 601,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "BrightnessMaximum",
+		modifier: null
+	},
+	BrightnessAuto: {
+		usbPage: 12,
+		usb: 117,
+		evdev: 244,
+		xkb: 252,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "BrightnessAuto",
+		modifier: null
+	},
+	MediaLast: {
+		usbPage: 12,
+		usb: 131,
+		evdev: 405,
+		xkb: 413,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "MediaLast",
+		modifier: null
+	},
+	LaunchPhone: {
+		usbPage: 12,
+		usb: 140,
+		evdev: 169,
+		xkb: 177,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchPhone",
+		modifier: null
+	},
+	ProgramGuide: {
+		usbPage: 12,
+		usb: 141,
+		evdev: 362,
+		xkb: 370,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ProgramGuide",
+		modifier: null
+	},
+	Exit: {
+		usbPage: 12,
+		usb: 148,
+		evdev: 174,
+		xkb: 182,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Exit",
+		modifier: null
+	},
+	ChannelUp: {
+		usbPage: 12,
+		usb: 156,
+		evdev: 410,
+		xkb: 418,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ChannelUp",
+		modifier: null
+	},
+	ChannelDown: {
+		usbPage: 12,
+		usb: 157,
+		evdev: 411,
+		xkb: 419,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ChannelDown",
+		modifier: null
+	},
+	MediaPlay: {
+		usbPage: 12,
+		usb: 176,
+		evdev: 207,
+		xkb: 215,
+		win: 0,
+		mac: 65535,
+		code: "MediaPlay",
+		id: "MediaPlay",
+		modifier: null
+	},
+	MediaRecord: {
+		usbPage: 12,
+		usb: 178,
+		evdev: 167,
+		xkb: 175,
+		win: 0,
+		mac: 65535,
+		code: "MediaRecord",
+		id: "MediaRecord",
+		modifier: null
+	},
+	MediaFastForward: {
+		usbPage: 12,
+		usb: 179,
+		evdev: 208,
+		xkb: 216,
+		win: 0,
+		mac: 65535,
+		code: "MediaFastForward",
+		id: "MediaFastForward",
+		modifier: null
+	},
+	MediaRewind: {
+		usbPage: 12,
+		usb: 180,
+		evdev: 168,
+		xkb: 176,
+		win: 0,
+		mac: 65535,
+		code: "MediaRewind",
+		id: "MediaRewind",
+		modifier: null
+	},
+	MediaTrackNext: {
+		usbPage: 12,
+		usb: 181,
+		evdev: 163,
+		xkb: 171,
+		win: 57369,
+		mac: 65535,
+		code: "MediaTrackNext",
+		id: "MediaTrackNext",
+		modifier: null
+	},
+	MediaTrackPrevious: {
+		usbPage: 12,
+		usb: 182,
+		evdev: 165,
+		xkb: 173,
+		win: 57360,
+		mac: 65535,
+		code: "MediaTrackPrevious",
+		id: "MediaTrackPrevious",
+		modifier: null
+	},
+	MediaStop: {
+		usbPage: 12,
+		usb: 183,
+		evdev: 166,
+		xkb: 174,
+		win: 57380,
+		mac: 65535,
+		code: "MediaStop",
+		id: "MediaStop",
+		modifier: null
+	},
+	Eject: {
+		usbPage: 12,
+		usb: 184,
+		evdev: 161,
+		xkb: 169,
+		win: 57388,
+		mac: 65535,
+		code: "Eject",
+		id: "Eject",
+		modifier: null
+	},
+	MediaPlayPause: {
+		usbPage: 12,
+		usb: 205,
+		evdev: 164,
+		xkb: 172,
+		win: 57378,
+		mac: 65535,
+		code: "MediaPlayPause",
+		id: "MediaPlayPause",
+		modifier: null
+	},
+	SpeechInputToggle: {
+		usbPage: 12,
+		usb: 207,
+		evdev: 582,
+		xkb: 590,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "SpeechInputToggle",
+		modifier: null
+	},
+	BassBoost: {
+		usbPage: 12,
+		usb: 229,
+		evdev: 209,
+		xkb: 217,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "BassBoost",
+		modifier: null
+	},
+	MediaSelect: {
+		usbPage: 12,
+		usb: 387,
+		evdev: 171,
+		xkb: 179,
+		win: 57453,
+		mac: 65535,
+		code: "MediaSelect",
+		id: "MediaSelect",
+		modifier: null
+	},
+	LaunchWordProcessor: {
+		usbPage: 12,
+		usb: 388,
+		evdev: 421,
+		xkb: 429,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchWordProcessor",
+		modifier: null
+	},
+	LaunchSpreadsheet: {
+		usbPage: 12,
+		usb: 390,
+		evdev: 423,
+		xkb: 431,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchSpreadsheet",
+		modifier: null
+	},
+	LaunchMail: {
+		usbPage: 12,
+		usb: 394,
+		evdev: 155,
+		xkb: 163,
+		win: 57452,
+		mac: 65535,
+		code: "LaunchMail",
+		id: "LaunchMail",
+		modifier: null
+	},
+	LaunchContacts: {
+		usbPage: 12,
+		usb: 397,
+		evdev: 429,
+		xkb: 437,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchContacts",
+		modifier: null
+	},
+	LaunchCalendar: {
+		usbPage: 12,
+		usb: 398,
+		evdev: 397,
+		xkb: 405,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchCalendar",
+		modifier: null
+	},
+	LaunchApp2: {
+		usbPage: 12,
+		usb: 402,
+		evdev: 140,
+		xkb: 148,
+		win: 57377,
+		mac: 65535,
+		code: "LaunchApp2",
+		id: "LaunchApp2",
+		modifier: null
+	},
+	LaunchApp1: {
+		usbPage: 12,
+		usb: 404,
+		evdev: 144,
+		xkb: 152,
+		win: 57451,
+		mac: 65535,
+		code: "LaunchApp1",
+		id: "LaunchApp1",
+		modifier: null
+	},
+	LaunchInternetBrowser: {
+		usbPage: 12,
+		usb: 406,
+		evdev: 150,
+		xkb: 158,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchInternetBrowser",
+		modifier: null
+	},
+	LogOff: {
+		usbPage: 12,
+		usb: 412,
+		evdev: 433,
+		xkb: 441,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LogOff",
+		modifier: null
+	},
+	LockScreen: {
+		usbPage: 12,
+		usb: 414,
+		evdev: 152,
+		xkb: 160,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LockScreen",
+		modifier: null
+	},
+	LaunchControlPanel: {
+		usbPage: 12,
+		usb: 415,
+		evdev: 579,
+		xkb: 587,
+		win: 0,
+		mac: 65535,
+		code: "LaunchControlPanel",
+		id: "LaunchControlPanel",
+		modifier: null
+	},
+	SelectTask: {
+		usbPage: 12,
+		usb: 418,
+		evdev: 580,
+		xkb: 588,
+		win: 0,
+		mac: 65535,
+		code: "SelectTask",
+		id: "SelectTask",
+		modifier: null
+	},
+	LaunchDocuments: {
+		usbPage: 12,
+		usb: 423,
+		evdev: 235,
+		xkb: 243,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchDocuments",
+		modifier: null
+	},
+	SpellCheck: {
+		usbPage: 12,
+		usb: 427,
+		evdev: 432,
+		xkb: 440,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "SpellCheck",
+		modifier: null
+	},
+	LaunchKeyboardLayout: {
+		usbPage: 12,
+		usb: 430,
+		evdev: 374,
+		xkb: 382,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchKeyboardLayout",
+		modifier: null
+	},
+	LaunchScreenSaver: {
+		usbPage: 12,
+		usb: 433,
+		evdev: 581,
+		xkb: 589,
+		win: 0,
+		mac: 65535,
+		code: "LaunchScreenSaver",
+		id: "LaunchScreenSaver",
+		modifier: null
+	},
+	LaunchAssistant: {
+		usbPage: 12,
+		usb: 459,
+		evdev: 583,
+		xkb: 591,
+		win: 0,
+		mac: 65535,
+		code: "LaunchAssistant",
+		id: "LaunchAssistant",
+		modifier: null
+	},
+	LaunchAudioBrowser: {
+		usbPage: 12,
+		usb: 439,
+		evdev: 392,
+		xkb: 400,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "LaunchAudioBrowser",
+		modifier: null
+	},
+	New: {
+		usbPage: 12,
+		usb: 513,
+		evdev: 181,
+		xkb: 189,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "New",
+		modifier: null
+	},
+	Close: {
+		usbPage: 12,
+		usb: 515,
+		evdev: 206,
+		xkb: 214,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Close",
+		modifier: null
+	},
+	Save: {
+		usbPage: 12,
+		usb: 519,
+		evdev: 234,
+		xkb: 242,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Save",
+		modifier: null
+	},
+	Print: {
+		usbPage: 12,
+		usb: 520,
+		evdev: 210,
+		xkb: 218,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Print",
+		modifier: null
+	},
+	BrowserSearch: {
+		usbPage: 12,
+		usb: 545,
+		evdev: 217,
+		xkb: 225,
+		win: 57445,
+		mac: 65535,
+		code: "BrowserSearch",
+		id: "BrowserSearch",
+		modifier: null
+	},
+	BrowserHome: {
+		usbPage: 12,
+		usb: 547,
+		evdev: 172,
+		xkb: 180,
+		win: 57394,
+		mac: 65535,
+		code: "BrowserHome",
+		id: "BrowserHome",
+		modifier: null
+	},
+	BrowserBack: {
+		usbPage: 12,
+		usb: 548,
+		evdev: 158,
+		xkb: 166,
+		win: 57450,
+		mac: 65535,
+		code: "BrowserBack",
+		id: "BrowserBack",
+		modifier: null
+	},
+	BrowserForward: {
+		usbPage: 12,
+		usb: 549,
+		evdev: 159,
+		xkb: 167,
+		win: 57449,
+		mac: 65535,
+		code: "BrowserForward",
+		id: "BrowserForward",
+		modifier: null
+	},
+	BrowserStop: {
+		usbPage: 12,
+		usb: 550,
+		evdev: 128,
+		xkb: 136,
+		win: 57448,
+		mac: 65535,
+		code: "BrowserStop",
+		id: "BrowserStop",
+		modifier: null
+	},
+	BrowserRefresh: {
+		usbPage: 12,
+		usb: 551,
+		evdev: 173,
+		xkb: 181,
+		win: 57447,
+		mac: 65535,
+		code: "BrowserRefresh",
+		id: "BrowserRefresh",
+		modifier: null
+	},
+	BrowserFavorites: {
+		usbPage: 12,
+		usb: 554,
+		evdev: 156,
+		xkb: 164,
+		win: 57446,
+		mac: 65535,
+		code: "BrowserFavorites",
+		id: "BrowserFavorites",
+		modifier: null
+	},
+	ZoomIn: {
+		usbPage: 12,
+		usb: 557,
+		evdev: 418,
+		xkb: 426,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ZoomIn",
+		modifier: null
+	},
+	ZoomOut: {
+		usbPage: 12,
+		usb: 558,
+		evdev: 419,
+		xkb: 427,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "ZoomOut",
+		modifier: null
+	},
+	ZoomToggle: {
+		usbPage: 12,
+		usb: 562,
+		evdev: 372,
+		xkb: 380,
+		win: 0,
+		mac: 65535,
+		code: "ZoomToggle",
+		id: "ZoomToggle",
+		modifier: null
+	},
+	Redo: {
+		usbPage: 12,
+		usb: 633,
+		evdev: 182,
+		xkb: 190,
+		win: 0,
+		mac: 65535,
+		code: null,
+		id: "Redo",
+		modifier: null
+	},
+	MailReply: {
+		usbPage: 12,
+		usb: 649,
+		evdev: 232,
+		xkb: 240,
+		win: 0,
+		mac: 65535,
+		code: "MailReply",
+		id: "MailReply",
+		modifier: null
+	},
+	MailForward: {
+		usbPage: 12,
+		usb: 651,
+		evdev: 233,
+		xkb: 241,
+		win: 0,
+		mac: 65535,
+		code: "MailForward",
+		id: "MailForward",
+		modifier: null
+	},
+	MailSend: {
+		usbPage: 12,
+		usb: 652,
+		evdev: 231,
+		xkb: 239,
+		win: 0,
+		mac: 65535,
+		code: "MailSend",
+		id: "MailSend",
+		modifier: null
+	},
+	KeyboardLayoutSelect: {
+		usbPage: 12,
+		usb: 669,
+		evdev: 584,
+		xkb: 592,
+		win: 0,
+		mac: 65535,
+		code: "KeyboardLayoutSelect",
+		id: "KeyboardLayoutSelect",
+		modifier: null
+	},
+	ShowAllWindows: {
+		usbPage: 12,
+		usb: 671,
+		evdev: 120,
+		xkb: 128,
+		win: 0,
+		mac: 65535,
+		code: "ShowAllWindows",
+		id: "ShowAllWindows",
+		modifier: null
+	}
+};
+keyMaps.None, keyMaps.Hyper, keyMaps.Super, keyMaps.Fn, keyMaps.FnLock, keyMaps.Suspend, keyMaps.Resume, keyMaps.Turbo, keyMaps.Sleep, keyMaps.WakeUp, keyMaps.DisplayToggleIntExt, keyMaps.UsbReserved, keyMaps.UsbErrorRollOver, keyMaps.UsbPostFail, keyMaps.UsbErrorUndefined, keyMaps.UsA, keyMaps.UsB, keyMaps.UsC, keyMaps.UsD, keyMaps.UsE, keyMaps.UsF, keyMaps.UsG, keyMaps.UsH, keyMaps.UsI, keyMaps.UsJ, keyMaps.UsK, keyMaps.UsL, keyMaps.UsM, keyMaps.UsN, keyMaps.UsO, keyMaps.UsP, keyMaps.UsQ, keyMaps.UsR, keyMaps.UsS, keyMaps.UsT, keyMaps.UsU, keyMaps.UsV, keyMaps.UsW, keyMaps.UsX, keyMaps.UsY, keyMaps.UsZ, keyMaps.Digit1, keyMaps.Digit2, keyMaps.Digit3, keyMaps.Digit4, keyMaps.Digit5, keyMaps.Digit6, keyMaps.Digit7, keyMaps.Digit8, keyMaps.Digit9, keyMaps.Digit0, keyMaps.Enter, keyMaps.Escape, keyMaps.Backspace, keyMaps.Tab, keyMaps.Space, keyMaps.Minus, keyMaps.Equal, keyMaps.BracketLeft, keyMaps.BracketRight, keyMaps.Backslash, keyMaps.IntlHash, keyMaps.Semicolon, keyMaps.Quote, keyMaps.Backquote, keyMaps.Comma, keyMaps.Period, keyMaps.Slash, keyMaps.CapsLock, keyMaps.F1, keyMaps.F2, keyMaps.F3, keyMaps.F4, keyMaps.F5, keyMaps.F6, keyMaps.F7, keyMaps.F8, keyMaps.F9, keyMaps.F10, keyMaps.F11, keyMaps.F12, keyMaps.PrintScreen, keyMaps.ScrollLock, keyMaps.Pause, keyMaps.Insert, keyMaps.Home, keyMaps.PageUp, keyMaps.Del, keyMaps.End, keyMaps.PageDown, keyMaps.ArrowRight, keyMaps.ArrowLeft, keyMaps.ArrowDown, keyMaps.ArrowUp, keyMaps.NumLock, keyMaps.NumpadDivide, keyMaps.NumpadMultiply, keyMaps.NumpadSubtract, keyMaps.NumpadAdd, keyMaps.NumpadEnter, keyMaps.Numpad1, keyMaps.Numpad2, keyMaps.Numpad3, keyMaps.Numpad4, keyMaps.Numpad5, keyMaps.Numpad6, keyMaps.Numpad7, keyMaps.Numpad8, keyMaps.Numpad9, keyMaps.Numpad0, keyMaps.NumpadDecimal, keyMaps.IntlBackslash, keyMaps.ContextMenu, keyMaps.Power, keyMaps.NumpadEqual, keyMaps.F13, keyMaps.F14, keyMaps.F15, keyMaps.F16, keyMaps.F17, keyMaps.F18, keyMaps.F19, keyMaps.F20, keyMaps.F21, keyMaps.F22, keyMaps.F23, keyMaps.F24, keyMaps.Open, keyMaps.Help, keyMaps.Select, keyMaps.Again, keyMaps.Undo, keyMaps.Cut, keyMaps.Copy, keyMaps.Paste, keyMaps.Find, keyMaps.VolumeMute, keyMaps.VolumeUp, keyMaps.VolumeDown, keyMaps.NumpadComma, keyMaps.IntlRo, keyMaps.KanaMode, keyMaps.IntlYen, keyMaps.Convert, keyMaps.NonConvert, keyMaps.Lang1, keyMaps.Lang2, keyMaps.Lang3, keyMaps.Lang4, keyMaps.Lang5, keyMaps.Abort, keyMaps.Props, keyMaps.NumpadParenLeft, keyMaps.NumpadParenRight, keyMaps.NumpadBackspace, keyMaps.NumpadMemoryStore, keyMaps.NumpadMemoryRecall, keyMaps.NumpadMemoryClear, keyMaps.NumpadMemoryAdd, keyMaps.NumpadMemorySubtract, keyMaps.NumpadSignChange, keyMaps.NumpadClear, keyMaps.NumpadClearEntry, keyMaps.ControlLeft, keyMaps.ShiftLeft, keyMaps.AltLeft, keyMaps.MetaLeft, keyMaps.ControlRight, keyMaps.ShiftRight, keyMaps.AltRight, keyMaps.MetaRight, keyMaps.Info, keyMaps.ClosedCaptionToggle, keyMaps.BrightnessUp, keyMaps.BrightnessDown, keyMaps.BrightnessToggle, keyMaps.BrightnessMinimium, keyMaps.BrightnessMaximum, keyMaps.BrightnessAuto, keyMaps.MediaLast, keyMaps.LaunchPhone, keyMaps.ProgramGuide, keyMaps.Exit, keyMaps.ChannelUp, keyMaps.ChannelDown, keyMaps.MediaPlay, keyMaps.MediaRecord, keyMaps.MediaFastForward, keyMaps.MediaRewind, keyMaps.MediaTrackNext, keyMaps.MediaTrackPrevious, keyMaps.MediaStop, keyMaps.Eject, keyMaps.MediaPlayPause, keyMaps.SpeechInputToggle, keyMaps.BassBoost, keyMaps.MediaSelect, keyMaps.LaunchWordProcessor, keyMaps.LaunchSpreadsheet, keyMaps.LaunchMail, keyMaps.LaunchContacts, keyMaps.LaunchCalendar, keyMaps.LaunchApp2, keyMaps.LaunchApp1, keyMaps.LaunchInternetBrowser, keyMaps.LogOff, keyMaps.LockScreen, keyMaps.LaunchControlPanel, keyMaps.SelectTask, keyMaps.LaunchDocuments, keyMaps.SpellCheck, keyMaps.LaunchKeyboardLayout, keyMaps.LaunchScreenSaver, keyMaps.LaunchAssistant, keyMaps.LaunchAudioBrowser, keyMaps.New, keyMaps.Close, keyMaps.Save, keyMaps.Print, keyMaps.BrowserSearch, keyMaps.BrowserHome, keyMaps.BrowserBack, keyMaps.BrowserForward, keyMaps.BrowserStop, keyMaps.BrowserRefresh, keyMaps.BrowserFavorites, keyMaps.ZoomIn, keyMaps.ZoomOut, keyMaps.ZoomToggle, keyMaps.Redo, keyMaps.MailReply, keyMaps.MailForward, keyMaps.MailSend, keyMaps.KeyboardLayoutSelect, keyMaps.ShowAllWindows;
+keyMaps.None, keyMaps.Sleep, keyMaps.WakeUp, keyMaps.DisplayToggleIntExt, keyMaps.UsA, keyMaps.UsB, keyMaps.UsC, keyMaps.UsD, keyMaps.UsE, keyMaps.UsF, keyMaps.UsG, keyMaps.UsH, keyMaps.UsI, keyMaps.UsJ, keyMaps.UsK, keyMaps.UsL, keyMaps.UsM, keyMaps.UsN, keyMaps.UsO, keyMaps.UsP, keyMaps.UsQ, keyMaps.UsR, keyMaps.UsS, keyMaps.UsT, keyMaps.UsU, keyMaps.UsV, keyMaps.UsW, keyMaps.UsX, keyMaps.UsY, keyMaps.UsZ, keyMaps.Digit1, keyMaps.Digit2, keyMaps.Digit3, keyMaps.Digit4, keyMaps.Digit5, keyMaps.Digit6, keyMaps.Digit7, keyMaps.Digit8, keyMaps.Digit9, keyMaps.Digit0, keyMaps.Enter, keyMaps.Escape, keyMaps.Backspace, keyMaps.Tab, keyMaps.Space, keyMaps.Minus, keyMaps.Equal, keyMaps.BracketLeft, keyMaps.BracketRight, keyMaps.Backslash, keyMaps.Semicolon, keyMaps.Quote, keyMaps.Backquote, keyMaps.Comma, keyMaps.Period, keyMaps.Slash, keyMaps.CapsLock, keyMaps.F1, keyMaps.F2, keyMaps.F3, keyMaps.F4, keyMaps.F5, keyMaps.F6, keyMaps.F7, keyMaps.F8, keyMaps.F9, keyMaps.F10, keyMaps.F11, keyMaps.F12, keyMaps.PrintScreen, keyMaps.ScrollLock, keyMaps.Pause, keyMaps.Insert, keyMaps.Home, keyMaps.PageUp, keyMaps.Del, keyMaps.End, keyMaps.PageDown, keyMaps.ArrowRight, keyMaps.ArrowLeft, keyMaps.ArrowDown, keyMaps.ArrowUp, keyMaps.NumLock, keyMaps.NumpadDivide, keyMaps.NumpadMultiply, keyMaps.NumpadSubtract, keyMaps.NumpadAdd, keyMaps.NumpadEnter, keyMaps.Numpad1, keyMaps.Numpad2, keyMaps.Numpad3, keyMaps.Numpad4, keyMaps.Numpad5, keyMaps.Numpad6, keyMaps.Numpad7, keyMaps.Numpad8, keyMaps.Numpad9, keyMaps.Numpad0, keyMaps.NumpadDecimal, keyMaps.IntlBackslash, keyMaps.ContextMenu, keyMaps.Power, keyMaps.NumpadEqual, keyMaps.F13, keyMaps.F14, keyMaps.F15, keyMaps.F16, keyMaps.F17, keyMaps.F18, keyMaps.F19, keyMaps.F20, keyMaps.F21, keyMaps.F22, keyMaps.F23, keyMaps.F24, keyMaps.Open, keyMaps.Help, keyMaps.Select, keyMaps.Again, keyMaps.Undo, keyMaps.Cut, keyMaps.Copy, keyMaps.Paste, keyMaps.Find, keyMaps.VolumeMute, keyMaps.VolumeUp, keyMaps.VolumeDown, keyMaps.NumpadComma, keyMaps.IntlRo, keyMaps.KanaMode, keyMaps.IntlYen, keyMaps.Convert, keyMaps.NonConvert, keyMaps.Lang1, keyMaps.Lang2, keyMaps.Lang3, keyMaps.Lang4, keyMaps.Lang5, keyMaps.NumpadParenLeft, keyMaps.NumpadParenRight, keyMaps.NumpadSignChange, keyMaps.ControlLeft, keyMaps.ShiftLeft, keyMaps.AltLeft, keyMaps.MetaLeft, keyMaps.ControlRight, keyMaps.ShiftRight, keyMaps.AltRight, keyMaps.MetaRight, keyMaps.Info, keyMaps.ClosedCaptionToggle, keyMaps.BrightnessUp, keyMaps.BrightnessDown, keyMaps.BrightnessToggle, keyMaps.BrightnessMinimium, keyMaps.BrightnessMaximum, keyMaps.BrightnessAuto, keyMaps.MediaLast, keyMaps.LaunchPhone, keyMaps.ProgramGuide, keyMaps.Exit, keyMaps.ChannelUp, keyMaps.ChannelDown, keyMaps.MediaPlay, keyMaps.MediaRecord, keyMaps.MediaFastForward, keyMaps.MediaRewind, keyMaps.MediaTrackNext, keyMaps.MediaTrackPrevious, keyMaps.MediaStop, keyMaps.Eject, keyMaps.MediaPlayPause, keyMaps.SpeechInputToggle, keyMaps.BassBoost, keyMaps.MediaSelect, keyMaps.LaunchWordProcessor, keyMaps.LaunchSpreadsheet, keyMaps.LaunchMail, keyMaps.LaunchContacts, keyMaps.LaunchCalendar, keyMaps.LaunchApp2, keyMaps.LaunchApp1, keyMaps.LaunchInternetBrowser, keyMaps.LogOff, keyMaps.LockScreen, keyMaps.LaunchControlPanel, keyMaps.SelectTask, keyMaps.LaunchDocuments, keyMaps.SpellCheck, keyMaps.LaunchKeyboardLayout, keyMaps.LaunchScreenSaver, keyMaps.LaunchAssistant, keyMaps.LaunchAudioBrowser, keyMaps.New, keyMaps.Close, keyMaps.Save, keyMaps.Print, keyMaps.BrowserSearch, keyMaps.BrowserHome, keyMaps.BrowserBack, keyMaps.BrowserForward, keyMaps.BrowserStop, keyMaps.BrowserRefresh, keyMaps.BrowserFavorites, keyMaps.ZoomIn, keyMaps.ZoomOut, keyMaps.ZoomToggle, keyMaps.Redo, keyMaps.MailReply, keyMaps.MailForward, keyMaps.MailSend, keyMaps.KeyboardLayoutSelect, keyMaps.ShowAllWindows;
+keyMaps.None, keyMaps.Sleep, keyMaps.WakeUp, keyMaps.DisplayToggleIntExt, keyMaps.UsA, keyMaps.UsB, keyMaps.UsC, keyMaps.UsD, keyMaps.UsE, keyMaps.UsF, keyMaps.UsG, keyMaps.UsH, keyMaps.UsI, keyMaps.UsJ, keyMaps.UsK, keyMaps.UsL, keyMaps.UsM, keyMaps.UsN, keyMaps.UsO, keyMaps.UsP, keyMaps.UsQ, keyMaps.UsR, keyMaps.UsS, keyMaps.UsT, keyMaps.UsU, keyMaps.UsV, keyMaps.UsW, keyMaps.UsX, keyMaps.UsY, keyMaps.UsZ, keyMaps.Digit1, keyMaps.Digit2, keyMaps.Digit3, keyMaps.Digit4, keyMaps.Digit5, keyMaps.Digit6, keyMaps.Digit7, keyMaps.Digit8, keyMaps.Digit9, keyMaps.Digit0, keyMaps.Enter, keyMaps.Escape, keyMaps.Backspace, keyMaps.Tab, keyMaps.Space, keyMaps.Minus, keyMaps.Equal, keyMaps.BracketLeft, keyMaps.BracketRight, keyMaps.Backslash, keyMaps.Semicolon, keyMaps.Quote, keyMaps.Backquote, keyMaps.Comma, keyMaps.Period, keyMaps.Slash, keyMaps.CapsLock, keyMaps.F1, keyMaps.F2, keyMaps.F3, keyMaps.F4, keyMaps.F5, keyMaps.F6, keyMaps.F7, keyMaps.F8, keyMaps.F9, keyMaps.F10, keyMaps.F11, keyMaps.F12, keyMaps.PrintScreen, keyMaps.ScrollLock, keyMaps.Pause, keyMaps.Insert, keyMaps.Home, keyMaps.PageUp, keyMaps.Del, keyMaps.End, keyMaps.PageDown, keyMaps.ArrowRight, keyMaps.ArrowLeft, keyMaps.ArrowDown, keyMaps.ArrowUp, keyMaps.NumLock, keyMaps.NumpadDivide, keyMaps.NumpadMultiply, keyMaps.NumpadSubtract, keyMaps.NumpadAdd, keyMaps.NumpadEnter, keyMaps.Numpad1, keyMaps.Numpad2, keyMaps.Numpad3, keyMaps.Numpad4, keyMaps.Numpad5, keyMaps.Numpad6, keyMaps.Numpad7, keyMaps.Numpad8, keyMaps.Numpad9, keyMaps.Numpad0, keyMaps.NumpadDecimal, keyMaps.IntlBackslash, keyMaps.ContextMenu, keyMaps.Power, keyMaps.NumpadEqual, keyMaps.F13, keyMaps.F14, keyMaps.F15, keyMaps.F16, keyMaps.F17, keyMaps.F18, keyMaps.F19, keyMaps.F20, keyMaps.F21, keyMaps.F22, keyMaps.F23, keyMaps.F24, keyMaps.Open, keyMaps.Help, keyMaps.Select, keyMaps.Again, keyMaps.Undo, keyMaps.Cut, keyMaps.Copy, keyMaps.Paste, keyMaps.Find, keyMaps.VolumeMute, keyMaps.VolumeUp, keyMaps.VolumeDown, keyMaps.NumpadComma, keyMaps.IntlRo, keyMaps.KanaMode, keyMaps.IntlYen, keyMaps.Convert, keyMaps.NonConvert, keyMaps.Lang1, keyMaps.Lang2, keyMaps.Lang3, keyMaps.Lang4, keyMaps.Lang5, keyMaps.NumpadParenLeft, keyMaps.NumpadParenRight, keyMaps.NumpadSignChange, keyMaps.ControlLeft, keyMaps.ShiftLeft, keyMaps.AltLeft, keyMaps.MetaLeft, keyMaps.ControlRight, keyMaps.ShiftRight, keyMaps.AltRight, keyMaps.MetaRight, keyMaps.Info, keyMaps.ClosedCaptionToggle, keyMaps.BrightnessUp, keyMaps.BrightnessDown, keyMaps.BrightnessToggle, keyMaps.BrightnessMinimium, keyMaps.BrightnessMaximum, keyMaps.BrightnessAuto, keyMaps.MediaLast, keyMaps.LaunchPhone, keyMaps.ProgramGuide, keyMaps.Exit, keyMaps.ChannelUp, keyMaps.ChannelDown, keyMaps.MediaPlay, keyMaps.MediaRecord, keyMaps.MediaFastForward, keyMaps.MediaRewind, keyMaps.MediaTrackNext, keyMaps.MediaTrackPrevious, keyMaps.MediaStop, keyMaps.Eject, keyMaps.MediaPlayPause, keyMaps.SpeechInputToggle, keyMaps.BassBoost, keyMaps.MediaSelect, keyMaps.LaunchWordProcessor, keyMaps.LaunchSpreadsheet, keyMaps.LaunchMail, keyMaps.LaunchContacts, keyMaps.LaunchCalendar, keyMaps.LaunchApp2, keyMaps.LaunchApp1, keyMaps.LaunchInternetBrowser, keyMaps.LogOff, keyMaps.LockScreen, keyMaps.LaunchControlPanel, keyMaps.SelectTask, keyMaps.LaunchDocuments, keyMaps.SpellCheck, keyMaps.LaunchKeyboardLayout, keyMaps.LaunchScreenSaver, keyMaps.LaunchAssistant, keyMaps.LaunchAudioBrowser, keyMaps.New, keyMaps.Close, keyMaps.Save, keyMaps.Print, keyMaps.BrowserSearch, keyMaps.BrowserHome, keyMaps.BrowserBack, keyMaps.BrowserForward, keyMaps.BrowserStop, keyMaps.BrowserRefresh, keyMaps.BrowserFavorites, keyMaps.ZoomIn, keyMaps.ZoomOut, keyMaps.ZoomToggle, keyMaps.Redo, keyMaps.MailReply, keyMaps.MailForward, keyMaps.MailSend, keyMaps.KeyboardLayoutSelect, keyMaps.ShowAllWindows;
+keyMaps.None, keyMaps.Sleep, keyMaps.WakeUp, keyMaps.UsbErrorRollOver, keyMaps.UsbPostFail, keyMaps.UsA, keyMaps.UsB, keyMaps.UsC, keyMaps.UsD, keyMaps.UsE, keyMaps.UsF, keyMaps.UsG, keyMaps.UsH, keyMaps.UsI, keyMaps.UsJ, keyMaps.UsK, keyMaps.UsL, keyMaps.UsM, keyMaps.UsN, keyMaps.UsO, keyMaps.UsP, keyMaps.UsQ, keyMaps.UsR, keyMaps.UsS, keyMaps.UsT, keyMaps.UsU, keyMaps.UsV, keyMaps.UsW, keyMaps.UsX, keyMaps.UsY, keyMaps.UsZ, keyMaps.Digit1, keyMaps.Digit2, keyMaps.Digit3, keyMaps.Digit4, keyMaps.Digit5, keyMaps.Digit6, keyMaps.Digit7, keyMaps.Digit8, keyMaps.Digit9, keyMaps.Digit0, keyMaps.Enter, keyMaps.Escape, keyMaps.Backspace, keyMaps.Tab, keyMaps.Space, keyMaps.Minus, keyMaps.Equal, keyMaps.BracketLeft, keyMaps.BracketRight, keyMaps.Backslash, keyMaps.Semicolon, keyMaps.Quote, keyMaps.Backquote, keyMaps.Comma, keyMaps.Period, keyMaps.Slash, keyMaps.CapsLock, keyMaps.F1, keyMaps.F2, keyMaps.F3, keyMaps.F4, keyMaps.F5, keyMaps.F6, keyMaps.F7, keyMaps.F8, keyMaps.F9, keyMaps.F10, keyMaps.F11, keyMaps.F12, keyMaps.PrintScreen, keyMaps.ScrollLock, keyMaps.Pause, keyMaps.Insert, keyMaps.Home, keyMaps.PageUp, keyMaps.Del, keyMaps.End, keyMaps.PageDown, keyMaps.ArrowRight, keyMaps.ArrowLeft, keyMaps.ArrowDown, keyMaps.ArrowUp, keyMaps.NumLock, keyMaps.NumpadDivide, keyMaps.NumpadMultiply, keyMaps.NumpadSubtract, keyMaps.NumpadAdd, keyMaps.NumpadEnter, keyMaps.Numpad1, keyMaps.Numpad2, keyMaps.Numpad3, keyMaps.Numpad4, keyMaps.Numpad5, keyMaps.Numpad6, keyMaps.Numpad7, keyMaps.Numpad8, keyMaps.Numpad9, keyMaps.Numpad0, keyMaps.NumpadDecimal, keyMaps.IntlBackslash, keyMaps.ContextMenu, keyMaps.Power, keyMaps.NumpadEqual, keyMaps.F13, keyMaps.F14, keyMaps.F15, keyMaps.F16, keyMaps.F17, keyMaps.F18, keyMaps.F19, keyMaps.F20, keyMaps.F21, keyMaps.F22, keyMaps.F23, keyMaps.F24, keyMaps.Help, keyMaps.Undo, keyMaps.Cut, keyMaps.Copy, keyMaps.Paste, keyMaps.VolumeMute, keyMaps.VolumeUp, keyMaps.VolumeDown, keyMaps.NumpadComma, keyMaps.IntlRo, keyMaps.KanaMode, keyMaps.IntlYen, keyMaps.Convert, keyMaps.NonConvert, keyMaps.Lang1, keyMaps.Lang2, keyMaps.Lang3, keyMaps.Lang4, keyMaps.ControlLeft, keyMaps.ShiftLeft, keyMaps.AltLeft, keyMaps.MetaLeft, keyMaps.ControlRight, keyMaps.ShiftRight, keyMaps.AltRight, keyMaps.MetaRight, keyMaps.MediaTrackNext, keyMaps.MediaTrackPrevious, keyMaps.MediaStop, keyMaps.Eject, keyMaps.MediaPlayPause, keyMaps.MediaSelect, keyMaps.LaunchMail, keyMaps.LaunchApp2, keyMaps.LaunchApp1, keyMaps.BrowserSearch, keyMaps.BrowserHome, keyMaps.BrowserBack, keyMaps.BrowserForward, keyMaps.BrowserStop, keyMaps.BrowserRefresh, keyMaps.BrowserFavorites;
+keyMaps.None, keyMaps.UsA, keyMaps.UsB, keyMaps.UsC, keyMaps.UsD, keyMaps.UsE, keyMaps.UsF, keyMaps.UsG, keyMaps.UsH, keyMaps.UsI, keyMaps.UsJ, keyMaps.UsK, keyMaps.UsL, keyMaps.UsM, keyMaps.UsN, keyMaps.UsO, keyMaps.UsP, keyMaps.UsQ, keyMaps.UsR, keyMaps.UsS, keyMaps.UsT, keyMaps.UsU, keyMaps.UsV, keyMaps.UsW, keyMaps.UsX, keyMaps.UsY, keyMaps.UsZ, keyMaps.Digit1, keyMaps.Digit2, keyMaps.Digit3, keyMaps.Digit4, keyMaps.Digit5, keyMaps.Digit6, keyMaps.Digit7, keyMaps.Digit8, keyMaps.Digit9, keyMaps.Digit0, keyMaps.Enter, keyMaps.Escape, keyMaps.Backspace, keyMaps.Tab, keyMaps.Space, keyMaps.Minus, keyMaps.Equal, keyMaps.BracketLeft, keyMaps.BracketRight, keyMaps.Backslash, keyMaps.Semicolon, keyMaps.Quote, keyMaps.Backquote, keyMaps.Comma, keyMaps.Period, keyMaps.Slash, keyMaps.CapsLock, keyMaps.F1, keyMaps.F2, keyMaps.F3, keyMaps.F4, keyMaps.F5, keyMaps.F6, keyMaps.F7, keyMaps.F8, keyMaps.F9, keyMaps.F10, keyMaps.F11, keyMaps.F12, keyMaps.Insert, keyMaps.Home, keyMaps.PageUp, keyMaps.Del, keyMaps.End, keyMaps.PageDown, keyMaps.ArrowRight, keyMaps.ArrowLeft, keyMaps.ArrowDown, keyMaps.ArrowUp, keyMaps.NumLock, keyMaps.NumpadDivide, keyMaps.NumpadMultiply, keyMaps.NumpadSubtract, keyMaps.NumpadAdd, keyMaps.NumpadEnter, keyMaps.Numpad1, keyMaps.Numpad2, keyMaps.Numpad3, keyMaps.Numpad4, keyMaps.Numpad5, keyMaps.Numpad6, keyMaps.Numpad7, keyMaps.Numpad8, keyMaps.Numpad9, keyMaps.Numpad0, keyMaps.NumpadDecimal, keyMaps.IntlBackslash, keyMaps.ContextMenu, keyMaps.NumpadEqual, keyMaps.F13, keyMaps.F14, keyMaps.F15, keyMaps.F16, keyMaps.F17, keyMaps.F18, keyMaps.F19, keyMaps.F20, keyMaps.VolumeMute, keyMaps.VolumeUp, keyMaps.VolumeDown, keyMaps.NumpadComma, keyMaps.IntlRo, keyMaps.KanaMode, keyMaps.IntlYen, keyMaps.ControlLeft, keyMaps.ShiftLeft, keyMaps.AltLeft, keyMaps.MetaLeft, keyMaps.ControlRight, keyMaps.ShiftRight, keyMaps.AltRight, keyMaps.MetaRight;
+const keyMapsByCode = {
+	Hyper: keyMaps.Hyper,
+	Super: keyMaps.Super,
+	Fn: keyMaps.Fn,
+	FnLock: keyMaps.FnLock,
+	Suspend: keyMaps.Suspend,
+	Resume: keyMaps.Resume,
+	Turbo: keyMaps.Turbo,
+	Sleep: keyMaps.Sleep,
+	WakeUp: keyMaps.WakeUp,
+	DisplayToggleIntExt: keyMaps.DisplayToggleIntExt,
+	KeyA: keyMaps.UsA,
+	KeyB: keyMaps.UsB,
+	KeyC: keyMaps.UsC,
+	KeyD: keyMaps.UsD,
+	KeyE: keyMaps.UsE,
+	KeyF: keyMaps.UsF,
+	KeyG: keyMaps.UsG,
+	KeyH: keyMaps.UsH,
+	KeyI: keyMaps.UsI,
+	KeyJ: keyMaps.UsJ,
+	KeyK: keyMaps.UsK,
+	KeyL: keyMaps.UsL,
+	KeyM: keyMaps.UsM,
+	KeyN: keyMaps.UsN,
+	KeyO: keyMaps.UsO,
+	KeyP: keyMaps.UsP,
+	KeyQ: keyMaps.UsQ,
+	KeyR: keyMaps.UsR,
+	KeyS: keyMaps.UsS,
+	KeyT: keyMaps.UsT,
+	KeyU: keyMaps.UsU,
+	KeyV: keyMaps.UsV,
+	KeyW: keyMaps.UsW,
+	KeyX: keyMaps.UsX,
+	KeyY: keyMaps.UsY,
+	KeyZ: keyMaps.UsZ,
+	Digit1: keyMaps.Digit1,
+	Digit2: keyMaps.Digit2,
+	Digit3: keyMaps.Digit3,
+	Digit4: keyMaps.Digit4,
+	Digit5: keyMaps.Digit5,
+	Digit6: keyMaps.Digit6,
+	Digit7: keyMaps.Digit7,
+	Digit8: keyMaps.Digit8,
+	Digit9: keyMaps.Digit9,
+	Digit0: keyMaps.Digit0,
+	Enter: keyMaps.Enter,
+	Escape: keyMaps.Escape,
+	Backspace: keyMaps.Backspace,
+	Tab: keyMaps.Tab,
+	Space: keyMaps.Space,
+	Minus: keyMaps.Minus,
+	Equal: keyMaps.Equal,
+	BracketLeft: keyMaps.BracketLeft,
+	BracketRight: keyMaps.BracketRight,
+	Backslash: keyMaps.Backslash,
+	IntlHash: keyMaps.IntlHash,
+	Semicolon: keyMaps.Semicolon,
+	Quote: keyMaps.Quote,
+	Backquote: keyMaps.Backquote,
+	Comma: keyMaps.Comma,
+	Period: keyMaps.Period,
+	Slash: keyMaps.Slash,
+	CapsLock: keyMaps.CapsLock,
+	F1: keyMaps.F1,
+	F2: keyMaps.F2,
+	F3: keyMaps.F3,
+	F4: keyMaps.F4,
+	F5: keyMaps.F5,
+	F6: keyMaps.F6,
+	F7: keyMaps.F7,
+	F8: keyMaps.F8,
+	F9: keyMaps.F9,
+	F10: keyMaps.F10,
+	F11: keyMaps.F11,
+	F12: keyMaps.F12,
+	PrintScreen: keyMaps.PrintScreen,
+	ScrollLock: keyMaps.ScrollLock,
+	Pause: keyMaps.Pause,
+	Insert: keyMaps.Insert,
+	Home: keyMaps.Home,
+	PageUp: keyMaps.PageUp,
+	Delete: keyMaps.Del,
+	End: keyMaps.End,
+	PageDown: keyMaps.PageDown,
+	ArrowRight: keyMaps.ArrowRight,
+	ArrowLeft: keyMaps.ArrowLeft,
+	ArrowDown: keyMaps.ArrowDown,
+	ArrowUp: keyMaps.ArrowUp,
+	NumLock: keyMaps.NumLock,
+	NumpadDivide: keyMaps.NumpadDivide,
+	NumpadMultiply: keyMaps.NumpadMultiply,
+	NumpadSubtract: keyMaps.NumpadSubtract,
+	NumpadAdd: keyMaps.NumpadAdd,
+	NumpadEnter: keyMaps.NumpadEnter,
+	Numpad1: keyMaps.Numpad1,
+	Numpad2: keyMaps.Numpad2,
+	Numpad3: keyMaps.Numpad3,
+	Numpad4: keyMaps.Numpad4,
+	Numpad5: keyMaps.Numpad5,
+	Numpad6: keyMaps.Numpad6,
+	Numpad7: keyMaps.Numpad7,
+	Numpad8: keyMaps.Numpad8,
+	Numpad9: keyMaps.Numpad9,
+	Numpad0: keyMaps.Numpad0,
+	NumpadDecimal: keyMaps.NumpadDecimal,
+	IntlBackslash: keyMaps.IntlBackslash,
+	ContextMenu: keyMaps.ContextMenu,
+	Power: keyMaps.Power,
+	NumpadEqual: keyMaps.NumpadEqual,
+	F13: keyMaps.F13,
+	F14: keyMaps.F14,
+	F15: keyMaps.F15,
+	F16: keyMaps.F16,
+	F17: keyMaps.F17,
+	F18: keyMaps.F18,
+	F19: keyMaps.F19,
+	F20: keyMaps.F20,
+	F21: keyMaps.F21,
+	F22: keyMaps.F22,
+	F23: keyMaps.F23,
+	F24: keyMaps.F24,
+	Open: keyMaps.Open,
+	Help: keyMaps.Help,
+	Select: keyMaps.Select,
+	Again: keyMaps.Again,
+	Undo: keyMaps.Undo,
+	Cut: keyMaps.Cut,
+	Copy: keyMaps.Copy,
+	Paste: keyMaps.Paste,
+	Find: keyMaps.Find,
+	AudioVolumeMute: keyMaps.VolumeMute,
+	AudioVolumeUp: keyMaps.VolumeUp,
+	AudioVolumeDown: keyMaps.VolumeDown,
+	NumpadComma: keyMaps.NumpadComma,
+	IntlRo: keyMaps.IntlRo,
+	KanaMode: keyMaps.KanaMode,
+	IntlYen: keyMaps.IntlYen,
+	Convert: keyMaps.Convert,
+	NonConvert: keyMaps.NonConvert,
+	Lang1: keyMaps.Lang1,
+	Lang2: keyMaps.Lang2,
+	Lang3: keyMaps.Lang3,
+	Lang4: keyMaps.Lang4,
+	Lang5: keyMaps.Lang5,
+	Abort: keyMaps.Abort,
+	Props: keyMaps.Props,
+	NumpadParenLeft: keyMaps.NumpadParenLeft,
+	NumpadParenRight: keyMaps.NumpadParenRight,
+	NumpadBackspace: keyMaps.NumpadBackspace,
+	NumpadMemoryStore: keyMaps.NumpadMemoryStore,
+	NumpadMemoryRecall: keyMaps.NumpadMemoryRecall,
+	NumpadMemoryClear: keyMaps.NumpadMemoryClear,
+	NumpadMemoryAdd: keyMaps.NumpadMemoryAdd,
+	NumpadMemorySubtract: keyMaps.NumpadMemorySubtract,
+	NumpadClear: keyMaps.NumpadClear,
+	NumpadClearEntry: keyMaps.NumpadClearEntry,
+	ControlLeft: keyMaps.ControlLeft,
+	ShiftLeft: keyMaps.ShiftLeft,
+	AltLeft: keyMaps.AltLeft,
+	MetaLeft: keyMaps.MetaLeft,
+	ControlRight: keyMaps.ControlRight,
+	ShiftRight: keyMaps.ShiftRight,
+	AltRight: keyMaps.AltRight,
+	MetaRight: keyMaps.MetaRight,
+	BrightnessUp: keyMaps.BrightnessUp,
+	BrightnessDown: keyMaps.BrightnessDown,
+	MediaPlay: keyMaps.MediaPlay,
+	MediaRecord: keyMaps.MediaRecord,
+	MediaFastForward: keyMaps.MediaFastForward,
+	MediaRewind: keyMaps.MediaRewind,
+	MediaTrackNext: keyMaps.MediaTrackNext,
+	MediaTrackPrevious: keyMaps.MediaTrackPrevious,
+	MediaStop: keyMaps.MediaStop,
+	Eject: keyMaps.Eject,
+	MediaPlayPause: keyMaps.MediaPlayPause,
+	MediaSelect: keyMaps.MediaSelect,
+	LaunchMail: keyMaps.LaunchMail,
+	LaunchApp2: keyMaps.LaunchApp2,
+	LaunchApp1: keyMaps.LaunchApp1,
+	LaunchControlPanel: keyMaps.LaunchControlPanel,
+	SelectTask: keyMaps.SelectTask,
+	LaunchScreenSaver: keyMaps.LaunchScreenSaver,
+	LaunchAssistant: keyMaps.LaunchAssistant,
+	BrowserSearch: keyMaps.BrowserSearch,
+	BrowserHome: keyMaps.BrowserHome,
+	BrowserBack: keyMaps.BrowserBack,
+	BrowserForward: keyMaps.BrowserForward,
+	BrowserStop: keyMaps.BrowserStop,
+	BrowserRefresh: keyMaps.BrowserRefresh,
+	BrowserFavorites: keyMaps.BrowserFavorites,
+	ZoomToggle: keyMaps.ZoomToggle,
+	MailReply: keyMaps.MailReply,
+	MailForward: keyMaps.MailForward,
+	MailSend: keyMaps.MailSend,
+	KeyboardLayoutSelect: keyMaps.KeyboardLayoutSelect,
+	ShowAllWindows: keyMaps.ShowAllWindows
+};
+Object.values(keyMaps);
+function getKeyMapByCode(code) {
+	return keyMapsByCode[code];
+}
 //#endregion
 //#region src/js/utils/electron.ts
 function parseElectronAccelerator(accelerator) {
