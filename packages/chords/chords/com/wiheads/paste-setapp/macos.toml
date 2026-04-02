@@ -1,7 +1,7 @@
 [config]
 name = "Paste (Setapp)"
 
-[handlers.hotkey]
+[on.hotkey]
 file = "wiheads.js"
 args = ["~/Library/Preferences/com.wiheads.paste-setapp.plist"]
 

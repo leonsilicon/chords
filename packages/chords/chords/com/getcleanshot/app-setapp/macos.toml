@@ -1,6 +1,6 @@
 name = "CleanShot X (Setapp)"
 
-[handlers.hotkey]
+[on.hotkey]
 file = "maketheweb.js"
 args = ["~/Library/Preferences/com.getcleanshot.app-setapp.plist"]
 

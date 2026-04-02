@@ -1,6 +1,6 @@
 name = "WhatsApp"
 
-[handlers.menu]
+[on.menu]
 type = "js"
 file = "@keychord/chords-menu/js/menu.js"
 args = ["WhatsApp"]

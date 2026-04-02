@@ -1,6 +1,6 @@
 name = "ChatGPT Atlas"
 
-[handlers.js]
+[on.js]
 type = "js"
 file = 'chrome.js'
 args = ['/Applications/ChatGPT Atlas.app']

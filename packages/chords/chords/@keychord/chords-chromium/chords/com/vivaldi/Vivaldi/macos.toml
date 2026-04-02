@@ -1,6 +1,6 @@
 name = "Vivaldi"
 
-[handlers.js]
+[on.js]
 type = "js"
 file = 'chrome.js'
 args = ['/Applications/Vivaldi.app']

@@ -1,6 +1,6 @@
 name = "Zed"
 
-[handlers.command]
+[on.command]
 file = 'zed.js'
 args = []
 

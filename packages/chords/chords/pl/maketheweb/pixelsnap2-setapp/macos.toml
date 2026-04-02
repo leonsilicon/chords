@@ -1,6 +1,6 @@
 name = "PixelSnap 2 (Setapp)"
 
-[handlers.hotkey]
+[on.hotkey]
 type = "js"
 file = "maketheweb.js"
 args = ["~/Library/Preferences/pl.maketheweb.pixelsnap2-setapp.plist"]
