@@ -9,7 +9,8 @@ import { serializeBplist } from "bplist-lossless";
 import parseJson from "json-parse-safe";
 import encodeUtf8 from "encode-utf8";
 import fs from "fs";
-import { onAppTerminate, setAppNeedsRelaunch } from "chord";
+import { onAppTerminate, setAppNeedsRelaunch, BuilderThis } from "chord";
+import path from 'path'
 
 interface PerItemHotkey {
   appName: string;
@@ -17,18 +18,18 @@ interface PerItemHotkey {
   keyName: string;
 }
 
-export default function buildBartenderHandler(this: any, tildepath: string) {
+export default function buildBartenderHandler(this: BuilderThis, tildepath: string) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
     return noop;
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(this.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")),
+    includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")),
     {
-      bundleId: this.bundleId,
+      bundleId: path.dirname(this.chordsFileAppId).replaceAll('/', '.'),
       // index 2 is the item id, index 1 is the property
-      getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1]),
+      getHotkeyId: (chord: any) => nullthrows(chord.args?.[2] ?? chord.args?.[1]),
     },
   );
   const writes = globalHotkeys.map(({ chord, shortcut }) => {
@@ -51,8 +52,8 @@ export default function buildBartenderHandler(this: any, tildepath: string) {
   });
   const needsRelaunch = createUpdatedPlist(writes).appliedWrites.length > 0;
   if (needsRelaunch) {
-    setAppNeedsRelaunch(this.bundleId, true);
-    onAppTerminate(this.bundleId, () => {
+    setAppNeedsRelaunch(this.chordsFileAppId, true);
+    onAppTerminate(this.chordsFileAppId, () => {
       const { updatedPlist: plist } = createUpdatedPlist(writes, { overwrite: false });
       const rawValue = plistValueToString(plist["per-item-hotkeys"]);
       const result = parseJson(rawValue);

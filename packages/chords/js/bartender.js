@@ -2,6 +2,7 @@ import os from "node:os";
 import fs from "fs";
 import { getGlobalHotkey, onAppTerminate, registerGlobalHotkey, setAppNeedsRelaunch, tap } from "chord";
 import { Buffer as Buffer$1 } from "buffer";
+import path from "path";
 //#region \0rolldown/runtime.js
 var __create = Object.create;
 var __defProp = Object.defineProperty;
@@ -5588,8 +5589,8 @@ function encodeUtf8(input) {
 function buildBartenderHandler(tildepath) {
 	const plistPath = untildify(tildepath);
 	if (!exists(plistPath)) return import_lib.default;
-	const globalHotkeys = ensureGlobalHotkeys(includeKeys(this.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
-		bundleId: this.bundleId,
+	const globalHotkeys = ensureGlobalHotkeys(includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
+		bundleId: path.dirname(this.chordsFileAppId).replaceAll("/", "."),
 		getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
 	});
 	const writes = globalHotkeys.map(({ chord, shortcut }) => {
@@ -5606,8 +5607,8 @@ function buildBartenderHandler(tildepath) {
 		keycodeKey: "carbonKeyCode"
 	});
 	if (createUpdatedPlist(writes).appliedWrites.length > 0) {
-		setAppNeedsRelaunch(this.bundleId, true);
-		onAppTerminate(this.bundleId, () => {
+		setAppNeedsRelaunch(this.chordsFileAppId, true);
+		onAppTerminate(this.chordsFileAppId, () => {
 			const { updatedPlist: plist } = createUpdatedPlist(writes, { overwrite: false });
 			const result = (0, import_json_parse_safe.default)(plistValueToString(plist["per-item-hotkeys"]));
 			let perItemHotkeyList = [];

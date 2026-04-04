@@ -5545,12 +5545,12 @@ var require_main = /* @__PURE__ */ __commonJSMin(((exports, module) => {
 var import_lib = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((exports, module) => {
 	module.exports = require_main();
 })))(), 1);
-function buildPlistHandler(chordfile, tildepath, { globalPrefix, propertyType, keycodeKey, modifierMaskKey, modifierType }) {
+function buildPlistHandler(context, tildepath, { globalPrefix, propertyType, keycodeKey, modifierMaskKey, modifierType }) {
 	const plistPath = untildify(tildepath);
 	if (!exists(plistPath)) return import_lib.default;
-	const writes = ensureGlobalHotkeys(includeKeys(chordfile.chords, (sequence) => typeof globalPrefix === "string" ? sequence.startsWith(globalPrefix) : globalPrefix.test(sequence)), {
-		bundleId: chordfile.bundleId,
-		getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+	const writes = ensureGlobalHotkeys(includeKeys(context.chordsFile.chords, (sequence) => typeof globalPrefix === "string" ? sequence.startsWith(globalPrefix) : globalPrefix.test(sequence)), {
+		bundleId: context.chordsFileAppId,
+		getHotkeyId: (chord) => nullthrows(chord["emit:hotkey"]?.[0])
 	}).map(({ chord, shortcut }) => ({
 		property: nullthrows(chord.args?.[0]),
 		propertyType,
@@ -5563,8 +5563,8 @@ function buildPlistHandler(chordfile, tildepath, { globalPrefix, propertyType, k
 		modifierType
 	});
 	if (createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0) {
-		setAppNeedsRelaunch(chordfile.bundleId, true);
-		const unregister = onAppTerminate(chordfile.bundleId, () => {
+		setAppNeedsRelaunch(context.chordsFileAppId, true);
+		const unregister = onAppTerminate(context.chordsFileAppId, () => {
 			const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
 			fs.writeFileSync(plistPath, serializeBplist(updatedPlist));
 			unregister();

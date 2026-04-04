@@ -5,21 +5,21 @@ import nullthrows from "nullthrows-es";
 import { includeKeys } from "filter-obj";
 import { exists } from "#/utils/file.ts";
 import noop from "@stdlib/utils-noop";
-import { onAppTerminate, setAppNeedsRelaunch } from "chord";
+import { onAppTerminate, setAppNeedsRelaunch, type BuilderThis } from "chord";
 import fs from "fs";
 import { serializeBplist } from "bplist-lossless";
 
-export default function buildWiheadsHandler(this: any, tildepath: string) {
+export default function buildWiheadsHandler(this: BuilderThis, tildepath: string) {
   const plistPath = untildify(tildepath);
   if (!exists(plistPath)) {
     return noop;
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(this.chords, (sequence) => sequence.startsWith("/")),
+    includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/")),
     {
-      bundleId: this.bundleId,
-      getHotkeyId: (chord) => nullthrows(chord.args?.[0]),
+      bundleId: this.chordsFileAppId,
+      getHotkeyId: (chord) => nullthrows(chord['emit:hotkey']?.[0]),
     },
   );
   const writes = globalHotkeys.map(({ chord, shortcut }) => ({
@@ -37,8 +37,8 @@ export default function buildWiheadsHandler(this: any, tildepath: string) {
   });
   const needsRelaunch = createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0;
   if (needsRelaunch) {
-    setAppNeedsRelaunch(this.bundleId, true);
-    const unregister = onAppTerminate(this.bundleId, () => {
+    setAppNeedsRelaunch(this.chordsFileAppId, true);
+    const unregister = onAppTerminate(this.chordsFileAppId, () => {
       const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
       fs.writeFileSync(plistPath, serializeBplist(updatedPlist));
       unregister();

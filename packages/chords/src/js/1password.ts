@@ -7,7 +7,7 @@ import nullthrows from "nullthrows-es";
 import { parse, stringify } from "doctor-json";
 import fs from "fs";
 import { parseElectronAccelerator, toElectronAccelerator } from "./utils/electron.ts";
-import { tap } from "chord";
+import { tap, type BuilderThis } from "chord";
 
 const keybindsSettings = [
   "keybinds.quickAccess",
@@ -17,7 +17,7 @@ const keybindsSettings = [
 ];
 
 // TODO: call `setAppNeedsRelaunch`
-export default function build1PasswordHandler(this: any) {
+export default function build1PasswordHandler(this: BuilderThis) {
   const settingsJsonFilepath = untildify(
     "~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json",
   );
@@ -26,10 +26,10 @@ export default function build1PasswordHandler(this: any) {
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(this.chords, (sequence) => sequence.startsWith("/")),
+    includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/")),
     {
-      bundleId: this.bundleId,
-      getHotkeyId: (chord) => nullthrows(chord.args?.[0]),
+      bundleId: this.chordsFileAppId,
+      getHotkeyId: (chord) => nullthrows(chord['emit:hotkey']?.[0]),
     },
   );
 

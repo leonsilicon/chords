@@ -1,15 +1,15 @@
 import spawn from "nano-spawn-compat";
 import { join } from "desm";
-import { onAppLaunch, onAppTerminate, setAppNeedsRelaunch } from "chord";
+import { onAppLaunch, onAppTerminate, setAppNeedsRelaunch, type BuilderThis } from "chord";
 import getPort from "get-port";
 
-export default async function createBrainfmHandler(this: any) {
+export default async function createBrainfmHandler(this: BuilderThis) {
   const brainfmAppPath = "/Applications/Brain.fm.app";
   let isPendingRestart = false;
   let remoteDebuggingPort: number | null = null;
 
   // TODO: check
-  setAppNeedsRelaunch(this.bundleId, true);
+  setAppNeedsRelaunch(this.chordsFileAppId, true);
 
   const hasRemoteDebuggingPort = async (pid: number) => {
     const { stdout } = await spawn("ps", ["-p", pid.toString(), "-o", "command="]);
@@ -17,14 +17,14 @@ export default async function createBrainfmHandler(this: any) {
   };
 
   // Ensures the app is launched with remote debugging
-  onAppLaunch(this.bundleId, async (app) => {
+  onAppLaunch(this.chordsFileAppId, async (app) => {
     if (!(await hasRemoteDebuggingPort(app.pid))) {
       isPendingRestart = true;
       await spawn("kill", ["-9", app.pid.toString()]);
     }
   });
 
-  onAppTerminate(this.bundleId, async () => {
+  onAppTerminate(this.chordsFileAppId, async () => {
     if (isPendingRestart) {
       isPendingRestart = false;
       remoteDebuggingPort = await getPort();

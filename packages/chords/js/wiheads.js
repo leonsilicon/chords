@@ -5548,9 +5548,9 @@ var import_lib = /* @__PURE__ */ __toESM((/* @__PURE__ */ __commonJSMin(((export
 function buildWiheadsHandler(tildepath) {
 	const plistPath = untildify(tildepath);
 	if (!exists(plistPath)) return import_lib.default;
-	const writes = ensureGlobalHotkeys(includeKeys(this.chords, (sequence) => sequence.startsWith("/")), {
-		bundleId: this.bundleId,
-		getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+	const writes = ensureGlobalHotkeys(includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/")), {
+		bundleId: this.chordsFileAppId,
+		getHotkeyId: (chord) => nullthrows(chord["emit:hotkey"]?.[0])
 	}).map(({ chord, shortcut }) => ({
 		property: nullthrows(chord.args?.[0]),
 		propertyType: "bytes",
@@ -5563,8 +5563,8 @@ function buildWiheadsHandler(tildepath) {
 		modifierType: "modern"
 	});
 	if (createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0) {
-		setAppNeedsRelaunch(this.bundleId, true);
-		const unregister = onAppTerminate(this.bundleId, () => {
+		setAppNeedsRelaunch(this.chordsFileAppId, true);
+		const unregister = onAppTerminate(this.chordsFileAppId, () => {
 			const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
 			fs.writeFileSync(plistPath, serializeBplist(updatedPlist));
 			unregister();

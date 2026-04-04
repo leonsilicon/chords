@@ -5,12 +5,12 @@ import nullthrows from "nullthrows-es";
 import { includeKeys } from "filter-obj";
 import { exists } from "./file.ts";
 import noop from "@stdlib/utils-noop";
-import { onAppTerminate, setAppNeedsRelaunch } from "chord";
+import { onAppTerminate, setAppNeedsRelaunch, type BuilderThis } from "chord";
 import fs from "fs";
 import { serializeBplist } from "bplist-lossless";
 
 export default function buildPlistHandler(
-  chordfile: any,
+  context: BuilderThis,
   tildepath: string,
   {
     globalPrefix,
@@ -32,14 +32,14 @@ export default function buildPlistHandler(
   }
 
   const globalHotkeys = ensureGlobalHotkeys(
-    includeKeys(chordfile.chords, (sequence) =>
+    includeKeys(context.chordsFile.chords, (sequence) =>
       typeof globalPrefix === "string"
         ? sequence.startsWith(globalPrefix)
         : globalPrefix.test(sequence),
     ),
     {
-      bundleId: chordfile.bundleId,
-      getHotkeyId: (chord) => nullthrows(chord.args?.[0]),
+      bundleId: context.chordsFileAppId,
+      getHotkeyId: (chord) => nullthrows(chord['emit:hotkey']?.[0]),
     },
   );
   const writes = globalHotkeys.map(({ chord, shortcut }) => ({
@@ -56,8 +56,8 @@ export default function buildPlistHandler(
   });
   const needsRelaunch = createUpdatedPlist(writes, { overwrite: false }).appliedWrites.length > 0;
   if (needsRelaunch) {
-    setAppNeedsRelaunch(chordfile.bundleId, true);
-    const unregister = onAppTerminate(chordfile.bundleId, () => {
+    setAppNeedsRelaunch(context.chordsFileAppId, true);
+    const unregister = onAppTerminate(context.chordsFileAppId, () => {
       const { updatedPlist } = createUpdatedPlist(writes, { overwrite: true });
       fs.writeFileSync(plistPath, serializeBplist(updatedPlist));
       unregister();

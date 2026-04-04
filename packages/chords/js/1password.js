@@ -5401,9 +5401,9 @@ function toElectronAccelerator(shortcut) {
 function build1PasswordHandler() {
 	const settingsJsonFilepath = untildify("~/Library/Group Containers/2BUA8C4S2C.com.1password/Library/Application Support/1Password/Data/settings/settings.json");
 	if (!exists(settingsJsonFilepath)) return import_lib.default;
-	const globalHotkeys = ensureGlobalHotkeys(includeKeys(this.chords, (sequence) => sequence.startsWith("/")), {
-		bundleId: this.bundleId,
-		getHotkeyId: (chord) => nullthrows(chord.args?.[0])
+	const globalHotkeys = ensureGlobalHotkeys(includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/")), {
+		bundleId: this.chordsFileAppId,
+		getHotkeyId: (chord) => nullthrows(chord["emit:hotkey"]?.[0])
 	});
 	if (globalHotkeys.length > 0) {
 		const settings = parse(fs.readFileSync(settingsJsonFilepath, "utf8"));

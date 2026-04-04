@@ -1,6 +1,7 @@
 import buildPlistHandler from "./utils/plist-handler.ts";
+import type { BuilderThis } from 'chord'
 
-export default function buildMakethewebHandler(this: any, tildepath: string) {
+export default function buildMakethewebHandler(this: BuilderThis, tildepath: string) {
   return buildPlistHandler(this, tildepath, {
     modifierMaskKey: "carbonModifiers",
     keycodeKey: "carbonKey",

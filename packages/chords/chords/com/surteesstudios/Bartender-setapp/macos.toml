@@ -4,70 +4,79 @@ name = "Bartender"
 file = "bartender.js"
 args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
 
-[on.item-hotkey]
-file = "bartender.js"
-args = ["~/Library/Preferences/com.surteesstudios.Bartender-setapp.plist"]
-
 [chords]
 '?/-' = { name = "Bartender" }
 '/-t' = { name = "Bartender: Toggle Hidden Items", 'emit:hotkey' = [
+  'global',
   "KeyboardShortcuts_showHiddenItems",
 ] }
-'/-s' = { name = "Bartender: Search", 'emit:hotkey' = ["KeyboardShortcuts_quickSearch"] }
+'/-s' = { name = "Bartender: Search", 'emit:hotkey' = ['global', "KeyboardShortcuts_quickSearch"] }
 '/-h' = { name = "Bartender: Hide Left Application Menu", 'emit:hotkey' = [
+  'global',
   "KeyboardShortcuts_hideLeftApplicationMenu",
 ] }
 '/-a' = { name = "Bartender: Show All Items", 'emit:hotkey' = [
+  'global',
   "KeyboardShortcuts_showAllItems",
 ] }
 
 '?-' = { name = "Bar" }
-'-b' = { name = "Bar: Battery", 'emit:item-hotkey' = [
+'-b' = { name = "Bar: Battery", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-Battery',
   'Battery',
 ] }
-'-s' = { name = "Bar: Spotlight", 'emit:item-hotkey' = [
+'-s' = { name = "Bar: Spotlight", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.Spotlight-Item-0',
   'Spotlight',
 ] }
-'-c' = { name = "Bar: Clock", 'emit:item-hotkey' = [
+'-c' = { name = "Bar: Clock", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-Clock',
   'Clock',
 ] }
-'-cc' = { name = "Bar: Control Center", 'emit:item-hotkey' = [
+'-cc' = { name = "Bar: Control Center", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-BentoBox-0',
   'Control Center',
 ] }
-'-i' = { name = "Bar: Input", 'emit:item-hotkey' = [
+'-i' = { name = "Bar: Input", 'emit:hotkey' = [
+  'item',
   'com.apple.TextInputMenuAgent',
   'com.apple.TextInputMenuAgent-Item-0',
   'Text Input',
 ] }
-'-w' = { name = "Bar: Wi-Fi", 'emit:item-hotkey' = [
+'-w' = { name = "Bar: Wi-Fi", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-WiFi',
   'Wi-Fi',
 ] }
-'-u' = { name = "Bar: User", 'emit:item-hotkey' = [
+'-u' = { name = "Bar: User", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-UserSwitcher',
   'User',
 ] }
-'-f' = { name = "Bar: Focus", 'emit:item-hotkey' = [
+'-f' = { name = "Bar: Focus", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-FocusModes',
   'Focus',
 ] }
-'-p' = { name = "Bar: Playing", 'emit:item-hotkey' = [
+'-p' = { name = "Bar: Playing", 'emit:hotkey' = [
+  'item',
   'com.apple.controlcenter',
   'com.apple.controlcenter-NowPlaying',
   'Now Playing',
 ] }
-'-j' = { name = "Bar: JoyTap", 'emit:item-hotkey' = [
+'-j' = { name = "Bar: JoyTap", 'emit:hotkey' = [
+  'item',
   'com.joytap.app-setapp',
   'com.joytap.app-setapp-Item-0',
   'JoyTap',
