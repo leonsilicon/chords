@@ -43,7 +43,7 @@ export default function buildPlistHandler(
     },
   );
   const writes = globalHotkeys.map(({ chord, shortcut }) => ({
-    property: nullthrows(chord.args?.[0]),
+    property: nullthrows(chord['emit:hotkey']?.[0]),
     propertyType,
     shortcut,
   }));

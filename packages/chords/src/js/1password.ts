@@ -36,7 +36,7 @@ export default function build1PasswordHandler(this: BuilderThis) {
   if (globalHotkeys.length > 0) {
     const settings = parse(fs.readFileSync(settingsJsonFilepath, "utf8"));
     for (const { chord, shortcut } of globalHotkeys) {
-      const hotkeyId = nullthrows(chord.args?.[0]);
+      const hotkeyId = nullthrows(chord['emit:hotkey']?.[0]);
       const accelerator = toElectronAccelerator(shortcut);
       const onePasswordAccelerator = accelerator.replace(
         /\+([^+]+)$/,

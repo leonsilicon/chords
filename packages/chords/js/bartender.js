@@ -5591,11 +5591,11 @@ function buildBartenderHandler(tildepath) {
 	if (!exists(plistPath)) return import_lib.default;
 	const globalHotkeys = ensureGlobalHotkeys(includeKeys(this.chordsFile.chords, (sequence) => sequence.startsWith("/") || sequence.startsWith("-")), {
 		bundleId: path.dirname(this.chordsFileAppId).replaceAll("/", "."),
-		getHotkeyId: (chord) => nullthrows(chord.args?.[2] ?? chord.args?.[1])
+		getHotkeyId: (chord) => nullthrows(chord["emit:hotkey"]?.[2] ?? chord["emit:hotkey"]?.[1])
 	});
 	const writes = globalHotkeys.map(({ chord, shortcut }) => {
 		return {
-			property: chord.args?.[2] ? `KeyboardShortcuts_${chord.args[2]}` : nullthrows(chord.args?.[1]),
+			property: chord["emit:hotkey"]?.[2] ? `KeyboardShortcuts_${chord["emit:hotkey"][2]}` : nullthrows(chord.args?.[1]),
 			propertyType: "string",
 			shortcut
 		};
@@ -5615,9 +5615,9 @@ function buildBartenderHandler(tildepath) {
 			if ("error" in result) perItemHotkeyList = [];
 			else perItemHotkeyList = result.value;
 			for (const { chord } of globalHotkeys) {
-				const appBundleIdentifier = chord.args?.[1];
-				const keyName = chord.args?.[2];
-				const appName = chord.args?.[3];
+				const appBundleIdentifier = chord["emit:hotkey"]?.[1];
+				const keyName = chord["emit:hotkey"]?.[2];
+				const appName = chord["emit:hotkey"]?.[3];
 				if (!appBundleIdentifier || !keyName || !appName) continue;
 				if (perItemHotkeyList.some((item) => item.keyName === keyName)) continue;
 				const item = {

@@ -29,12 +29,12 @@ export default function buildBartenderHandler(this: BuilderThis, tildepath: stri
     {
       bundleId: path.dirname(this.chordsFileAppId).replaceAll('/', '.'),
       // index 2 is the item id, index 1 is the property
-      getHotkeyId: (chord: any) => nullthrows(chord.args?.[2] ?? chord.args?.[1]),
+      getHotkeyId: (chord: any) => nullthrows(chord['emit:hotkey']?.[2] ?? chord['emit:hotkey']?.[1]),
     },
   );
   const writes = globalHotkeys.map(({ chord, shortcut }) => {
-    const property = chord.args?.[2]
-      ? `KeyboardShortcuts_${chord.args[2]}`
+    const property = chord['emit:hotkey']?.[2]
+      ? `KeyboardShortcuts_${chord['emit:hotkey'][2]}`
       : nullthrows(chord.args?.[1]);
     return {
       property,
@@ -65,9 +65,9 @@ export default function buildBartenderHandler(this: BuilderThis, tildepath: stri
       }
 
       for (const { chord } of globalHotkeys) {
-        const appBundleIdentifier = chord.args?.[1];
-        const keyName = chord.args?.[2];
-        const appName = chord.args?.[3];
+        const appBundleIdentifier = chord['emit:hotkey']?.[1];
+        const keyName = chord['emit:hotkey']?.[2];
+        const appName = chord['emit:hotkey']?.[3];
         if (!appBundleIdentifier || !keyName || !appName) {
           continue;
         }

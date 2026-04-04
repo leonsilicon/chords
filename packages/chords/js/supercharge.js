@@ -5552,7 +5552,7 @@ function buildPlistHandler(context, tildepath, { globalPrefix, propertyType, key
 		bundleId: context.chordsFileAppId,
 		getHotkeyId: (chord) => nullthrows(chord["emit:hotkey"]?.[0])
 	}).map(({ chord, shortcut }) => ({
-		property: nullthrows(chord.args?.[0]),
+		property: nullthrows(chord["emit:hotkey"]?.[0]),
 		propertyType,
 		shortcut
 	}));
