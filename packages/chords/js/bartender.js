@@ -45,7 +45,7 @@ function untildify(pathWithTilde) {
 	return pathWithTilde;
 }
 //#endregion
-//#region node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
+//#region node_modules/.pnpm/keycode-ts2@0.1.1/node_modules/keycode-ts2/dist/generated.js
 const KeyMappingCode = {
 	Hyper: "Hyper",
 	Super: "Super",
@@ -5595,7 +5595,7 @@ function buildBartenderHandler(tildepath) {
 	});
 	const writes = globalHotkeys.map(({ chord, shortcut }) => {
 		return {
-			property: chord["emit:hotkey"]?.[2] ? `KeyboardShortcuts_${chord["emit:hotkey"][2]}` : nullthrows(chord.args?.[1]),
+			property: chord["emit:hotkey"]?.[2] ? `KeyboardShortcuts_${chord["emit:hotkey"][2]}` : nullthrows(chord["emit:hotkey"]?.[1]),
 			propertyType: "string",
 			shortcut
 		};

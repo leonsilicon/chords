@@ -2342,7 +2342,7 @@ const stringify = (object) => {
 	return orig.doc.text;
 };
 //#endregion
-//#region node_modules/.pnpm/keycode-ts2@0.1.0/node_modules/keycode-ts2/dist/generated.js
+//#region node_modules/.pnpm/keycode-ts2@0.1.1/node_modules/keycode-ts2/dist/generated.js
 const KeyMappingCode = {
 	Hyper: "Hyper",
 	Super: "Super",
