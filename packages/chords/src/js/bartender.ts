@@ -35,7 +35,7 @@ export default function buildBartenderHandler(this: BuilderThis, tildepath: stri
   const writes = globalHotkeys.map(({ chord, shortcut }) => {
     const property = chord['emit:hotkey']?.[2]
       ? `KeyboardShortcuts_${chord['emit:hotkey'][2]}`
-      : nullthrows(chord.args?.[1]);
+      : nullthrows(chord['emit:hotkey']?.[1]);
     return {
       property,
       // _Bartender_ stores shortcuts as strings
