@@ -1,6 +1,6 @@
 name = "Opera"
 
-[on.js]
+[handlers.js]
 type = "js"
 file = 'chrome.js'
 args = ['/Applications/Opera.app']

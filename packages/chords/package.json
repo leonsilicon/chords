@@ -7,6 +7,7 @@
   "dependencies": {
     "@keychord/chords-menu": "github:KeyChord/chords-menu#d17435f29fbcae83fcc372fccbbbb3189011f72d",
     "@keychord/chords-chromium": "github:KeyChord/chords-chromium#bd12096440a086c81c612fdf5aa9dd0b39737aae",
+    "@keychord/chords-jetbrains": "github:KeyChord/chords-jetbrains#25c767201949dd0dd757d590d2585173eca916a4",
     "@stdlib/utils-noop": "^0.2.3",
     "@types/json-parse-safe": "^2.0.3",
     "any-ascii-json": "^0.4.0",

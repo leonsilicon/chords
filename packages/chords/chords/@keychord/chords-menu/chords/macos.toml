@@ -1,6 +1,6 @@
 name = "macOS Menu Bar"
 
-[on.menu]
+[handlers.menu]
 file = "menu.js"
 args = []
 
