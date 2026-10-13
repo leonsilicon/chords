@@ -15,10 +15,6 @@ Paste\
 Bartender\
 WhatsApp
 
-## Global Keys
-
-`.` Window Management (dwmac)
-
 ## Browsers
 
 `p` = `P`age
